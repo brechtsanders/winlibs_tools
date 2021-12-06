@@ -1,0 +1,6 @@
+1.0.6
+
+2021-12-06  Brecht Sanders  https://github.com/brechtsanders/
+
+  * initial public release under GPL-2.0 license
+

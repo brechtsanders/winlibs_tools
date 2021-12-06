@@ -164,6 +164,35 @@ ifneq ($(BINDIR),.)
 	$(RMDIR) $(BINDIR)
 endif
 
+.PHONY: version
+version:
+	sed -ne "s/^#define\s*WINLIBS_VERSION_[A-Z]*\s*\([0-9]*\)\s*$$/\1./p" src/winlibs_common.h | tr -d "\n" | sed -e "s/\.$$//" > version
+
+OSALIAS := $(OS)
+ifeq ($(OS),Windows_NT)
+ifneq (,$(findstring x86_64,$(shell gcc --version)))
+OSALIAS := win64
+else
+OSALIAS := win32
+endif
+endif
+
+COMMON_PACKAGE_FILES = README.md LICENSE Changelog.txt
+
+.PHONY: binarypackage
+binarypackage: version
+ifneq ($(OS),Windows_NT)
+	#$(MAKE) PREFIX=binarypackage_temp_$(OSALIAS) install
+	#tar cfJ winlibs-tools-$(shell cat version)-$(OSALIAS).tar.xz --transform="s?^binarypackage_temp_$(OSALIAS)/??" $(COMMON_PACKAGE_FILES) binarypackage_temp_$(OSALIAS)/*
+else
+	$(MAKE) STATIC=1 BINDIR=binarypackage_temp_$(OSALIAS) OBJDIR=binarypackage_temp_$(OSALIAS)/tmp
+	rm -rf binarypackage_temp_$(OSALIAS)/tmp
+	cp -f $(COMMON_PACKAGE_FILES) binarypackage_temp_$(OSALIAS)/
+	rm -f winlibs-tools-$(shell cat version)-$(OSALIAS).zip
+	cd binarypackage_temp_$(OSALIAS) && zip -r9 ../winlibs-tools-$(shell cat version)-$(OSALIAS).zip $(COMMON_PACKAGE_FILES) * && cd ..
+endif
+	rm -rf binarypackage_temp_$(OSALIAS)
+
 #ldconfig
 ##apt-get install pkg-config libavl-dev libcurl4-gnutls-dev libgumbo-dev libpcre2-dev libsqlite3-dev
 #apt-get install pkg-config libavl-dev libcurl4-openssl-dev libgumbo-dev libpcre2-dev libsqlite3-dev
