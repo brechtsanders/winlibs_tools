@@ -17,6 +17,19 @@ This allows C/C++ developers to use existing software libraries with [MinGW-w64]
 
 These tools are intended to run on Windows, but the development of these tools was kept as platform independent as possible, in case there is also a future case for using them on other platforms.
 
+## Recipe Format
+
+A `.winlib` build recipe is written as a series of shell commands that can be run manually in the [MSYS2](https://www.msys2.org/) shell.
+At the same time they contain fixed commands that allow the build tools to extract information and run them in an automated and unattended way.
+
+## Package Format
+
+Binary packages are compressed into `.7z` archives, so they can also be opened with [7-Zip](https://7-zip.org/).
+
+A binary package file will have a name that consists of the package name, the version number and the architecture, followed by the `.7z` extension (`<name>-<version>-<arch>.7z`, e.g.: `libbz2-1.0.8.x86_64.7z`).
+
+In the archive there will be a `.packageinfo.xml` file containing package metadata and a folder `.license` containing license file(s).
+
 ## Provided Tools
 
  * `wl-showstatus`: show status (used during build process)
