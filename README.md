@@ -15,6 +15,23 @@ But these tools can be used to build thousands of other software packages for Wi
 
 This allows C/C++ developers to use existing software libraries with [MinGW-w64](https://www.mingw-w64.org/) [GCC (GNU Compiler Collection)](https://gcc.gnu.org/), which improves portability to/from other platforms, making it easier to use the same code for multiple platforms (e.g. Windows, Linux, macOS).
 
+These tools are intended to run on Windows, but the development of these tools was kept as platform independent as possible, in case there is also a future case for using them on other platforms.
+
+## Provided Tools
+
+ * `wl-showstatus`: show status (used during build process)
+ * `wl-download`: download file (used to download source code archives)
+ * `wl-wait4deps`: wait for package dependencies
+ * `wl-listall`: list available package recipes
+ * `wl-info`: display package recipe information
+ * `wl-showdeps`: display package dependency tree
+ * `wl-checknewreleases`: check source code website(s) for new versions
+ * `wl-makepackage`: create package file from isolated package install folder
+ * `wl-install`: install package file
+ * `wl-uninstall`: uninstall package(s)
+ * `wl-build`: build package from source
+ * `wl-find`: search in installed winlibs packages
+
 ## Dependencies
 
  * [miniargv](https://github.com/brechtsanders/miniargv/)
