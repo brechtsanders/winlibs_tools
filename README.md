@@ -3,6 +3,18 @@ Tools for building [winlibs](https://winlibs.com/) packages from source using th
 
 These tools are needed to natively build winlibs packages from source on Windows.
 
+## Goal
+
+In order to build binary packages from source certain build and package management tools are needed.
+
+The primary goal of [winlibs.com](https://winlibs.com/) is to build C/C++ source code on native Windows 32-bit and 64-bit platforms using [MinGW-w64](https://www.mingw-w64.org/) [GCC](https://gcc.gnu.org/).
+
+The [MinGW-w64](https://www.mingw-w64.org/) [GCC (GNU Compiler Collection)](https://gcc.gnu.org/) itself and all of its dependencies built with these tools can be downloaded from [winlibs.com](https://winlibs.com/).
+
+But these tools can be used to build thousands of other software packages for Windows.
+
+This allows C/C++ developers to use existing software libraries with [MinGW-w64](https://www.mingw-w64.org/) [GCC (GNU Compiler Collection)](https://gcc.gnu.org/), which improves portability to/from other platforms, making it easier to use the same code for multiple platforms (e.g. Windows, Linux, macOS).
+
 ## Dependencies
 
  * [miniargv](https://github.com/brechtsanders/miniargv/)
