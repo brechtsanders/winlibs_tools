@@ -1,2 +1,2 @@
-# winlibs_tools
-Tools for building winlibs packages from source using MinGW-w64
+# winlibs build tools
+Tools for building [winlibs](https://winlibs.com/) packages from source using MinGW-w64
