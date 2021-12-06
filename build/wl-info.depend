@@ -1,0 +1,56 @@
+# depslib dependency file v1.0
+1637010986 source:z:\winlibs\src\package_info.c
+	"package_info.h"
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	<dirent.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<unistd.h>
+
+1620240584 z:\winlibs\src\package_info.h
+	<stddef.h>
+	<time.h>
+
+1616688239 source:z:\winlibs\src\sorted_unique_list.c
+	"sorted_unique_list.h"
+	<avl.h>
+	<string.h>
+	<ctype.h>
+	<stdio.h>
+
+1618569018 z:\winlibs\src\sorted_unique_list.h
+	<stdlib.h>
+
+1638727135 source:z:\winlibs\src\wl-info.c
+	<stdlib.h>
+	<stdint.h>
+	<stdio.h>
+	<string.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<miniargv.h>
+	<versioncmp.h>
+	"winlibs_common.h"
+	"package_info.h"
+	"sorted_unique_list.h"
+
+1638720072 z:\winlibs\src\winlibs_common.h
+
+1637010986 source:\\server\users\brecht\sources\cpp\winlibs\src\package_info.c
+	"package_info.h"
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	<dirent.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<unistd.h>
+
+1620240584 \\server\users\brecht\sources\cpp\winlibs\src\package_info.h
+	<stddef.h>
+	<time.h>
+

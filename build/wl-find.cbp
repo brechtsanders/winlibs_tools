@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="wl-find" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/wl-find" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/wl-find" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-Os" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+			<Target title="Debug32">
+				<Option output="bin/Debug32/wl-find" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug32/" />
+				<Option type="1" />
+				<Option compiler="MINGW32" />
+				<Option parameters="-i D:\Prog\winlibs64-11.2.0ucrt\custombuilt --packagefiles zlib libbz2 jwasm" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release32">
+				<Option output="bin/Release32/wl-find" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release32/" />
+				<Option type="1" />
+				<Option compiler="MINGW32" />
+				<Compiler>
+					<Add option="-Os" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+			<Target title="Debug64">
+				<Option output="bin/Debug64/wl-find" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug64/" />
+				<Option type="1" />
+				<Option compiler="MINGW64" />
+				<Option parameters="-i _inst jwasm" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release64">
+				<Option output="bin/Release64/wl-find" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release64/" />
+				<Option type="1" />
+				<Option compiler="MINGW64" />
+				<Option parameters="-i D:\Prog\winlibs64-11.2.0ucrt\custombuilt --foldername --fullpath Australia" />
+				<Compiler>
+					<Add option="-Os" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Os" />
+			<Add option="-Wall" />
+			<Add option="-DSTATIC" />
+			<Add directory="../src" />
+		</Compiler>
+		<Linker>
+			<Add option="-static-libgcc" />
+			<Add option="-static" />
+			<Add option="`pkg-config --static --libs sqlite3`" />
+			<Add library="avl" />
+			<Add library="miniargv" />
+			<Add library="portcolcon" />
+		</Linker>
+		<Unit filename="../src/filesystem.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/filesystem.h" />
+		<Unit filename="../src/memory_buffer.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/memory_buffer.h" />
+		<Unit filename="../src/pkgdb.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/pkgdb.h" />
+		<Unit filename="../src/sorted_unique_list.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/sorted_unique_list.h" />
+		<Unit filename="../src/winlibs_common.h" />
+		<Unit filename="../src/wl-find.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Extensions>
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

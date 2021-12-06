@@ -1,0 +1,129 @@
+# depslib dependency file v1.0
+1637010986 source:z:\winlibs\src\package_info.c
+	"package_info.h"
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	<dirent.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<unistd.h>
+
+1620240584 z:\winlibs\src\package_info.h
+	<stddef.h>
+	<time.h>
+
+1616684639 source:z:\winlibs\src\sorted_unique_list.c
+	"sorted_unique_list.h"
+	<avl.h>
+	<string.h>
+	<ctype.h>
+	<stdio.h>
+
+1618569018 z:\winlibs\src\sorted_unique_list.h
+	<stdlib.h>
+
+1638778782 source:z:\winlibs\src\wl-build.c
+	<stdio.h>
+	<stdlib.h>
+	<stdint.h>
+	<string.h>
+	<ctype.h>
+	<unistd.h>
+	<pthread.h>
+	<windows.h>
+	<miniargv.h>
+	<versioncmp.h>
+	<crossrun.h>
+	<dirtrav.h>
+	"package_info.h"
+	"sorted_unique_list.h"
+	"memory_buffer.h"
+	"filesystem.h"
+	"handle_interrupts.h"
+	"winlibs_common.h"
+	<malloc.h>
+	<string.h>
+	<windows.h>
+	<limits.h>
+	<unistd.h>
+	<portcolcon.h>
+
+1638720072 z:\winlibs\src\winlibs_common.h
+
+1637764573 source:z:\winlibs\src\memory_buffer.c
+	"memory_buffer.h"
+	<string.h>
+	<stdio.h>
+
+1637740219 z:\winlibs\src\memory_buffer.h
+	<stdlib.h>
+	<stdarg.h>
+
+1634131102 source:\\server\users\brecht\sources\cpp\winlibs\src\memory_buffer.c
+	"memory_buffer.h"
+	<string.h>
+	<stdio.h>
+
+1618568947 \\server\users\brecht\sources\cpp\winlibs\src\memory_buffer.h
+	<stdlib.h>
+	<stdarg.h>
+
+1637010986 source:\\server\users\brecht\sources\cpp\winlibs\src\package_info.c
+	"package_info.h"
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	<dirent.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<unistd.h>
+
+1620240584 \\server\users\brecht\sources\cpp\winlibs\src\package_info.h
+	<stddef.h>
+	<time.h>
+
+1616684639 source:\\server\users\brecht\sources\cpp\winlibs\src\sorted_unique_list.c
+	"sorted_unique_list.h"
+	<avl.h>
+	<string.h>
+	<ctype.h>
+	<stdio.h>
+
+1618569018 \\server\users\brecht\sources\cpp\winlibs\src\sorted_unique_list.h
+	<stdlib.h>
+
+1619372395 source:z:\winlibs\src\filesystem.c
+	"filesystem.h"
+	<sys/types.h>
+	<sys/stat.h>
+	<unistd.h>
+	<stdlib.h>
+	<string.h>
+	<direct.h>
+	<sys/stat.h>
+	<errno.h>
+
+1619372395 z:\winlibs\src\filesystem.h
+	<stdio.h>
+
+1629915790 z:\winlibs\src\handle_interrupts.h
+	<windows.h>
+	<signal.h>
+
+1619372395 source:\\server\users\brecht\sources\cpp\winlibs\src\filesystem.c
+	"filesystem.h"
+	<sys/types.h>
+	<sys/stat.h>
+	<unistd.h>
+	<stdlib.h>
+	<string.h>
+	<direct.h>
+	<sys/stat.h>
+	<errno.h>
+
+1619372395 \\server\users\brecht\sources\cpp\winlibs\src\filesystem.h
+	<stdio.h>
+

@@ -1,0 +1,71 @@
+# depslib dependency file v1.0
+1637010986 source:z:\winlibs\src\package_info.c
+	"package_info.h"
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	<dirent.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<unistd.h>
+
+1620240584 z:\winlibs\src\package_info.h
+	<stddef.h>
+	<time.h>
+
+1638702161 source:z:\winlibs\src\wl-showdeps.c
+	<stdio.h>
+	<stdlib.h>
+	<malloc.h>
+	<string.h>
+	<miniargv.h>
+	"package_info.h"
+	"filesystem.h"
+	"winlibs_common.h"
+
+1638720072 z:\winlibs\src\winlibs_common.h
+
+1619372395 source:z:\winlibs\src\filesystem.c
+	"filesystem.h"
+	<sys/types.h>
+	<sys/stat.h>
+	<unistd.h>
+	<stdlib.h>
+	<string.h>
+	<direct.h>
+	<sys/stat.h>
+	<errno.h>
+
+1619372395 z:\winlibs\src\filesystem.h
+	<stdio.h>
+
+1619372395 source:\\server\users\brecht\sources\cpp\winlibs\src\filesystem.c
+	"filesystem.h"
+	<sys/types.h>
+	<sys/stat.h>
+	<unistd.h>
+	<stdlib.h>
+	<string.h>
+	<direct.h>
+	<sys/stat.h>
+	<errno.h>
+
+1619372395 \\server\users\brecht\sources\cpp\winlibs\src\filesystem.h
+	<stdio.h>
+
+1637010986 source:\\server\users\brecht\sources\cpp\winlibs\src\package_info.c
+	"package_info.h"
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	<dirent.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<unistd.h>
+
+1620240584 \\server\users\brecht\sources\cpp\winlibs\src\package_info.h
+	<stddef.h>
+	<time.h>
+

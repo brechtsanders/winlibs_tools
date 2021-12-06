@@ -1,0 +1,105 @@
+# depslib dependency file v1.0
+1637764573 source:z:\winlibs\src\memory_buffer.c
+	"memory_buffer.h"
+	<string.h>
+	<stdio.h>
+
+1637740219 z:\winlibs\src\memory_buffer.h
+	<stdlib.h>
+	<stdarg.h>
+
+1619252436 source:z:\winlibs\src\fstab.c
+	"fstab.h"
+	"filesystem.h"
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	<fcntl.h>
+	<sys/stat.h>
+	<limits.h>
+
+1618568917 z:\winlibs\src\fstab.h
+	<stdlib.h>
+
+1638652146 source:z:\winlibs\src\wl-makepackage.c
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	<fcntl.h>
+	<sys/stat.h>
+	<unistd.h>
+	<inttypes.h>
+	<limits.h>
+	<miniargv.h>
+	<dirtrav.h>
+	<pcre2_finder.h>
+	<archive.h>
+	<archive_entry.h>
+	<pedeps.h>
+	"winlibs_common.h"
+	"fstab.h"
+	"memory_buffer.h"
+	"sorted_unique_list.h"
+	<pedeps.h>
+	"text_list.h"
+
+1619372395 source:z:\winlibs\src\filesystem.c
+	"filesystem.h"
+	<sys/types.h>
+	<sys/stat.h>
+	<unistd.h>
+	<stdlib.h>
+	<string.h>
+	<direct.h>
+	<sys/stat.h>
+	<errno.h>
+
+1619372395 z:\winlibs\src\filesystem.h
+	<stdio.h>
+
+1638720072 z:\winlibs\src\winlibs_common.h
+
+1616684639 source:z:\winlibs\src\sorted_unique_list.c
+	"sorted_unique_list.h"
+	<avl.h>
+	<string.h>
+	<ctype.h>
+	<stdio.h>
+
+1618569018 z:\winlibs\src\sorted_unique_list.h
+	<stdlib.h>
+
+1619372395 source:\\server\users\brecht\sources\cpp\winlibs\src\filesystem.c
+	"filesystem.h"
+	<sys/types.h>
+	<sys/stat.h>
+	<unistd.h>
+	<stdlib.h>
+	<string.h>
+	<direct.h>
+	<sys/stat.h>
+	<errno.h>
+
+1619372395 \\server\users\brecht\sources\cpp\winlibs\src\filesystem.h
+	<stdio.h>
+
+1634131102 source:\\server\users\brecht\sources\cpp\winlibs\src\memory_buffer.c
+	"memory_buffer.h"
+	<string.h>
+	<stdio.h>
+
+1618568947 \\server\users\brecht\sources\cpp\winlibs\src\memory_buffer.h
+	<stdlib.h>
+	<stdarg.h>
+
+1616684639 source:\\server\users\brecht\sources\cpp\winlibs\src\sorted_unique_list.c
+	"sorted_unique_list.h"
+	<avl.h>
+	<string.h>
+	<ctype.h>
+	<stdio.h>
+
+1618569018 \\server\users\brecht\sources\cpp\winlibs\src\sorted_unique_list.h
+	<stdlib.h>
+

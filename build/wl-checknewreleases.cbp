@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="wl-checknewreleases" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/wl-checknewreleases" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option parameters="-u \\SERVER\users\brecht\sources\porting_to_win32\build_scripts -d _versioncheck.sq3 -c _cache.sq3 -x 3600 -v3 -j2 wtl zlib libjpeg libtiff libdl squashfuse grsync" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/wl-checknewreleases" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+			<Target title="Debug32">
+				<Option output="bin/Debug32/wl-checknewreleases" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug32/" />
+				<Option type="1" />
+				<Option compiler="MINGW32" />
+				<Option parameters="-u \\SERVER\users\brecht\sources\porting_to_win32\build_scripts gnome-desktop libpng libpng ansi32 libdl libjpeg libpng dtl tmux gnome-desktop" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release32">
+				<Option output="bin/Release32/wl-checknewreleases" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release32/" />
+				<Option type="1" />
+				<Option compiler="MINGW32" />
+				<Option parameters="-u \\SERVER\users\brecht\sources\porting_to_win32\build_scripts -v3 -j2 -n3 gnome-devel-docs opengui libelf libelf libdl libpng libpng libdl libpng" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+			<Target title="Debug64">
+				<Option output="bin/Debug64/wl-checknewreleases" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug64/" />
+				<Option type="1" />
+				<Option compiler="MINGW64" />
+				<Option parameters="-s \\SERVER\users\brecht\sources\porting_to_win32\build_scripts -d _versioncheck.sq3 -c _cache.sq3 -x 3600 -v -v -v -j2 wtl zlib libjpeg libtiff libdl squashfuse grsync jwsmtp" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release64">
+				<Option output="bin/Release64/wl-checknewreleases" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release64/" />
+				<Option type="1" />
+				<Option compiler="MINGW64" />
+				<Option parameters="-u \\SERVER\users\brecht\sources\porting_to_win32\build_scripts all -vv" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-DCURL_STATICLIB" />
+		</Compiler>
+		<Linker>
+			<Add option="-Wl,--as-needed" />
+			<Add library="miniargv" />
+			<Add library="versioncmp" />
+			<Add library="curl" />
+			<Add library="gumbo" />
+			<Add library="pcre2-8" />
+			<Add library="avl" />
+			<Add library="sqlite3" />
+		</Linker>
+		<Unit filename="../src/common_output.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/common_output.h" />
+		<Unit filename="../src/download_cache.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/download_cache.h" />
+		<Unit filename="../src/downloader.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/downloader.h" />
+		<Unit filename="../src/memory_buffer.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/memory_buffer.h" />
+		<Unit filename="../src/package_info.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/package_info.h" />
+		<Unit filename="../src/sorted_item_queue.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/sorted_item_queue.h" />
+		<Unit filename="../src/sorted_unique_list.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/sorted_unique_list.h" />
+		<Unit filename="../src/version_check_db.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/version_check_db.h" />
+		<Unit filename="../src/winlibs_common.h" />
+		<Unit filename="../src/wl-checknewreleases.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Extensions>
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

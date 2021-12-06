@@ -1,0 +1,29 @@
+# depslib dependency file v1.0
+1638529164 source:z:\winlibs\src\wl-showstatus.c
+	<stdio.h>
+	<stdlib.h>
+	<malloc.h>
+	<string.h>
+	<windows.h>
+	<limits.h>
+	<unistd.h>
+	<miniargv.h>
+	<portcolcon.h>
+	"winlibs_common.h"
+
+1638720072 z:\winlibs\src\winlibs_common.h
+
+1637183767 source:\\server\users\brecht\sources\cpp\winlibs\src\wl-showstatus.c
+	<stdio.h>
+	<stdlib.h>
+	<malloc.h>
+	<string.h>
+	<windows.h>
+	<limits.h>
+	<unistd.h>
+	<argtable2.h>
+	<portcolcon.h>
+	"winlibs_common.h"
+
+1636806968 \\server\users\brecht\sources\cpp\winlibs\src\winlibs_common.h
+

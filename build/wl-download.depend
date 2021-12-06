@@ -1,0 +1,41 @@
+# depslib dependency file v1.0
+1636657860 source:z:\winlibs\src\exclusive_lock_file.c
+	"exclusive_lock_file.h"
+	"winlibs_common.h"
+	<stdlib.h>
+	<string.h>
+	<sys/stat.h>
+	<fcntl.h>
+	<errno.h>
+	<unistd.h>
+	<windows.h>
+	<stdio.h>
+
+1636657598 z:\winlibs\src\exclusive_lock_file.h
+
+1638696901 source:z:\winlibs\src\wl-download.c
+	<stdlib.h>
+	<fcntl.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<fcntl.h>
+	<errno.h>
+	<string.h>
+	<ctype.h>
+	<time.h>
+	<winsock2.h>
+	<sys/types.h>
+	<unistd.h>
+	<curl/curl.h>
+	<curl/easy.h>
+	<miniargv.h>
+	"exclusive_lock_file.h"
+	"handle_interrupts.h"
+	"winlibs_common.h"
+
+1638720072 z:\winlibs\src\winlibs_common.h
+
+1629915790 z:\winlibs\src\handle_interrupts.h
+	<windows.h>
+	<signal.h>
+

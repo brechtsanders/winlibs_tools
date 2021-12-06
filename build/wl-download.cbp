@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="wl-download" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/wl-download" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/wl-download" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+			<Target title="Debug32">
+				<Option output="bin/Debug32/wl-download" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug32/" />
+				<Option type="1" />
+				<Option compiler="MINGW32" />
+				<Option parameters="-f -v -d C:\TEMP http://www.zlib.net/zlib-1.2.11.tar.gz" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release32">
+				<Option output="bin/Release32/wl-download" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release32/" />
+				<Option type="1" />
+				<Option compiler="MINGW32" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+			<Target title="Debug64">
+				<Option output="bin/Debug64/wl-download" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug64/" />
+				<Option type="1" />
+				<Option compiler="MINGW64" />
+				<Option parameters="-f -v -d C:\TEMP\sources http://www.zlib.net/zlib-1.2.11.tar.gz https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add option="-static" />
+				</Linker>
+			</Target>
+			<Target title="Release64">
+				<Option output="bin/Release64/wl-download" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release64/" />
+				<Option type="1" />
+				<Option compiler="MINGW64" />
+				<Option parameters="-t 60 -d C:\TEMP https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-DSTATIC" />
+			<Add directory="../src" />
+		</Compiler>
+		<Linker>
+			<Add option="-static" />
+			<Add option="-Wl,--as-needed" />
+			<Add option="`pkg-config.exe --static --libs libcurl librtmp libbrotlidec libgcrypt shishi gnutls libidn libntlm`" />
+			<Add option="-Wl,--allow-multiple-definition" />
+			<Add library="miniargv" />
+		</Linker>
+		<Unit filename="../src/exclusive_lock_file.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/exclusive_lock_file.h" />
+		<Unit filename="../src/winlibs_common.h" />
+		<Unit filename="../src/wl-download.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Extensions>
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="wl-build" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/wl-build" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/wl-build" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option parameters="-s \\SERVER\users\brecht\sources\porting_to_win32\build_scripts pango cairo" />
+				<Compiler>
+					<Add option="-Os" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+			<Target title="Debug32">
+				<Option output="bin/Debug32/wl-build" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug32/" />
+				<Option type="1" />
+				<Option compiler="MINGW32" />
+				<Option parameters='-s \\SERVER\users\brecht\sources\porting_to_win32\build_scripts -i D:\Prog\winlibs32_stage\custombuilt -x &quot;D:\Prog\msys64\usr\bin\bash.exe --noprofile --rcfile D:\Prog\winlibs32_stage\profile_settings.sh -i&quot; zlib libbz2' />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release32">
+				<Option output="bin/Release32/wl-build" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release32/" />
+				<Option type="1" />
+				<Option compiler="MINGW32" />
+				<Option parameters="-s \\SERVER\users\brecht\sources\porting_to_win32\build_scripts gdb" />
+				<Compiler>
+					<Add option="-Os" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+			<Target title="Debug64">
+				<Option output="bin/Debug64/wl-build" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug64/" />
+				<Option type="1" />
+				<Option compiler="MINGW64" />
+				<Option parameters='-s \\SERVER\users\brecht\sources\porting_to_win32\build_scripts -x &quot;D:\Prog\msys64\usr\bin\bash.exe --noprofile --rcfile D:\Prog\winlibs64-11.2.0ucrt\profile_settings.sh -i&quot; -l logs -i D:\Prog\winlibs64-11.2.0ucrt\custombuilt libxml2' />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release64">
+				<Option output="bin/Release64/wl-build" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release64/" />
+				<Option type="1" />
+				<Option compiler="MINGW64" />
+				<Option parameters='-s \\SERVER\users\brecht\sources\porting_to_win32\build_scripts -x &quot;D:\Prog\msys64\usr\bin\bash.exe --noprofile --rcfile D:\Prog\winlibs64-11.2.0ucrt\profile_settings.sh -i&quot; -b C:\TEMP cairo' />
+				<Compiler>
+					<Add option="-Os" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Os" />
+			<Add option="-Wall" />
+			<Add option="-DSTATIC" />
+			<Add directory="../src" />
+		</Compiler>
+		<Linker>
+			<Add option="-static-libgcc" />
+			<Add option="-static" />
+			<Add library="miniargv" />
+			<Add library="avl" />
+			<Add library="versioncmp" />
+			<Add library="crossrun" />
+			<Add library="dirtrav" />
+		</Linker>
+		<Unit filename="../src/filesystem.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/filesystem.h" />
+		<Unit filename="../src/handle_interrupts.h" />
+		<Unit filename="../src/memory_buffer.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/memory_buffer.h" />
+		<Unit filename="../src/package_info.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/package_info.h" />
+		<Unit filename="../src/sorted_unique_list.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/sorted_unique_list.h" />
+		<Unit filename="../src/winlibs_common.h" />
+		<Unit filename="../src/wl-build.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Extensions>
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
