@@ -1,3 +1,9 @@
+1.0.7
+
+2021-12-09  Brecht Sanders  https://github.com/brechtsanders/
+
+  * wl-find: added -l and -d flags and don't highlight in file/folder listing
+
 1.0.6
 
 2021-12-06  Brecht Sanders  https://github.com/brechtsanders/

@@ -54,3 +54,18 @@
 	<stddef.h>
 	<time.h>
 
+1637010986 source:z:\winlibs_tools\src\package_info.c
+	"package_info.h"
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	<dirent.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<unistd.h>
+
+1620240584 z:\winlibs_tools\src\package_info.h
+	<stddef.h>
+	<time.h>
+

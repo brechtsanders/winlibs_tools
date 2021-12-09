@@ -69,3 +69,32 @@
 	<stddef.h>
 	<time.h>
 
+1619372395 source:z:\winlibs_tools\src\filesystem.c
+	"filesystem.h"
+	<sys/types.h>
+	<sys/stat.h>
+	<unistd.h>
+	<stdlib.h>
+	<string.h>
+	<direct.h>
+	<sys/stat.h>
+	<errno.h>
+
+1619372395 z:\winlibs_tools\src\filesystem.h
+	<stdio.h>
+
+1637010986 source:z:\winlibs_tools\src\package_info.c
+	"package_info.h"
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	<dirent.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<unistd.h>
+
+1620240584 z:\winlibs_tools\src\package_info.h
+	<stddef.h>
+	<time.h>
+

@@ -127,3 +127,36 @@
 1618569018 \\server\users\brecht\sources\cpp\winlibs\src\sorted_unique_list.h
 	<stdlib.h>
 
+1619372395 source:z:\winlibs_tools\src\filesystem.c
+	"filesystem.h"
+	<sys/types.h>
+	<sys/stat.h>
+	<unistd.h>
+	<stdlib.h>
+	<string.h>
+	<direct.h>
+	<sys/stat.h>
+	<errno.h>
+
+1619372395 z:\winlibs_tools\src\filesystem.h
+	<stdio.h>
+
+1637764573 source:z:\winlibs_tools\src\memory_buffer.c
+	"memory_buffer.h"
+	<string.h>
+	<stdio.h>
+
+1637740219 z:\winlibs_tools\src\memory_buffer.h
+	<stdlib.h>
+	<stdarg.h>
+
+1616684639 source:z:\winlibs_tools\src\sorted_unique_list.c
+	"sorted_unique_list.h"
+	<avl.h>
+	<string.h>
+	<ctype.h>
+	<stdio.h>
+
+1618569018 z:\winlibs_tools\src\sorted_unique_list.h
+	<stdlib.h>
+

@@ -85,10 +85,10 @@ int main (int argc, char** argv, char *envp[])
     {0, "filepath", NULL, process_arg_searchtype, SEARCHTYPE2VOIDPTR(file_name), "search in entire file path"},
     {'F', "foldername", NULL, process_arg_searchtype, SEARCHTYPE2VOIDPTR(folder_name_only), "search in folder name"},
     {0, "folderpath", NULL, process_arg_searchtype, SEARCHTYPE2VOIDPTR(folder_name), "search in entire folder path"},
-    {0, "packagefiles", NULL, process_arg_searchtype, SEARCHTYPE2VOIDPTR(package_files), "list all files in specified package(s) (implies --or)"},
-    {0, "packagefolders", NULL, process_arg_searchtype, SEARCHTYPE2VOIDPTR(package_folders), "list all folders in specified package(s) (implies --or)"},
+    {'l', "files", NULL, process_arg_searchtype, SEARCHTYPE2VOIDPTR(package_files), "list all files in specified package(s) (implies --or)"},
+    {'d', "folders", NULL, process_arg_searchtype, SEARCHTYPE2VOIDPTR(package_folders), "list all folders in specified package(s) (implies --or)"},
     {0, "or", NULL, miniargv_cb_increment_int, &ormultiple, "search any of the given arguments instead of all"},
-    {0, "fullpath", NULL, miniargv_cb_increment_int, &fullpath, "show full installation path when showing file or folder names"},
+    {0, "fullpath", NULL, miniargv_cb_increment_int, &fullpath, "show absolute installation path when showing file or folder names"},
     {'s', "short", NULL, miniargv_cb_increment_int, &shortoutput, "short output"},
     {0, NULL, "TEXT", process_arg_param, paramlist, "text to search for"},
     {0, NULL, NULL, NULL, NULL, NULL}
@@ -318,8 +318,6 @@ int main (int argc, char** argv, char *envp[])
             break;
           case file_name:
           case folder_name:
-          case package_files:
-          case package_folders:
             s = (char*)sqlite3_column_text(sqlresult, 1);
             if (!shortoutput)
               portcolcon_printf_in_color(con, PORTCOLCON_COLOR_CYAN, PORTCOLCON_COLOR_IGNORE, "%s: ", (char*)sqlite3_column_text(sqlresult, 0));
@@ -327,7 +325,14 @@ int main (int argc, char** argv, char *envp[])
               portcolcon_printf(con, "%s/", dstdir);
             portcolcon_write_multiple_highlights(con, s, paramlist, 0, PORTCOLCON_COLOR_YELLOW, PORTCOLCON_COLOR_BLUE);
             portcolcon_write(con, "\n");
-            break;
+          case package_files:
+          case package_folders:
+            s = (char*)sqlite3_column_text(sqlresult, 1);
+            if (!shortoutput)
+              portcolcon_printf_in_color(con, PORTCOLCON_COLOR_CYAN, PORTCOLCON_COLOR_IGNORE, "%s: ", (char*)sqlite3_column_text(sqlresult, 0));
+            if (fullpath)
+              portcolcon_printf(con, "%s/", dstdir);
+            portcolcon_printf(con, "%s\n", s);
             break;
         }
       }

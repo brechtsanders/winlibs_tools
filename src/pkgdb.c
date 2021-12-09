@@ -108,7 +108,7 @@ SELECT p1.path, p1.package, p2.package
 FROM package_path AS p1
 JOIN package_path AS p2
 ON p1.path = p2.path
-AND p1.package <> p2.package
+AND p1.package < p2.package
 AND p1.type = 0 AND p2.type = 0
 ORDER BY p1.path, p1.package, p2.package;
 
