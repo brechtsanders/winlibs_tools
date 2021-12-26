@@ -435,6 +435,7 @@ sorted_unique_list* get_package_versions_from_url (struct check_package_versions
     PCRE2_UCHAR buffer[256];
     pcre2_get_error_message(rc, buffer, sizeof(buffer));
     commonoutput_printf(info->logoutput, 0, "[%i] PCRE2 compilation failed at offset %i: %s, expression: %s\n", threadinfo->threadindex, (int)erroroffset, buffer, versionmatchregex);
+    commonoutput_flush(info->logoutput);
     free(versionmatchregex);
     return NULL;
   }
@@ -454,6 +455,7 @@ sorted_unique_list* get_package_versions_from_url (struct check_package_versions
   data.ovector = pcre2_get_ovector_pointer(data.match_data);
   //load and parse data from URL
   commonoutput_printf(info->logoutput, 1, "[%i] %s: loading URL: %s\n", threadinfo->threadindex, basename, url);
+  commonoutput_flush(info->logoutput);
   data.level = 0;
   data.url = NULL;
   mimetype = NULL;
@@ -465,6 +467,7 @@ sorted_unique_list* get_package_versions_from_url (struct check_package_versions
     *presponsecode = urlinfo.responsecode;
   if (!htmldata) {
     commonoutput_printf(info->logoutput, 1, "[%i] %s: failed loading URL: %s%s%s\n", threadinfo->threadindex, basename, url, (urlinfo.status && *urlinfo.status ? " - " : ""), (urlinfo.status && *urlinfo.status ? *urlinfo.status : ""));
+    commonoutput_flush(info->logoutput);
   } else {
     unsigned int i;
     unsigned int n;
@@ -477,11 +480,13 @@ sorted_unique_list* get_package_versions_from_url (struct check_package_versions
       search_text_list_versions(htmldata, &data);
     } else {
       commonoutput_printf(info->logoutput, 1, "[%i] %s: unsupported MIME type \"%s\" from URL: %s\n", threadinfo->threadindex, basename, (mimetype ? mimetype : "(none)"), url);
+      commonoutput_flush(info->logoutput);
     }
     free(htmldata);
     //process subfolders
     n = sorted_unique_list_size(data.subfolders);
     commonoutput_printf(info->logoutput, 2, "[%i] %s: done loading URL%s (%u subfolders found): %s\n", threadinfo->threadindex, basename, (urlinfo.cached ? " from cache" : ""), n, url);
+    commonoutput_flush(info->logoutput);
     if (info->limitsuburls && n > info->limitsuburls)
       n = info->limitsuburls;
     urlinfo.status = NULL;
@@ -491,6 +496,7 @@ sorted_unique_list* get_package_versions_from_url (struct check_package_versions
       if ((suburl = resolve_url(data.url, sorted_unique_list_get(data.subfolders, i))) != NULL) {
         //load and parse data from URL
         commonoutput_printf(info->logoutput, 2, "[%i] %s: loading sub-URL [%u/%u]: %s\n", threadinfo->threadindex, basename, i + 1, n, suburl);
+        commonoutput_flush(info->logoutput);
         free(mimetype);
         mimetype = NULL;
         if ((htmldata = downloader_get_file(threadinfo->dl, suburl, &urlinfo)) == NULL) {
@@ -507,6 +513,7 @@ sorted_unique_list* get_package_versions_from_url (struct check_package_versions
           }
           free(htmldata);
         }
+        commonoutput_flush(info->logoutput);
         free(suburl);
       }
     }
@@ -553,6 +560,7 @@ int check_package_versions (struct check_package_versions_struct* info, struct c
   //read package information
   if ((pkginfo = read_packageinfo(info->packageinfopath, packagename)) == NULL) {
     commonoutput_printf(info->logoutput, 0, "[%i] Error: package information not found for package: %s", threadinfo->threadindex, packagename);
+    commonoutput_flush(info->logoutput);
     return 0;
   }
   //get versions from package download page (if specified)
@@ -584,6 +592,7 @@ int check_package_versions (struct check_package_versions_struct* info, struct c
         if (newpackagedata.outputbuffer->datalen)
           commonoutput_putbuf(info->reportoutput, -9999, newpackagedata.outputbuffer->data, newpackagedata.outputbuffer->datalen);
         memory_buffer_free(newpackagedata.outputbuffer);
+        commonoutput_flush(info->reportoutput);
       }
     }
     free(status);
@@ -616,11 +625,13 @@ void* package_thread (struct package_thread_struct* threaddata)
   //open version database file
   if ((threaddata->threadinfo.versiondb = versioncheckdb_open(threaddata->info->versionmasterdb)) == NULL) {
     commonoutput_printf(threaddata->info->logoutput, -1, "[%i] Error opening version database\n", threaddata->threadinfo.threadindex);
+    commonoutput_flush(threaddata->info->logoutput);
     return NULL;
   }
   //create downloader
   if ((threaddata->threadinfo.dl = downloader_create(PROGRAM_USER_AGENT, threaddata->info->cachedb, threaddata->info->logoutput)) == NULL) {
     commonoutput_printf(threaddata->info->logoutput, -1, "[%i] Error in downloader_create()", threaddata->threadinfo.threadindex);
+    commonoutput_flush(threaddata->info->logoutput);
     versioncheckdb_close(threaddata->threadinfo.versiondb);
     return NULL;
   }
@@ -628,6 +639,7 @@ void* package_thread (struct package_thread_struct* threaddata)
   while (!interrupted && (packagename = sorted_item_queue_take_next(threaddata->packagelist, &remaining)) != NULL) {
     threaddata->count++;
     commonoutput_printf(threaddata->info->logoutput, 1, "[%i] Package [%lu/%lu]: %s\n", threaddata->threadinfo.threadindex, (unsigned long)(threaddata->info->totalpackages - remaining), (unsigned long)threaddata->info->totalpackages, packagename);
+    commonoutput_flush(threaddata->info->logoutput);
     check_package_versions(threaddata->info, &threaddata->threadinfo, packagename);
     free(packagename);
     sched_yield();
@@ -637,6 +649,7 @@ void* package_thread (struct package_thread_struct* threaddata)
   threaddata->threadinfo.dl = NULL;
   versioncheckdb_close(threaddata->threadinfo.versiondb);
   commonoutput_printf(threaddata->info->logoutput, 2, "[%i] Thread finished after processing %lu packages\n", threaddata->threadinfo.threadindex, (unsigned long)threaddata->count);
+  commonoutput_flush(threaddata->info->logoutput);
   return NULL;
 }
 
@@ -754,10 +767,12 @@ int main (int argc, char** argv, char *envp[])
   } else if (cachedbfile && cache_expiration != 0 && !downloadcachedb_is_new(info.cachedb)) {
     int n;
     commonoutput_printf(info.logoutput, 1, "Purging entries older than %lu seconds from cache database: %s\n", cache_expiration, cachedbfile);
+    commonoutput_flush(info.logoutput);
     if ((n = downloadcachedb_purge(info.cachedb)) < 0)
       commonoutput_printf(info.logoutput, 0, "Error purging cache\n");
     else
       commonoutput_printf(info.logoutput, 2, "Cache entries deleted: %i\n", n);
+    commonoutput_flush(info.logoutput);
   }
   //process each package in the list using multiple threads
   struct package_thread_struct* threaddata;
@@ -771,6 +786,7 @@ int main (int argc, char** argv, char *envp[])
   if (numthreads > info.totalpackages)
     numthreads = info.totalpackages;
   commonoutput_printf(info.logoutput, 2, "Checking %lu packages using %i simultaneous threads\n", (unsigned long)info.totalpackages, numthreads);
+  commonoutput_flush(info.logoutput);
   for (i = 0; i < numthreads; i++) {
     threaddata[i].threadindex = i;
     threaddata[i].info = &info;

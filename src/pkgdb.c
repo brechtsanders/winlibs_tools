@@ -120,6 +120,8 @@ ON p1.path = p2.path
 WHERE p2.type = 0
 ORDER BY p1.path, p2.package;
 
+sqlite3 $MINGWPREFIX/var/lib/winlibs/wl-pkg.db "SELECT p1.path, p2.package FROM (SELECT path, COUNT(path) AS count FROM package_path WHERE type = 0 GROUP BY path HAVING count > 1 ORDER BY path) AS p1 LEFT JOIN package_path AS p2 ON p1.path = p2.path WHERE p2.type = 0 ORDER BY p1.path, p2.package"
+
 */
 
 ////////////////////////////////////////////////////////////////////////

@@ -1,3 +1,14 @@
+1.0.8
+
+2021-12-26  Brecht Sanders  https://github.com/brechtsanders/
+
+  * wl-build: accept comma-separated package lists
+
+2021-12-20  Brecht Sanders  https://github.com/brechtsanders/
+
+  * wl-download: flush output after showing progress updates
+  * wl-checknewreleases: flush log and report output after updating
+
 1.0.7
 
 2021-12-09  Brecht Sanders  https://github.com/brechtsanders/

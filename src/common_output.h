@@ -67,6 +67,13 @@ int commonoutput_vprintf (struct commonoutput_stuct* handle, int verbose, const 
 */
 int commonoutput_printf (struct commonoutput_stuct* handle, int verbose, const char* format, ...);
 
+//!flush buffers for common output
+/*!
+  \param  handle                common output handle
+  \return zero on success, non-zero on error
+*/
+int commonoutput_flush (struct commonoutput_stuct* handle);
+
 #ifdef __cplusplus
 }
 #endif

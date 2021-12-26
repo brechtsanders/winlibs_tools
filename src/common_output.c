@@ -132,3 +132,10 @@ int commonoutput_printf (struct commonoutput_stuct* handle, int verbose, const c
   return result;
 }
 
+int commonoutput_flush (struct commonoutput_stuct* handle)
+{
+  if (!handle || !handle->logfile)
+    return -1;
+  return fflush(handle->logfile);
+}
+

@@ -725,7 +725,6 @@ void show_help ()
 
 int main (int argc, char** argv, char *envp[])
 {
-  int i;
   int showhelp = 0;
   const char* basepath = NULL;
   const char* packageinfopath = NULL;
@@ -811,17 +810,41 @@ int main (int argc, char** argv, char *envp[])
   sortedpackagelist = sorted_unique_list_create(packageinfo_cmp, (sorted_unique_free_fn)free_packageinfo);
   add_package_and_dependencies_to_list_data.packagenamelist = sortedpackagelist;
   add_package_and_dependencies_to_list_data.packageinfopath = packageinfopath;
-  i = 0;
-  while (!interrupted && (i = miniargv_get_next_arg_param(i, argv, argdef, NULL)) > 0) {
-    if (strcasecmp(argv[i], "all") == 0) {
-      add_package_and_dependencies_to_list_data.filtertype = filter_type_all;
-      iterate_packages(packageinfopath, (package_callback_fn)add_package_and_dependencies_to_list, &add_package_and_dependencies_to_list_data);
-    } else if (strcasecmp(argv[i], "all-changed") == 0) {
-      add_package_and_dependencies_to_list_data.filtertype = filter_type_changed;
-      iterate_packages(packageinfopath, (package_callback_fn)add_package_and_dependencies_to_list, &add_package_and_dependencies_to_list_data);
-    } else {
-      add_package_and_dependencies_to_list_data.filtertype = filter_type_all;
-      add_package_and_dependencies_to_list(argv[i], &add_package_and_dependencies_to_list_data);
+  {
+    int i;
+    const char* p;
+    const char* q;
+    char* s;
+    i = 0;
+    while (!interrupted && (i = miniargv_get_next_arg_param(i, argv, argdef, NULL)) > 0) {
+      //go through each item in comma-separated list
+      p = argv[i];
+      while (p && *p) {
+        //get separate item
+        if ((q = strchr(p, ',')) == NULL) {
+          s = strdup(p);
+        } else {
+          s = (char*)malloc(q - p + 1);
+          memcpy(s, p, q - p);
+          s[q - p] = 0;
+        }
+        //process item
+        if (s && *s) {
+          if (strcasecmp(s, "all") == 0) {
+            add_package_and_dependencies_to_list_data.filtertype = filter_type_all;
+            iterate_packages(packageinfopath, (package_callback_fn)add_package_and_dependencies_to_list, &add_package_and_dependencies_to_list_data);
+          } else if (strcasecmp(s, "all-changed") == 0) {
+            add_package_and_dependencies_to_list_data.filtertype = filter_type_changed;
+            iterate_packages(packageinfopath, (package_callback_fn)add_package_and_dependencies_to_list, &add_package_and_dependencies_to_list_data);
+          } else {
+            add_package_and_dependencies_to_list_data.filtertype = filter_type_all;
+            add_package_and_dependencies_to_list(s, &add_package_and_dependencies_to_list_data);
+          }
+        }
+        //move to next item
+        free(s);
+        p = (q ? q + 1 : NULL);
+      }
     }
   }
 

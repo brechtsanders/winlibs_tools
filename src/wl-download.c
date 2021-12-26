@@ -63,6 +63,7 @@ void show_progress (struct process_download_data_struct* dldata)
     //printf("\r%lu/%lu bytes (%u%%)", (unsigned long)dldata->pos, (unsigned long)dldata->len, (unsigned)(100L * dldata->pos / dldata->len));
   else
     printf("\r%lu bytes", (unsigned long)dldata->pos);
+  fflush(stdout);
 }
 
 static size_t process_download_data (void* data, size_t size, size_t nitems, void* userdata)
