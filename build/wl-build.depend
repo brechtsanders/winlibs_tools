@@ -150,8 +150,10 @@
 	<stdlib.h>
 	<stdarg.h>
 
-1637010986 source:z:\winlibs_tools\src\package_info.c
+1640635077 source:z:\winlibs_tools\src\package_info.c
 	"package_info.h"
+	"filesystem.h"
+	"winlibs_common.h"
 	<stdlib.h>
 	<stdio.h>
 	<string.h>
@@ -161,7 +163,7 @@
 	<sys/stat.h>
 	<unistd.h>
 
-1620240584 z:\winlibs_tools\src\package_info.h
+1640635479 z:\winlibs_tools\src\package_info.h
 	<stddef.h>
 	<time.h>
 
@@ -174,4 +176,36 @@
 
 1618569018 z:\winlibs_tools\src\sorted_unique_list.h
 	<stdlib.h>
+
+1640635452 source:z:\winlibs_tools\src\wl-build.c
+	<stdio.h>
+	<stdlib.h>
+	<stdint.h>
+	<string.h>
+	<ctype.h>
+	<unistd.h>
+	<pthread.h>
+	<windows.h>
+	<miniargv.h>
+	<versioncmp.h>
+	<crossrun.h>
+	<dirtrav.h>
+	"package_info.h"
+	"sorted_unique_list.h"
+	"memory_buffer.h"
+	"filesystem.h"
+	"handle_interrupts.h"
+	"winlibs_common.h"
+	<malloc.h>
+	<string.h>
+	<windows.h>
+	<limits.h>
+	<unistd.h>
+	<portcolcon.h>
+
+1629915790 z:\winlibs_tools\src\handle_interrupts.h
+	<windows.h>
+	<signal.h>
+
+1640634019 z:\winlibs_tools\src\winlibs_common.h
 

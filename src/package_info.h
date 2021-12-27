@@ -17,6 +17,13 @@ packageinfo_file open_packageinfo_file (const char* infopath, const char* basena
 void close_packageinfo_file (packageinfo_file pkgfile);
 char* packageinfo_file_readline (packageinfo_file pkgfile);
 
+//!check path(s) of build package information files
+/*!
+  \param  infopath              full path(s) of directory containing build information files
+  \return 0 if no valid paths were found, < 0 on success, > 0 specifying the number of invalid folders in the list
+*/
+int check_packageinfo_paths (const char* infopath);
+
 //!data structure for package information
 struct package_info_struct {
   char* name;
@@ -50,7 +57,7 @@ void free_packageinfo (struct package_info_struct* packageinfo);
 
 //!get build package information from file
 /*!
-  \param  infopath              full path of directory containing build information files
+  \param  infopath              full path(s) of directory containing build information files
   \param  basename              name of package
   \return package information (or NULL on error), the caller must clean up with free_packageinfo()
 */
@@ -75,7 +82,7 @@ typedef int (*package_callback_fn)(const char* basename, void* callbackdata);
 
 //!iterate through build package information
 /*!
-  \param  infopath              full path of directory containing build information files
+  \param  infopath              full path(s) of directory containing build information files
   \param  callback              callback function to be called for each package
   \param  callbackdata          callback data passed to be passed to callback function
   \return number of packages processed
@@ -100,7 +107,7 @@ struct package_info_list_struct {
 #if 0
 //!get list of build package information
 /*!
-  \param  infopath              full path of directory containing build information files
+  \param  infopath              full path(s) of directory containing build information files
   \param  callback              callback function to be called for each package
   \param  callbackdata          callback data passed to be passed to callback function
   \return package information list (or NULL on error or if list is empty)
@@ -126,7 +133,7 @@ struct package_info_list_struct* search_packageinfolist_by_basename (struct pack
 //!add package and its dependencies to package information list
 /*!
   \param  packagelist           package information list
-  \param  infopath              full path of directory containing build information files
+  \param  infopath              full path(s) of directory containing build information files
   \param  basename              name of package
   \return zero on success or non-zero when the package was not added
 */

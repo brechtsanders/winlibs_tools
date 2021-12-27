@@ -86,6 +86,10 @@
 			<Add library="avl" />
 			<Add library="versioncmp" />
 		</Linker>
+		<Unit filename="../src/filesystem.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/filesystem.h" />
 		<Unit filename="../src/package_info.c">
 			<Option compilerVar="CC" />
 		</Unit>

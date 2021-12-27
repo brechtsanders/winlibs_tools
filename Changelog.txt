@@ -1,5 +1,10 @@
 1.0.8
 
+2021-12-27  Brecht Sanders  https://github.com/brechtsanders/
+
+  * accept path list via -s / BUILDSCRIPTS (previously only single path)
+    semicolon-separated on Windows, colon-separated on other platforms
+
 2021-12-26  Brecht Sanders  https://github.com/brechtsanders/
 
   * wl-build: accept comma-separated package lists

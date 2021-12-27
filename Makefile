@@ -125,13 +125,13 @@ $(BINDIR)/wl-wait4deps$(BINEXT): $(OBJDIR)/wl-wait4deps.o $(OBJDIR)/filesystem.o
 $(BINDIR)/wl-listall$(BINEXT): $(OBJDIR)/wl-listall.o $(OBJDIR)/package_info.o $(OBJDIR)/sorted_unique_list.o
 	$(CC) $(STRIPFLAG) $(LDFLAGS) -o $@ $^ $(MINIARGV_LDFLAGS) $(VERSIONCMP_LDFLAGS) $(AVL_LDFLAGS)
 
-$(BINDIR)/wl-info$(BINEXT): $(OBJDIR)/wl-info.o $(OBJDIR)/package_info.o
+$(BINDIR)/wl-info$(BINEXT): $(OBJDIR)/wl-info.o $(OBJDIR)/package_info.o $(OBJDIR)/filesystem.o
 	$(CC) $(STRIPFLAG) $(LDFLAGS) -o $@ $^ $(MINIARGV_LDFLAGS) $(VERSIONCMP_LDFLAGS) $(AVL_LDFLAGS)
 
-$(BINDIR)/wl-showdeps$(BINEXT): $(OBJDIR)/wl-showdeps.o $(OBJDIR)/filesystem.o $(OBJDIR)/package_info.o
+$(BINDIR)/wl-showdeps$(BINEXT): $(OBJDIR)/wl-showdeps.o $(OBJDIR)/filesystem.o $(OBJDIR)/package_info.o $(OBJDIR)/filesystem.o
 	$(CC) $(STRIPFLAG) $(LDFLAGS) -o $@ $^ $(MINIARGV_LDFLAGS) $(VERSIONCMP_LDFLAGS) $(AVL_LDFLAGS)
 
-$(BINDIR)/wl-checknewreleases$(BINEXT): $(OBJDIR)/wl-checknewreleases.o $(OBJDIR)/package_info.o $(OBJDIR)/version_check_db.o $(OBJDIR)/common_output.o $(OBJDIR)/download_cache.o $(OBJDIR)/downloader.o $(OBJDIR)/memory_buffer.o $(OBJDIR)/sorted_unique_list.o $(OBJDIR)/sorted_item_queue.o
+$(BINDIR)/wl-checknewreleases$(BINEXT): $(OBJDIR)/wl-checknewreleases.o $(OBJDIR)/package_info.o $(OBJDIR)/version_check_db.o $(OBJDIR)/common_output.o $(OBJDIR)/download_cache.o $(OBJDIR)/downloader.o $(OBJDIR)/memory_buffer.o $(OBJDIR)/sorted_unique_list.o $(OBJDIR)/sorted_item_queue.o $(OBJDIR)/filesystem.o
 	$(CC) $(STRIPFLAG) $(LDFLAGS) -o $@ $^ $(MINIARGV_LDFLAGS) $(VERSIONCMP_LDFLAGS) $(AVL_LDFLAGS) $(CURL_LDFLAGS) $(GUMBO_LDFLAGS) $(PCRE2_LDFLAGS) $(SQLITE3_LDFLAGS) -pthread
 
 $(BINDIR)/wl-makepackage$(BINEXT): $(OBJDIR)/wl-makepackage.o $(OBJDIR)/memory_buffer.o $(OBJDIR)/fstab.o $(OBJDIR)/filesystem.o $(OBJDIR)/sorted_unique_list.o

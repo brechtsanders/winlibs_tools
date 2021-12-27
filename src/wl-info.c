@@ -9,17 +9,10 @@
 #include "winlibs_common.h"
 #include "package_info.h"
 #include "sorted_unique_list.h"
+#include "filesystem.h"
 
 #define PROGRAM_NAME    "wl-info"
 #define PROGRAM_DESC    "Command line utility to display package recipe information"
-
-int folder_exists (const char* path)
-{
-  struct stat statbuf;
-  if (stat(path, &statbuf) == 0 && S_ISDIR(statbuf.st_mode))
-    return 1;
-  return 0;
-}
 
 int packageinfo_show (const char* basename, void* callbackdata)
 {
@@ -106,8 +99,8 @@ int main (int argc, char *argv[], char *envp[])
     fprintf(stderr, "Missing -s parameter or BUILDSCRIPTS environment variable\n");
     return 2;
   }
-  if (!folder_exists(packageinfopath)) {
-    fprintf(stderr, "Path does not exist: %s\n", packageinfopath);
+  if (!check_packageinfo_paths(packageinfopath)) {
+    fprintf(stderr, "Invalid path(s) specified with -s parameter or BUILDSCRIPTS environment variable: %s\n", packageinfopath);
     return 3;
   }
   //process command line argument values

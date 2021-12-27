@@ -1,4 +1,6 @@
 #include "package_info.h"
+#include "filesystem.h"
+#include "winlibs_common.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -7,14 +9,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-
-#if defined(__WIN32__)
-#define PATH_SEPARATOR "\\"
-#else
-#define PATH_SEPARATOR "/"
-#endif
-
-#define PACKAGEINFO_EXTENSION ".winlib"
 
 void set_var (char** var, const char* value)
 {
@@ -46,36 +40,51 @@ struct packageinfo_file_struct {
 
 packageinfo_file open_packageinfo_file (const char* infopath, const char* basename)
 {
+  const char* p;
+  const char* q;
   struct stat statbuf;
   FILE* handle;
-  packageinfo_file result = NULL;
   size_t path_len;
   char* fullpath;
+  packageinfo_file result = NULL;
   //abort on invalid parameters
   if (infopath == NULL || basename == NULL)
     return NULL;
-  //determine full path
-  path_len = strlen(infopath);
-  fullpath = (char*)malloc(path_len + strlen(basename) + strlen(PACKAGEINFO_EXTENSION) + 2);
-  memcpy(fullpath, infopath, path_len);
-  fullpath[path_len] = PATH_SEPARATOR[0];
-  strcpy(fullpath + path_len + 1, basename);
-  strcat(fullpath + path_len + 1, PACKAGEINFO_EXTENSION);
-  //check if file exists
-  if (stat(fullpath, &statbuf) == 0 && S_ISREG(statbuf.st_mode)) {
-    //open file
-    if ((handle = fopen(fullpath, "rb")) != NULL) {
-      result = (packageinfo_file)malloc(sizeof(struct packageinfo_file_struct));
-      result->handle = handle;
-      result->lastchanged = 0;
-      //keep last file access time
-      if (statbuf.st_mtime)
-        result->lastchanged = statbuf.st_mtime;
-      if (statbuf.st_ctime > result->lastchanged)
-        result->lastchanged = statbuf.st_ctime;
+  //go through each path in (semi)colon-separated list
+  p = infopath;
+  while (!result && p && *p) {
+    //get separate path
+    if ((q = strchr(p, PATHLIST_SEPARATOR)) == NULL) {
+      q = p + strlen(p);
     }
+    //process item
+    if (p && *p) {
+      //determine full path
+      path_len = q - p;
+      fullpath = (char*)malloc(path_len + strlen(basename) + strlen(PACKAGE_RECIPE_EXTENSION) + 2);
+      memcpy(fullpath, p, path_len);
+      fullpath[path_len] = PATH_SEPARATOR;
+      strcpy(fullpath + path_len + 1, basename);
+      strcat(fullpath + path_len + 1, PACKAGE_RECIPE_EXTENSION);
+      //check if file exists
+      if (stat(fullpath, &statbuf) == 0 && S_ISREG(statbuf.st_mode)) {
+        //open file
+        if ((handle = fopen(fullpath, "rb")) != NULL) {
+          result = (packageinfo_file)malloc(sizeof(struct packageinfo_file_struct));
+          result->handle = handle;
+          result->lastchanged = 0;
+          //keep last file access time
+          if (statbuf.st_mtime)
+            result->lastchanged = statbuf.st_mtime;
+          if (statbuf.st_ctime > result->lastchanged)
+            result->lastchanged = statbuf.st_ctime;
+        }
+      }
+      free(fullpath);
+    }
+    //point to next path in list
+    p = (*q ? q + 1 : NULL);
   }
-  free(fullpath);
   return result;
 }
 
@@ -106,6 +115,42 @@ char* packageinfo_file_readline (packageinfo_file pkgfile)
     }
   }
   return result;
+}
+
+int check_packageinfo_paths (const char* infopath)
+{
+  const char* p;
+  const char* q;
+  char* s;
+  int count_good = 0;
+  int count_bad = 0;
+  //go through each path in (semi)colon-separated list
+  p = infopath;
+  while (p && *p) {
+    //get separate path
+    if ((q = strchr(p, PATHLIST_SEPARATOR)) == NULL) {
+      s = strdup(p);
+    } else {
+      s = (char*)malloc(q - p + 1);
+      memcpy(s, p, q - p);
+      s[q - p] = 0;
+    }
+    //process item
+    if (s && *s) {
+      if (folder_exists(s))
+        count_good++;
+      else
+        count_bad++;
+    }
+    //point to next path in list
+    free(s);
+    p = (q ? q + 1 : NULL);
+  }
+  if (count_good == 0)
+    return 0;
+  if (count_bad > 0)
+    return count_bad;
+  return -count_good;
 }
 
 void free_packageinfo (struct package_info_struct* packageinfo)
@@ -283,27 +328,48 @@ void get_package_downloadurl_info (struct package_info_struct* packageinfo, char
 
 size_t iterate_packages (const char* infopath, package_callback_fn callback, void* callbackdata)
 {
+  const char* p;
+  const char* q;
+  char* s;
   DIR* dir;
   struct dirent *dp;
   size_t namelen;
   char* basename;
   int abort = 0;
   size_t count = 0;
-  const size_t pkgextlen = strlen(PACKAGEINFO_EXTENSION);
-  if (infopath != NULL && (dir = opendir(infopath)) != NULL) {
-    while (!abort && (dp = readdir(dir)) != NULL) {
-      namelen = strlen(dp->d_name);
-      if (!(dp->d_name[0] == '.' && (dp->d_name[1] == 0 || (dp->d_name[1] == '.' && dp->d_name[2] == 0))) && namelen > pkgextlen && strcmp(dp->d_name + namelen - pkgextlen, PACKAGEINFO_EXTENSION) == 0) {
-        basename = (char*)malloc(namelen - pkgextlen + 1);
-        memcpy(basename, dp->d_name, namelen - pkgextlen);
-        basename[namelen - pkgextlen] = 0;
-        count++;
-        if (callback)
-          abort = (*callback)(basename, callbackdata);
-        free(basename);
+  const size_t pkgextlen = strlen(PACKAGE_RECIPE_EXTENSION);
+  //go through each path in (semi)colon-separated list
+  p = infopath;
+  while (p && *p) {
+    //get separate path
+    if ((q = strchr(p, PATHLIST_SEPARATOR)) == NULL) {
+      s = strdup(p);
+    } else {
+      s = (char*)malloc(q - p + 1);
+      memcpy(s, p, q - p);
+      s[q - p] = 0;
+    }
+    //process item
+    if (s && *s) {
+      if ((dir = opendir(s)) != NULL) {
+        while (!abort && (dp = readdir(dir)) != NULL) {
+          namelen = strlen(dp->d_name);
+          if (!(dp->d_name[0] == '.' && (dp->d_name[1] == 0 || (dp->d_name[1] == '.' && dp->d_name[2] == 0))) && namelen > pkgextlen && strcmp(dp->d_name + namelen - pkgextlen, PACKAGE_RECIPE_EXTENSION) == 0) {
+            basename = (char*)malloc(namelen - pkgextlen + 1);
+            memcpy(basename, dp->d_name, namelen - pkgextlen);
+            basename[namelen - pkgextlen] = 0;
+            count++;
+            if (callback)
+              abort = (*callback)(basename, callbackdata);
+            free(basename);
+          }
+        }
+        closedir(dir);
       }
     }
-    closedir(dir);
+    //point to next path in list
+    free(s);
+    p = (q ? q + 1 : NULL);
   }
   return count;
 }
@@ -589,7 +655,7 @@ int package_is_installed (const char* installpath, const char* basename)
   if ((fullpath = (char*)malloc(strlen(installpath) + strlen(basename) + 19)) == NULL)
     return 0;
   strcpy(fullpath, installpath);
-  strcat(fullpath, PATH_SEPARATOR "var" PATH_SEPARATOR "lib" PATH_SEPARATOR "packages" PATH_SEPARATOR);
+  strcat(fullpath, WINLIBS_CHR2STR(PATH_SEPARATOR) "var" WINLIBS_CHR2STR(PATH_SEPARATOR) "lib" WINLIBS_CHR2STR(PATH_SEPARATOR) "packages" WINLIBS_CHR2STR(PATH_SEPARATOR));
   strcat(fullpath, basename);
   if (stat(fullpath, &statbuf) == 0 && S_ISDIR(statbuf.st_mode))
     result = 1;
@@ -667,11 +733,11 @@ char* installed_package_version (const char* installpath, const char* basename)
   if ((fullpath = (char*)malloc(strlen(installpath) + strlen(basename) + 27)) == NULL)
     return NULL;
   strcpy(fullpath, installpath);
-  strcat(fullpath, PATH_SEPARATOR "var" PATH_SEPARATOR "lib" PATH_SEPARATOR "packages" PATH_SEPARATOR);
+  strcat(fullpath, WINLIBS_CHR2STR(PATH_SEPARATOR) "var" WINLIBS_CHR2STR(PATH_SEPARATOR) "lib" WINLIBS_CHR2STR(PATH_SEPARATOR) "packages" WINLIBS_CHR2STR(PATH_SEPARATOR));
   strcat(fullpath, basename);
   if (stat(fullpath, &statbuf) == 0 && S_ISDIR(statbuf.st_mode)) {
     FILE* f;
-    strcat(fullpath, PATH_SEPARATOR "version");
+    strcat(fullpath, WINLIBS_CHR2STR(PATH_SEPARATOR) "version");
     if ((f = fopen(fullpath, "rb")) != NULL) {
       char buf[64];
       size_t buflen = fread(buf, 1, sizeof(buf) - 1, f);
@@ -701,10 +767,10 @@ time_t installed_package_lastchanged (const char* installpath, const char* basen
   if ((fullpath = (char*)malloc(strlen(installpath) + strlen(basename) + 27)) == NULL)
     return 0;
   strcpy(fullpath, installpath);
-  strcat(fullpath, PATH_SEPARATOR "var" PATH_SEPARATOR "lib" PATH_SEPARATOR "packages" PATH_SEPARATOR);
+  strcat(fullpath, WINLIBS_CHR2STR(PATH_SEPARATOR) "var" WINLIBS_CHR2STR(PATH_SEPARATOR) "lib" WINLIBS_CHR2STR(PATH_SEPARATOR) "packages" WINLIBS_CHR2STR(PATH_SEPARATOR));
   strcat(fullpath, basename);
   if (stat(fullpath, &statbuf) == 0 && S_ISDIR(statbuf.st_mode)) {
-    strcat(fullpath, PATH_SEPARATOR "version");
+    strcat(fullpath, WINLIBS_CHR2STR(PATH_SEPARATOR) "version");
     if (stat(fullpath, &statbuf) == 0 && S_ISREG(statbuf.st_mode)) {
       //open file
       if (statbuf.st_mtime)

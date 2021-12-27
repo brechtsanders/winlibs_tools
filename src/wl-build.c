@@ -777,8 +777,8 @@ int main (int argc, char** argv, char *envp[])
     fprintf(stderr, "Missing -s parameter or BUILDSCRIPTS environment variable\n");
     return 1;
   }
-  if (!folder_exists(packageinfopath)) {
-    fprintf(stderr, "Path does not exist: %s\n", packageinfopath);
+  if (!check_packageinfo_paths(packageinfopath)) {
+    fprintf(stderr, "Invalid path(s) specified with -s parameter or BUILDSCRIPTS environment variable: %s\n", packageinfopath);
     return 2;
   }
   if (!basepath || !*basepath) {

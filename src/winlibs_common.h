@@ -77,15 +77,37 @@
 #define PATH_SEPARATOR '/'
 #endif
 
+/*! \brief path list separator character */
+#ifdef _WIN32
+#define PATHLIST_SEPARATOR ';'
+#else
+#define PATHLIST_SEPARATOR ':'
+#endif
+
+/*! \cond PRIVATE */
+#define WINLIBS_CHR2STR_(c) #c
+#define WINLIBS_CHR2STR(c) WINLIBS_CHR2STR_(c)
+/*! \endcond */
+
 /*! \brief path where information about installed packages is stored */
 #ifdef _WIN32
 #define PACKAGE_INFO_PATH "\\var\\lib\\packages"
-#define PACKAGE_DATABASE_PATH "\\var\\lib\\winlibs"
 #else
 #define PACKAGE_INFO_PATH "/var/lib/packages"
+#endif
+
+/*! \brief path where package information database is stored */
+#ifdef _WIN32
+#define PACKAGE_DATABASE_PATH "\\var\\lib\\winlibs"
+#else
 #define PACKAGE_DATABASE_PATH "/var/lib/winlibs"
 #endif
+
+/*! \brief package information database filename */
 #define PACKAGE_DATABASE_FILE "wl-pkg.db"
+
+/*! \brief extension for package recipe files */
+#define PACKAGE_RECIPE_EXTENSION ".winlib"
 
 /*! \brief base name for lock file used for downloads */
 #define SOURCE_DOWNLOAD_LOCK_FILE_BASE ".winlibsdownload"

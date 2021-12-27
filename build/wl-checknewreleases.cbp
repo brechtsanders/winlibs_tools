@@ -101,6 +101,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../src/downloader.h" />
+		<Unit filename="../src/filesystem.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/filesystem.h" />
 		<Unit filename="../src/memory_buffer.c">
 			<Option compilerVar="CC" />
 		</Unit>

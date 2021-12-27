@@ -27,3 +27,17 @@
 
 1636806968 \\server\users\brecht\sources\cpp\winlibs\src\winlibs_common.h
 
+1638779472 source:z:\winlibs_tools\src\wl-showstatus.c
+	<stdio.h>
+	<stdlib.h>
+	<malloc.h>
+	<string.h>
+	<windows.h>
+	<limits.h>
+	<unistd.h>
+	<miniargv.h>
+	<portcolcon.h>
+	"winlibs_common.h"
+
+1640634019 z:\winlibs_tools\src\winlibs_common.h
+

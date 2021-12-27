@@ -38,3 +38,47 @@
 
 1638720072 z:\winlibs\src\winlibs_common.h
 
+1640635077 source:z:\winlibs_tools\src\package_info.c
+	"package_info.h"
+	"filesystem.h"
+	"winlibs_common.h"
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	<dirent.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<unistd.h>
+
+1640635479 z:\winlibs_tools\src\package_info.h
+	<stddef.h>
+	<time.h>
+
+1619372395 z:\winlibs_tools\src\filesystem.h
+	<stdio.h>
+
+1640634019 z:\winlibs_tools\src\winlibs_common.h
+
+1616684639 source:z:\winlibs_tools\src\sorted_unique_list.c
+	"sorted_unique_list.h"
+	<avl.h>
+	<string.h>
+	<ctype.h>
+	<stdio.h>
+
+1618569018 z:\winlibs_tools\src\sorted_unique_list.h
+	<stdlib.h>
+
+1640635479 source:z:\winlibs_tools\src\wl-listall.c
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<miniargv.h>
+	<versioncmp.h>
+	"winlibs_common.h"
+	"sorted_unique_list.h"
+	"package_info.h"
+

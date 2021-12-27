@@ -39,3 +39,43 @@
 	<windows.h>
 	<signal.h>
 
+1636657860 source:z:\winlibs_tools\src\exclusive_lock_file.c
+	"exclusive_lock_file.h"
+	"winlibs_common.h"
+	<stdlib.h>
+	<string.h>
+	<sys/stat.h>
+	<fcntl.h>
+	<errno.h>
+	<unistd.h>
+	<windows.h>
+	<stdio.h>
+
+1636657598 z:\winlibs_tools\src\exclusive_lock_file.h
+
+1640634019 z:\winlibs_tools\src\winlibs_common.h
+
+1640016792 source:z:\winlibs_tools\src\wl-download.c
+	<stdlib.h>
+	<fcntl.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<fcntl.h>
+	<errno.h>
+	<string.h>
+	<ctype.h>
+	<time.h>
+	<winsock2.h>
+	<sys/types.h>
+	<unistd.h>
+	<curl/curl.h>
+	<curl/easy.h>
+	<miniargv.h>
+	"exclusive_lock_file.h"
+	"handle_interrupts.h"
+	"winlibs_common.h"
+
+1629915790 z:\winlibs_tools\src\handle_interrupts.h
+	<windows.h>
+	<signal.h>
+

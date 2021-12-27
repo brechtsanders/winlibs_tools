@@ -54,8 +54,10 @@
 	<stddef.h>
 	<time.h>
 
-1637010986 source:z:\winlibs_tools\src\package_info.c
+1640635077 source:z:\winlibs_tools\src\package_info.c
 	"package_info.h"
+	"filesystem.h"
+	"winlibs_common.h"
 	<stdlib.h>
 	<stdio.h>
 	<string.h>
@@ -65,7 +67,40 @@
 	<sys/stat.h>
 	<unistd.h>
 
-1620240584 z:\winlibs_tools\src\package_info.h
+1640635479 z:\winlibs_tools\src\package_info.h
 	<stddef.h>
 	<time.h>
+
+1640634019 z:\winlibs_tools\src\winlibs_common.h
+
+1619372395 z:\winlibs_tools\src\filesystem.h
+	<stdio.h>
+
+1619372395 source:z:\winlibs_tools\src\filesystem.c
+	"filesystem.h"
+	<sys/types.h>
+	<sys/stat.h>
+	<unistd.h>
+	<stdlib.h>
+	<string.h>
+	<direct.h>
+	<sys/stat.h>
+	<errno.h>
+
+1640635479 source:z:\winlibs_tools\src\wl-info.c
+	<stdlib.h>
+	<stdint.h>
+	<stdio.h>
+	<string.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<miniargv.h>
+	<versioncmp.h>
+	"winlibs_common.h"
+	"package_info.h"
+	"sorted_unique_list.h"
+	"filesystem.h"
+
+1618569018 z:\winlibs_tools\src\sorted_unique_list.h
+	<stdlib.h>
 
