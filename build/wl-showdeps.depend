@@ -83,7 +83,7 @@
 1619372395 z:\winlibs_tools\src\filesystem.h
 	<stdio.h>
 
-1640635077 source:z:\winlibs_tools\src\package_info.c
+1640808178 source:z:\winlibs_tools\src\package_info.c
 	"package_info.h"
 	"filesystem.h"
 	"winlibs_common.h"
@@ -96,7 +96,7 @@
 	<sys/stat.h>
 	<unistd.h>
 
-1640635479 z:\winlibs_tools\src\package_info.h
+1640808178 z:\winlibs_tools\src\package_info.h
 	<stddef.h>
 	<time.h>
 

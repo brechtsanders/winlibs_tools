@@ -103,7 +103,7 @@ int pkgdb_uninstall_package (pkgdb_handle handle, const char* package);
   \param  handle                database handle
   \param  package               package name
   \param  pkginfo               place where package information will be stored
-  \return 0 on success
+  \return package information or NULL on error, the caller must free the result with package_metadata_free()
 */
 struct package_metadata_struct* pkgdb_read_package (pkgdb_handle handle, const char* package);
 
@@ -147,6 +147,15 @@ int pkgdb_interate_package_folders (pkgdb_handle handle, const char* package, pk
 typedef int (*pkgdb_package_callback_fn)(pkgdb_handle handle, const struct package_metadata_struct* pkginfo, void* callbackdata);
 #endif
 
+//!check if packages are installed
+/*!
+  \param  handle                database handle
+  \param  packagelist           comma separated list of package names
+  \return non-zero if all packages are installed, zero if at least package is missing
+*/
+size_t pkgdb_packages_are_installed (pkgdb_handle handle, const char* packagelist);
+
+
 //!get sqlite3 handleSQL query with 1 string parameter
 /*!
   \param  handle                database handle
@@ -170,6 +179,28 @@ sqlite3_stmt* pkgdb_sql_query_param_str (pkgdb_handle handle, const char* sql, i
   \return sqlite3 status code
 */
 int pkgdb_sql_query_next_row (sqlite3_stmt* sqlresult);
+
+
+
+//!callback function used by iterate_items_in_list()
+/*!
+  \param  item                  item data
+  \param  callbackdata          callback data passed to read_packageinfolist
+  \return zero to continue processing, non-zero to abort
+*/
+typedef size_t (*iterate_items_in_list_callback_fn)(const char* item, void* callbackdata);
+
+//!iterate through list of items
+/*!
+  \param  itemlist              list of package names
+  \param  separator             separator
+  \param  callback              callback function to be called for each package name
+  \param  callbackdata          callback data passed to be passed to callback function
+  \return last result from callback (should be zero if all entries were processed)
+*/
+size_t iterate_items_in_list (const char* itemlist, char separator, iterate_items_in_list_callback_fn callback, void* callbackdata);
+
+
 
 #ifdef __cplusplus
 }

@@ -1,5 +1,9 @@
 1.0.8
 
+2021-12-29  Brecht Sanders  https://github.com/brechtsanders/
+
+  * wl-build: use sqlite3 database to check for installed packages
+
 2021-12-27  Brecht Sanders  https://github.com/brechtsanders/
 
   * accept path list via -s / BUILDSCRIPTS (previously only single path)

@@ -17,6 +17,7 @@
 #include <crossrun.h>
 #include <dirtrav.h>
 #include "package_info.h"
+#include "pkgdb.h"
 #include "sorted_unique_list.h"
 #include "memory_buffer.h"
 #include "filesystem.h"
@@ -662,13 +663,13 @@ int dependancies_listed_but_not_depended_on_iteration (const char* basename, voi
   return 0;
 }
 
-size_t dependancies_listed_but_not_depended_on (const char* basepath, struct package_info_struct* pkginfo)
+size_t dependancies_listed_but_not_depended_on (const char* dstdir, struct package_info_struct* pkginfo)
 {
   struct memory_buffer* pkginfopath = memory_buffer_create();
   struct memory_buffer* filepath = memory_buffer_create();
   struct dependancies_listed_but_not_depended_on_struct data = {0, sorted_unique_list_create(strcmp, free)};
   //determine package information path
-  memory_buffer_set_printf(pkginfopath, "%s%s%c%s%c", basepath, PACKAGE_INFO_PATH, PATH_SEPARATOR, pkginfo->basename, PATH_SEPARATOR);
+  memory_buffer_set_printf(pkginfopath, "%s%s%c%s%c", dstdir, PACKAGE_INFO_PATH, PATH_SEPARATOR, pkginfo->basename, PATH_SEPARATOR);
   //check dependancies
   sorted_unique_list_load_from_file(&data.dependencies, memory_buffer_get(memory_buffer_set_printf(filepath, "%s%s", memory_buffer_get(pkginfopath), PACKAGE_INFO_DEPENDENCIES_FILE)));
   iterate_packages_in_comma_separated_list(pkginfo->dependencies, dependancies_listed_but_not_depended_on_iteration, &data);
@@ -725,8 +726,9 @@ void show_help ()
 
 int main (int argc, char** argv, char *envp[])
 {
+  pkgdb_handle db;
   int showhelp = 0;
-  const char* basepath = NULL;
+  const char* dstdir = NULL;
   const char* packageinfopath = NULL;
   const char* shellcmd = DEFAULT_SHELL_COMMAND;
   const char* builddir = NULL;
@@ -735,7 +737,7 @@ int main (int argc, char** argv, char *envp[])
   //definition of command line arguments
   const miniargv_definition argdef[] = {
     {'h', "help",         NULL,      miniargv_cb_increment_int, &showhelp,        "show command line help"},
-    {'i', "install-path", "PATH",    miniargv_cb_set_const_str, &basepath,        "path where to install packages\noverrides environment variable MINGWPREFIX"},
+    {'i', "install-path", "PATH",    miniargv_cb_set_const_str, &dstdir,          "path where to install packages\noverrides environment variable MINGWPREFIX"},
     //{'u', "source-path",  "PATH",    miniargv_cb_set_const_str, &packageinfopath, "path containing build recipes\noverrides environment variable BUILDSCRIPTS"},
     {'s', "source-path",  "PATH",    miniargv_cb_set_const_str, &packageinfopath, "path containing build recipes\noverrides environment variable BUILDSCRIPTS"},
     {'x', "shell",        "CMD",     miniargv_cb_set_const_str, &shellcmd,        "shell command to execute, defaults to:\n\"" DEFAULT_SHELL_COMMAND "\""},
@@ -747,7 +749,7 @@ int main (int argc, char** argv, char *envp[])
   };
   //definition of environment variables
   const miniargv_definition envdef[] = {
-    {0,   "MINGWPREFIX",  NULL,      miniargv_cb_set_const_str, &basepath,        "path where to install packages"},
+    {0,   "MINGWPREFIX",  NULL,      miniargv_cb_set_const_str, &dstdir,          "path where to install packages"},
     {0,   "BUILDSCRIPTS", NULL,      miniargv_cb_set_const_str, &packageinfopath, "path where to look for build recipes"},
     //{0,   "MINGWPKGINFODIR", NULL,      miniargv_cb_set_const_str, &packageinfopath, "path where to look for build recipes"},
     {0, NULL, NULL, NULL, NULL, NULL}
@@ -781,12 +783,12 @@ int main (int argc, char** argv, char *envp[])
     fprintf(stderr, "Invalid path(s) specified with -s parameter or BUILDSCRIPTS environment variable: %s\n", packageinfopath);
     return 2;
   }
-  if (!basepath || !*basepath) {
+  if (!dstdir || !*dstdir) {
     fprintf(stderr, "Missing -i parameter or MINGWPREFIX environment variable\n");
     return 3;
   }
-  if (!folder_exists(basepath)) {
-    fprintf(stderr, "Path does not exist: %s\n", basepath);
+  if (!folder_exists(dstdir)) {
+    fprintf(stderr, "Path does not exist: %s\n", dstdir);
     return 4;
   }
   if (builddir && *builddir) {
@@ -794,6 +796,11 @@ int main (int argc, char** argv, char *envp[])
       fprintf(stderr, "Build path does not exist: %s\n", builddir);
       return 5;
     }
+  }
+  //open package database
+  if ((db = pkgdb_open(dstdir)) == NULL) {
+    fprintf(stderr, "No valid package database found for: %s\n", dstdir);
+    return 6;
   }
 
   //install signal handler
@@ -856,23 +863,25 @@ int main (int argc, char** argv, char *envp[])
 
   //process package build list
   {
-    char* version;
     char* logfile;
     int skip;
     unsigned long exitcode;
     struct package_info_list_struct* current;
     struct package_info_struct* pkginfo;
+    struct package_metadata_struct* dbpkginfo;
     while (!interrupted && (current = packagebuildlist) != NULL) {
       skip = 0;
       //check installed version
-      version = installed_package_version(basepath, current->info->basename);
+      dbpkginfo = pkgdb_read_package(db, current->info->basename);
       printf("--> %s %s (", current->info->basename, current->info->version);
-      if (!version)
+      if (!dbpkginfo)
         printf("currently not installed");
-      else if (strcmp(version, current->info->version) == 0)
-        printf("already installed");
+      else if (!dbpkginfo->datafield[PACKAGE_METADATA_INDEX_VERSION])
+        printf("installed without version information");
+      else if (strcmp(dbpkginfo->datafield[PACKAGE_METADATA_INDEX_VERSION], current->info->version) == 0)
+          printf("already installed");
       else
-        printf("installed version: %s", version);
+        printf("installed version: %s", dbpkginfo->datafield[PACKAGE_METADATA_INDEX_VERSION]);
       printf(")\n");
       //check latest package information and determine if package should be skipped
       if ((pkginfo = read_packageinfo(packageinfopath, current->info->basename)) == NULL) {
@@ -885,18 +894,18 @@ int main (int argc, char** argv, char *envp[])
           skip++;
         }
         //check if prerequisites are installed
-        if (basepath && (packages_are_installed(basepath, pkginfo->dependencies) == 0 || packages_are_installed(basepath, pkginfo->builddependencies) == 0)) {
+        if (dstdir && (pkgdb_packages_are_installed(db, pkginfo->dependencies) == 0 || pkgdb_packages_are_installed(db, pkginfo->builddependencies) == 0)) {
           printf("missing dependencies, skipping\n");
           skip++;
         }
       }
       //determine if already installed package should be rebuilt
-      if (!skip && basepath && version) {
+      if (!skip && dstdir && dbpkginfo) {
         if (PKG_XTRA(current->info)->cyclic_start_pkginfo) {
           //part of cyclic loop
           struct package_info_struct* cyclic_pkginfo;
           if ((cyclic_pkginfo = read_packageinfo(packageinfopath, PKG_XTRA(current->info)->cyclic_start_pkginfo->basename)) != NULL) {
-            if (!dependancies_listed_but_not_depended_on(basepath, cyclic_pkginfo))
+            if (!dependancies_listed_but_not_depended_on(dstdir, cyclic_pkginfo))
               skip++;
             free_packageinfo(cyclic_pkginfo);
           }
@@ -910,16 +919,18 @@ int main (int argc, char** argv, char *envp[])
         }
       }
       //check if rebuild needed because recipe was changed
-      if (skip && basepath && pkginfo && pkginfo->lastchanged) {
+      if (skip && dstdir && pkginfo && pkginfo->lastchanged) {
         if (PKG_XTRA(current->info)->filtertype == filter_type_changed) {
           time_t install_lastchanged;
-          if ((install_lastchanged = installed_package_lastchanged(basepath, current->info->basename)) != 0 && install_lastchanged < pkginfo->lastchanged) {
+          if ((install_lastchanged = installed_package_lastchanged(dstdir, current->info->basename)) != 0 && install_lastchanged < pkginfo->lastchanged) {
             printf("build recipe for %s was changed, rebuilding (installed: %lu, package: %lu)\n", pkginfo->basename, (unsigned long)install_lastchanged, (unsigned long)pkginfo->lastchanged);
             skip = 0;
           }
         }
       }
-      //clean up latest package information
+      //clean up
+      if (dbpkginfo)
+        package_metadata_free(dbpkginfo);
       if (pkginfo)
         free_packageinfo(pkginfo);
       //build package (unless it should be skipped)
@@ -945,9 +956,6 @@ int main (int argc, char** argv, char *envp[])
           free(logfile);
         }
       }
-      //clean up
-      if (version)
-        free(version);
       //point to next package
       packagebuildlist = current->next;
       free(current);
@@ -961,6 +969,7 @@ int main (int argc, char** argv, char *envp[])
   }
 
   //clean up
+  pkgdb_close(db);
   sorted_unique_list_free(sortedpackagelist);
   return 0;
 }

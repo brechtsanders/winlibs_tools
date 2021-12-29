@@ -150,7 +150,7 @@
 	<stdlib.h>
 	<stdarg.h>
 
-1640635077 source:z:\winlibs_tools\src\package_info.c
+1640808178 source:z:\winlibs_tools\src\package_info.c
 	"package_info.h"
 	"filesystem.h"
 	"winlibs_common.h"
@@ -163,7 +163,7 @@
 	<sys/stat.h>
 	<unistd.h>
 
-1640635479 z:\winlibs_tools\src\package_info.h
+1640808178 z:\winlibs_tools\src\package_info.h
 	<stddef.h>
 	<time.h>
 
@@ -177,7 +177,7 @@
 1618569018 z:\winlibs_tools\src\sorted_unique_list.h
 	<stdlib.h>
 
-1640635452 source:z:\winlibs_tools\src\wl-build.c
+1640770181 source:z:\winlibs_tools\src\wl-build.c
 	<stdio.h>
 	<stdlib.h>
 	<stdint.h>
@@ -191,6 +191,7 @@
 	<crossrun.h>
 	<dirtrav.h>
 	"package_info.h"
+	"pkgdb.h"
 	"sorted_unique_list.h"
 	"memory_buffer.h"
 	"filesystem.h"
@@ -208,4 +209,21 @@
 	<signal.h>
 
 1640634019 z:\winlibs_tools\src\winlibs_common.h
+
+1640770082 source:z:\winlibs_tools\src\pkgdb.c
+	"pkgdb.h"
+	"filesystem.h"
+	"memory_buffer.h"
+	"winlibs_common.h"
+	<stdint.h>
+	<stdlib.h>
+	<string.h>
+	<unistd.h>
+	<windows.h>
+
+1640769849 z:\winlibs_tools\src\pkgdb.h
+	"sorted_unique_list.h"
+	<stdint.h>
+	<stdlib.h>
+	<sqlite3.h>
 

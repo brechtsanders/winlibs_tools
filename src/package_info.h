@@ -153,7 +153,9 @@ int package_is_installed (const char* installpath, const char* basename);
   \param  packagelist           comma separated list of package names
   \return non-zero if all packages are installed
 */
+/*
 int packages_are_installed (const char* installpath, const char* packagelist);
+*/
 
 //!check which version of package is installed
 /*!
@@ -161,7 +163,9 @@ int packages_are_installed (const char* installpath, const char* packagelist);
   \param  basename              name of package
   \return version (caller must free() the result) or NULL if not installed
 */
+/*
 char* installed_package_version (const char* installpath, const char* basename);
+*/
 
 //!check when the package was installed
 /*!

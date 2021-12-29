@@ -697,6 +697,7 @@ int packages_are_installed (const char* installpath, const char* packagelist)
 }
 */
 
+/*
 struct packages_are_installed_struct {
   const char* installpath;
   int installed;
@@ -756,6 +757,7 @@ char* installed_package_version (const char* installpath, const char* basename)
   free(fullpath);
   return result;
 }
+*/
 
 time_t installed_package_lastchanged (const char* installpath, const char* basename)
 {

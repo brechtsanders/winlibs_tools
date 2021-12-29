@@ -126,6 +126,31 @@ sqlite3 $MINGWPREFIX/var/lib/winlibs/wl-pkg.db "SELECT p1.path, p2.package FROM 
 
 ////////////////////////////////////////////////////////////////////////
 
+typedef int (*iterate_comma_separated_list_no_alloc_callback_fn)(const char* data, size_t datalen, void* callbackdata);
+
+int iterate_comma_separated_list_no_alloc (const char* list, iterate_comma_separated_list_no_alloc_callback_fn callback, void* callbackdata)
+{
+  const char* p;
+  const char* q;
+  int result;
+  p = list;
+  while (p && *p) {
+    q = p;
+    while (*q && *q != ',')
+      q++;
+    if (q > p) {
+      if ((result = (*callback)(p, q - p, callbackdata)) != 0)
+        return result;
+      p = q;
+    }
+    if (*p)
+      p++;
+  }
+  return 0;
+}
+
+////////////////////////////////////////////////////////////////////////
+
 const char* package_metadata_field_name[] = {
   "Name",
   "Version",
@@ -178,31 +203,6 @@ void package_metadata_free (struct package_metadata_struct* metadata)
   sorted_unique_list_free(metadata->optionaldependencies);
   sorted_unique_list_free(metadata->builddependencies);
   free(metadata);
-}
-
-////////////////////////////////////////////////////////////////////////
-
-typedef int (*comma_separated_list_callback_fn)(const char* data, size_t datalen, void* callbackdata);
-
-int iterate_comma_separated_list (const char* list, comma_separated_list_callback_fn callback, void* callbackdata)
-{
-  const char* p;
-  const char* q;
-  int result;
-  p = list;
-  while (p && *p) {
-    q = p;
-    while (*q && *q != ',')
-      q++;
-    if (q > p) {
-      if ((result = (*callback)(p, q - p, callbackdata)) != 0)
-        return result;
-      p = q;
-    }
-    if (*p)
-      p++;
-  }
-  return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -497,7 +497,7 @@ int pkgdb_install_package (pkgdb_handle handle, const struct package_metadata_st
     execute_sql_cmd_param_str(handle->db, SQL_DEL_PACKAGE_CATEGORIES, pkginfo->datafield[PACKAGE_METADATA_INDEX_BASENAME]);
     categorydata.handle = handle;
     categorydata.package = pkginfo->datafield[PACKAGE_METADATA_INDEX_BASENAME];
-    iterate_comma_separated_list(pkginfo->datafield[PACKAGE_METADATA_INDEX_CATEGORY], set_package_category_callback, &categorydata);
+    iterate_comma_separated_list_no_alloc(pkginfo->datafield[PACKAGE_METADATA_INDEX_CATEGORY], set_package_category_callback, &categorydata);
   }
   execute_sql_cmd(handle->db, SQL_END_TRANSACTION);
   return status;
@@ -620,6 +620,34 @@ int pkgdb_interate_package_folders (pkgdb_handle handle, const char* package, pk
   return pkgdb_interate_package_files_or_folders(handle, package, PACKAGE_PATH_TYPE_FOLDER, callback, callbackdata);
 }
 
+struct pkgdb_packages_are_installed_struct {
+  struct pkgdb_handle_struct* handle;
+  int installed;
+};
+
+size_t pkgdb_packages_are_installed_callback (const char* basename, void* callbackdata)
+{
+  struct package_metadata_struct* pkginfo;
+  if ((pkginfo = pkgdb_read_package(((struct pkgdb_packages_are_installed_struct*)callbackdata)->handle, basename)) == NULL) {
+    ((struct pkgdb_packages_are_installed_struct*)callbackdata)->installed = 0;
+    return -1;
+  }
+  package_metadata_free(pkginfo);
+  ((struct pkgdb_packages_are_installed_struct*)callbackdata)->installed++;
+  return 0;
+}
+
+size_t pkgdb_packages_are_installed (pkgdb_handle handle, const char* packagelist)
+{
+  struct pkgdb_packages_are_installed_struct data;
+  if (!handle)
+    return 0;
+  data.handle = handle;
+  data.installed = 1;
+  iterate_items_in_list(packagelist, ',', pkgdb_packages_are_installed_callback, &data);
+  return data.installed;
+}
+
 sqlite3* pkgdb_get_sqlite3_handle (pkgdb_handle handle)
 {
   return (handle ? handle->db : NULL);
@@ -638,6 +666,38 @@ int pkgdb_sql_query_next_row (sqlite3_stmt* sqlresult)
     WAIT_BEFORE_RETRY(RETRY_WAIT_TIME)
   }
   return status;
+}
+
+////////////////////////////////////////////////////////////////////////
+
+size_t iterate_items_in_list (const char* itemlist, char separator, iterate_items_in_list_callback_fn callback, void* callbackdata)
+{
+  const char* p;
+  const char* q;
+  char* entry;
+  size_t entrylen;
+  size_t result;
+  p = itemlist;
+  while (p && *p) {
+    q = p;
+    while (*q && *q != separator)
+      q++;
+    if (q > p) {
+      entrylen = q - p;
+      if ((entry = (char*)malloc(entrylen + 1)) != NULL) {
+        memcpy(entry, p, entrylen);
+        entry[entrylen] = 0;
+        result = (*callback)(entry, callbackdata);
+        free(entry);
+        if (result)
+          return result;
+      }
+      p = q;
+    }
+    if (*p)
+      p++;
+  }
+  return 0;
 }
 
 

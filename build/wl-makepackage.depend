@@ -136,3 +136,41 @@
 1618569018 z:\winlibs_tools\src\sorted_unique_list.h
 	<stdlib.h>
 
+1619252436 source:z:\winlibs_tools\src\fstab.c
+	"fstab.h"
+	"filesystem.h"
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	<fcntl.h>
+	<sys/stat.h>
+	<limits.h>
+
+1618568917 z:\winlibs_tools\src\fstab.h
+	<stdlib.h>
+
+1638779472 source:z:\winlibs_tools\src\wl-makepackage.c
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	<fcntl.h>
+	<sys/stat.h>
+	<unistd.h>
+	<inttypes.h>
+	<limits.h>
+	<miniargv.h>
+	<dirtrav.h>
+	<pcre2_finder.h>
+	<archive.h>
+	<archive_entry.h>
+	<pedeps.h>
+	"winlibs_common.h"
+	"fstab.h"
+	"memory_buffer.h"
+	"sorted_unique_list.h"
+	<pedeps.h>
+	"text_list.h"
+
+1640634019 z:\winlibs_tools\src\winlibs_common.h
+

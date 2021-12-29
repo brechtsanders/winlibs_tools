@@ -179,7 +179,7 @@
 	<stdlib.h>
 	<stdarg.h>
 
-1639148491 source:z:\winlibs_tools\src\pkgdb.c
+1640770082 source:z:\winlibs_tools\src\pkgdb.c
 	"pkgdb.h"
 	"filesystem.h"
 	"memory_buffer.h"
@@ -190,7 +190,7 @@
 	<unistd.h>
 	<windows.h>
 
-1637763504 z:\winlibs_tools\src\pkgdb.h
+1640769849 z:\winlibs_tools\src\pkgdb.h
 	"sorted_unique_list.h"
 	<stdint.h>
 	<stdlib.h>
@@ -207,4 +207,19 @@
 	<string.h>
 	<ctype.h>
 	<stdio.h>
+
+1638779472 source:z:\winlibs_tools\src\wl-uninstall.c
+	<stdlib.h>
+	<stdint.h>
+	<stdio.h>
+	<unistd.h>
+	<string.h>
+	<ctype.h>
+	<dirent.h>
+	<sys/stat.h>
+	<miniargv.h>
+	"winlibs_common.h"
+	"memory_buffer.h"
+	"filesystem.h"
+	"pkgdb.h"
 
