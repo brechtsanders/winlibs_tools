@@ -50,7 +50,7 @@ In the archive there will be a `.packageinfo.xml` file containing package metada
  * [miniargv](https://github.com/brechtsanders/miniargv/)
  * [portcolcon](https://github.com/brechtsanders/portcolcon/)
  * [versioncmp](https://github.com/brechtsanders/versioncmp/)
- * [dirtrav](https://github.com/brechtsanders/libdirtrav/)
+ * [libdirtrav](https://github.com/brechtsanders/libdirtrav/)
  * [crossrun](https://github.com/brechtsanders/crossrun/)
  * [pedeps](https://github.com/brechtsanders/pedeps/)
  * [pcre2_finder](https://github.com/brechtsanders/pcre2_finder/)
