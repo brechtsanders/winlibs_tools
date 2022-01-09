@@ -205,3 +205,175 @@ char* downloader_get_file (struct downloader* handle, const char* url, struct do
   return data;
 }
 
+////////////////////////////////////////////////////////////////////////
+
+#define ISHEXDIGIT(c) ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f'))
+#define HEXVALUE(c) (unsigned char)(c >= '0' && c <= '9' ? c - '0' : (c >= 'A' && c <= 'F' ? c - 'A' + 10 : (c >= 'a' && c <= 'f' ? c - 'a' + 10 : 0)))
+
+char* url_decode (const char* data, size_t datalen)
+{
+  char* result;
+  size_t i;
+  char* p;
+  if (!data)
+    return NULL;
+  if ((result = (char*)malloc(datalen + 1)) == NULL)
+    return NULL;
+  i = 0;
+  p = result;
+  while (i < datalen) {
+    if (data[i] == '+') {
+      *p++ = ' ';
+      i++;
+    } else if (data[i] == '%' && i + 2 < datalen && ISHEXDIGIT(data[i + 1]) && ISHEXDIGIT(data[i + 2])) {
+      *(unsigned char*)p++ = (HEXVALUE(data[i + 1]) << 4) | HEXVALUE(data[i + 2]);
+      i += 3;
+    } else {
+      *p++ = data[i++];
+    }
+  }
+  *p = 0;
+  return result;
+}
+
+const char* url_skip_scheme (const char* url)
+{
+  const char* p = url;
+  while (*p && ((*p >= 'a' && *p <= 'z') || (*p >= 'A' && *p <= 'Z') || *p == '+' || *p == '-' || *p == '.'))
+    p++;
+  if (*p++ != ':')
+    return NULL;
+  if (*p++ != '/')
+    return NULL;
+  if (*p++ != '/')
+    return NULL;
+  return p;
+}
+
+char* resolve_url (const char* base_url, const char* url)
+{
+  char* result;
+  const char* afterscheme;
+  size_t pos;
+  size_t lastslashpos;
+  if (!base_url || !*base_url || !url)
+    return NULL;
+  //check if URL is already absolute
+  if (url_skip_scheme(url))
+    return strdup(url);
+  //abort if base URL doesn't contain scheme
+  if ((afterscheme = url_skip_scheme(base_url)) == NULL)
+    return NULL;
+  if (*url == '/') {
+    //URL starts at root, get position of first slash after scheme
+    while (*afterscheme && *afterscheme != '/')
+      afterscheme++;
+    lastslashpos = afterscheme - base_url;
+  } else {
+    //URL is relative, get position of last slash
+    pos = 0;
+    lastslashpos = 0;
+    while (base_url[pos] && base_url[pos] != '?' && base_url[pos] != '#') {
+      if (base_url[pos] == '/')
+        lastslashpos = pos;
+      pos++;
+    }
+    if (lastslashpos == 0)
+      lastslashpos = pos;
+  }
+  //create new URL
+  if ((result = (char*)malloc(lastslashpos + strlen(url) + 2)) == NULL)
+    return NULL;
+  memcpy(result, base_url, lastslashpos);
+  if (*url != '/')
+    result[lastslashpos++] = '/';
+  strcpy(result + lastslashpos, url);
+  return result;
+}
+
+const char* get_url_file_part (const char* url, size_t* filelen)
+{
+  size_t urllen = 0;
+  const char *p = url;
+  const char *result = p;
+  int protocoldone = 0;
+  const char* afterprotocol = NULL;
+  size_t resultlen;
+  if (!url || !*url)
+    return NULL;
+  while (url[urllen] && url[urllen] != '#')
+    urllen++;
+  resultlen = urllen;
+  while (urllen-- > 0 && *p && *p != '?' && *p != '#') {
+    if (*p == '/') {
+      if (urllen == 0 && resultlen > 0) {
+        resultlen--;
+      } else {
+        result = p + 1;
+        resultlen = urllen;
+      }
+    }
+    if (!protocoldone && *p == ':' && urllen >= 2) {
+      if (p[1] == '/' && p[2] == '/') {
+        protocoldone = 1;
+        afterprotocol = p + 3;
+      }
+    }
+    p++;
+  }
+  if (filelen)
+    *filelen = resultlen;
+  if (protocoldone && result == afterprotocol)
+    return NULL;
+  return (*result && resultlen ? result : NULL);
+}
+
+const char* get_url_download_file_part (const char* url, size_t* filelen)
+{
+  const char* result;
+  size_t resultlen;
+  result = get_url_file_part(url, &resultlen);
+  if (result && *result && result != url && *(result - 1) == '/' && (strcasecmp(result, "download") == 0 || strcasecmp(result, "download/") == 0)) {
+    const char* p = result - 1;
+    while (p != url && *(p - 1) != '/')
+      p--;
+    resultlen = result - 1 - p;
+    result = p;
+  }
+  if (filelen)
+    *filelen = resultlen;
+  return result;
+}
+
+////////////////////////////////////////////////////////////////////////
+
+int mimetype_cmp (const char* fullmimetype, const char* basemimetype)
+{
+  int result;
+  size_t basemimetypelen;
+  if (!fullmimetype || !*fullmimetype || !basemimetype || !*basemimetype)
+    return -1;
+  basemimetypelen = strlen(basemimetype);
+  if ((result = strncasecmp(fullmimetype, basemimetype, basemimetypelen)) == 0) {
+    if (fullmimetype[basemimetypelen] && fullmimetype[basemimetypelen] != ';' && !isspace(fullmimetype[basemimetypelen]))
+      return 1;
+  }
+  return result;
+}
+
+static const char* allowed_mime_types[] = {
+  "text/html",
+  "application/xhtml+xml",
+  NULL
+};
+
+int mimetype_is_html (const char* fullmimetype)
+{
+  int i;
+  for (i = 0; allowed_mime_types[i]; i++) {
+    if (mimetype_cmp(fullmimetype, allowed_mime_types[i]) == 0) {
+      return 1;
+    }
+  }
+  return 0;
+}

@@ -156,12 +156,13 @@ struct find_replace_callback_struct {
   int nextid;
 };
 
-#define PKG_REPLACE_INST_SH   0x01  //replace install paths in shell scripts
-#define PKG_REPLACE_INST_REL  0x02  //replace install paths in libtool archives and pkg-config metadata files
-#define PKG_REPLACE_DST_REL   0x04  //replace destination paths in libtool archives and pkg-config metadata files
-#define PKG_REPLACE_LIB_PATH  0x08  //remove -L paths
-#define PKG_REPLACE_LIB_ARG   0x10  //replace full library paths with -l arguments
-#define PKG_REPLACE_LIBDIR    0x20  //comment out libdir=
+#define PKG_REPLACE_INST_SH     0x01  //replace install paths in shell scripts
+#define PKG_REPLACE_INST_REL    0x02  //replace install paths in libtool archives
+#define PKG_REPLACE_INST_REL_PC 0x04  //replace install paths in pkg-config metadata files (using ${pcfiledir})
+#define PKG_REPLACE_DST_REL     0x08  //replace destination paths in libtool archives and pkg-config metadata files
+#define PKG_REPLACE_LIB_PATH    0x10  //remove -L paths
+#define PKG_REPLACE_LIB_ARG     0x20  //replace full library paths with -l arguments
+#define PKG_REPLACE_LIBDIR      0x40  //comment out libdir=
 
 typedef void (*path_callback_fn)(const char* path, void* callbackdata);
 
@@ -291,6 +292,14 @@ static int package_file_match_found (struct pcre2_finder* finder, const char* da
         pcre2_finder_output(finder, "..", 2);
         if (i > 0)
           pcre2_finder_output(finder, "/", 1);
+      }
+      break;
+    case PKG_REPLACE_INST_REL_PC :
+      //replace with relative path using pkg-config variable ${pcfiledir}
+      i = callbackdata->folderinfo->level;
+      pcre2_finder_output(finder, "${pcfiledir}", 12);
+      while (i-- > 0) {
+        pcre2_finder_output(finder, "/..", 3);
       }
       break;
     case PKG_REPLACE_DST_REL :
@@ -485,9 +494,9 @@ int add_modified_file_to_archive (const char* fullpath, const char* relativepath
           iterate_path_permutations(callbackdata->srcdir, inst_path_permutation_lib_path_callback, &pathcallbackdata, PCRE2_MULTILINE, replace_flags & PKG_REPLACE_LIB_PATH);
           iterate_path_permutations(callbackdata->dstdir, inst_path_permutation_lib_path_callback, &pathcallbackdata, PCRE2_MULTILINE, replace_flags & PKG_REPLACE_LIB_PATH);
         }
-        if (replace_flags & (PKG_REPLACE_INST_SH | PKG_REPLACE_INST_REL)) {
+        if (replace_flags & (PKG_REPLACE_INST_SH | PKG_REPLACE_INST_REL | PKG_REPLACE_INST_REL_PC)) {
           //add installation paths to be replaced
-          iterate_path_permutations(callbackdata->srcdir, inst_path_permutation_add_callback, &pathcallbackdata, PCRE2_MULTILINE | PCRE2_CASELESS, replace_flags & (PKG_REPLACE_INST_SH | PKG_REPLACE_INST_REL));
+          iterate_path_permutations(callbackdata->srcdir, inst_path_permutation_add_callback, &pathcallbackdata, PCRE2_MULTILINE | PCRE2_CASELESS, replace_flags & (PKG_REPLACE_INST_SH | PKG_REPLACE_INST_REL | PKG_REPLACE_INST_REL_PC));
         }
         if (replace_flags & PKG_REPLACE_DST_REL) {
           //add run paths to be replaced
@@ -567,17 +576,23 @@ int packager_file_callback (dirtrav_entry info)
   const char* ext = dirtrav_prop_get_extension(info);
   size_t pathlen = (path ? strlen(path) : 0);
   int status = 0;
-  if (ext && (strcasecmp(ext, ".pc") == 0 || strcasecmp(ext, ".la") == 0)) {
+  if (ext && strcasecmp(ext, ".la") == 0) {
     //replace absolute install path with relative path in .pc and .la files
     if (callbackdata->verbose) {
       printf("Adding customized file: %s\n", path);
       fflush(stdout);
     }
     status = add_modified_file_to_archive(srcfile, path, PKG_REPLACE_INST_REL | PKG_REPLACE_DST_REL | PKG_REPLACE_LIB_PATH | PKG_REPLACE_LIB_ARG | PKG_REPLACE_LIBDIR, callbackdata);
+  } else if (ext && strcasecmp(ext, ".pc") == 0) {
+    //replace absolute install path with relative path in .pc and .la files
+    if (callbackdata->verbose) {
+      printf("Adding customized file: %s\n", path);
+      fflush(stdout);
+    }
+    status = add_modified_file_to_archive(srcfile, path, PKG_REPLACE_INST_REL_PC | PKG_REPLACE_DST_REL | PKG_REPLACE_LIB_PATH | PKG_REPLACE_LIB_ARG | PKG_REPLACE_LIBDIR, callbackdata);
   } else if (pathlen > 7 && strcasecmp(path + pathlen - 7, "-config") == 0) {
     //replace absolute install path with relative path in *-config scripts
     if (callbackdata->verbose) {
-      printf("Adding customized file: %s\n", path);
       fflush(stdout);
     }
     status = add_modified_file_to_archive(srcfile, path, PKG_REPLACE_INST_SH, callbackdata);
