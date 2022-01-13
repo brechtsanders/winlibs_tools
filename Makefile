@@ -42,7 +42,7 @@ endif
 
 CFLAGS = 
 LDFLAGS = 
-ifneq ($(STATIC),)
+ifdef STATIC
 CFLAGS += -DSTATIC
 LDFLAGS += -static
 PKG_CONFIG += --static
@@ -60,7 +60,7 @@ VERSIONCMP_LDFLAGS = -lversioncmp
 CROSSRUN_LDFLAGS = -lcrossrun
 PEDEPS_LDFLAGS = -lpedeps
 AVL_LDFLAGS = -lavl
-ifneq ($(STATIC),)
+ifdef STATIC
 #CURL_LDFLAGS = $(shell $(PKG_CONFIG) --libs libcurl librtmp libbrotlidec libgcrypt shishi gnutls libidn)
 CURL_LDFLAGS = $(shell $(PKG_CONFIG) --static --libs libcurl librtmp libbrotlidec libgcrypt shishi gnutls libidn libntlm)
 else
@@ -68,13 +68,13 @@ CURL_LDFLAGS = $(shell $(PKG_CONFIG) --libs libcurl)
 endif
 GUMBO_LDFLAGS = $(shell $(PKG_CONFIG) --libs gumbo)
 PCRE2_LDFLAGS = $(shell $(PKG_CONFIG) --libs libpcre2-8)
-ifneq ($(STATIC),)
+ifdef STATIC
 SQLITE3_LDFLAGS = $(shell $(PKG_CONFIG) --static --libs sqlite3)
 else
 SQLITE3_LDFLAGS = $(shell $(PKG_CONFIG) --libs sqlite3)
 endif
 EXPAT_LDFLAGS = $(shell $(PKG_CONFIG) --libs expat)
-ifneq ($(STATIC),)
+ifdef STATIC
 LIBARCHIVE_LDFLAGS = $(shell $(PKG_CONFIG) --static --libs libarchive)
 ifeq ($(OS),Windows_NT)
 LIBARCHIVE_LDFLAGS += -liconv
@@ -84,11 +84,11 @@ LIBARCHIVE_LDFLAGS = $(shell $(PKG_CONFIG) --libs libarchive)
 endif
 LIBDIRTRAV_LDFLAGS = -ldirtrav
 PCRE2_FINDER_LDFLAGS = -lpcre2_finder
-ifneq ($(STATIC),)
+ifdef STATIC
 PCRE2_FINDER_LDFLAGS += -lpcre2-8
 endif
 PTHREADS_LDFLAGS = -lpthread
-ifneq ($(STATIC),)
+ifdef STATIC
 ifeq ($(OS),Windows_NT)
 LDFLAGS += -Wl,--allow-multiple-definition
 endif
