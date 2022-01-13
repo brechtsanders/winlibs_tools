@@ -109,7 +109,7 @@ jobs:
       run: |
         git clone https://github.com/brechtsanders/pedeps
         cd pedeps
-        make install PREFIX=../deps DOXYGEN= CC=${{ matrix.config.cc }}
+        make install PREFIX=../deps DOXYGEN= CC=${{ matrix.config.cc }} CFLAGS="-I$PWD/deps/include" LDFLAGS="-L$PWD/deps/lib"
     - name: Prerequisite pcre2_finder
       run: |
         git clone https://github.com/brechtsanders/pcre2_finder
