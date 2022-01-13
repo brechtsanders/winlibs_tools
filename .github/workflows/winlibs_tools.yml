@@ -127,6 +127,16 @@ jobs:
         ninja -Cbuild_win install/strip
     - name: Build
       run: |
-        PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:$PKG_CONFIG_PATH make BINDIR=bin OBJDIR=obj CFLAGS="-I$PWD/deps/include" LDFLAGS="-L$PWD/deps/lib"
-      #STATIC=1 
+        PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:$PKG_CONFIG_PATH make install PREFIX=$PWD/release STATIC=1 BINDIR=bin OBJDIR=obj CFLAGS="-I$PWD/deps/include" LDFLAGS="-L$PWD/deps/lib"
+    - name: Build package
+      run: |
+        PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:$PKG_CONFIG_PATH make binarypackage BINDIR=bin OBJDIR=obj CFLAGS="-I$PWD/deps/include" LDFLAGS="-L$PWD/deps/lib"
+#    - name: Pack
+#      run: |
+#        tar cfj ./${{ matrix.config.artifact }} --strip-components=1 release
+#    - name: Upload
+#      uses: actions/upload-artifact@v1
+#      with:
+#        path: ./${{ matrix.config.artifact }}
+#        name: ${{ matrix.config.artifact }}
 
