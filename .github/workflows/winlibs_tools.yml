@@ -116,13 +116,13 @@ jobs:
         git clone https://github.com/brechtsanders/pcre2_finder
         cd pcre2_finder
         mkdir -p build
-        cmake -GNinja -DCMAKE_INSTALL_PREFIX:PATH=../deps \
+        cmake -GNinja -DCMAKE_INSTALL_PREFIX:PATH=$PWD/../deps \
          -DCMAKE_BUILD_TYPE:STRING=Release \
          -DBUILD_SHARED:BOOL=ON \
          -DBUILD_STATIC:BOOL=ON \
          -DCMAKE_C_COMPILER=${{ matrix.config.cc }} \
          -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }} \
-         -S. -Bbuild_win &&
+         -S. -Bbuild_win
         ninja -Cbuild_win install/strip
     - name: Build
       run: |
