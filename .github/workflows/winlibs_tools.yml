@@ -60,6 +60,7 @@ jobs:
           mingw-w64-${{ matrix.config.arch }}-toolchain
           mingw-w64-${{ matrix.config.arch }}-ninja
           mingw-w64-${{ matrix.config.arch }}-cmake
+          mingw-w64-${{ matrix.config.arch }}-rtmpdump
           mingw-w64-${{ matrix.config.arch }}-curl
           mingw-w64-${{ matrix.config.arch }}-gumbo-parser
           mingw-w64-${{ matrix.config.arch }}-pcre2
