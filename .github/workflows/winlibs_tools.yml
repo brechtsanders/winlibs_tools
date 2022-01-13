@@ -177,7 +177,8 @@ jobs:
         ninja -Cbuild_win install/strip
     - name: Build
       run: |
-        PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:$PKG_CONFIG_PATH make install \
+        PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:/usr/local/opt/libarchive/lib/pkgconfig:$PKG_CONFIG_PATH \
+         make install \
          PREFIX=$PWD/release \
          BINDIR=bin \
          OBJDIR=obj \
@@ -186,7 +187,8 @@ jobs:
 #    - if: matrix.config.os == 'windows-latest'
 #      name: Build static
 #      run: |
-#        PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:$PKG_CONFIG_PATH make install \
+#        PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:/usr/local/opt/libarchive/lib/pkgconfig:$PKG_CONFIG_PATH \
+#         make install \
 #         PREFIX=$PWD/release \
 #         STATIC=1 \
 #         BINDIR=bin \
@@ -196,7 +198,8 @@ jobs:
 #    - if: matrix.config.os != 'windows-latest'
 #      name: Build shared
 #      run: |
-#        PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:$PKG_CONFIG_PATH make install \
+#        PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:/usr/local/opt/libarchive/lib/pkgconfig:$PKG_CONFIG_PATH \
+#         make install \
 #         PREFIX=$PWD/release \
 #         BINDIR=bin \
 #         OBJDIR=obj \
@@ -204,7 +207,8 @@ jobs:
 #         LDFLAGS="-L$PWD/deps/lib -L/usr/local/opt/libarchive/lib"
 ##    - name: Build package
 ##      run: |
-##        PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:$PKG_CONFIG_PATH make binarypackage \
+##        PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:/usr/local/opt/libarchive/lib/pkgconfig:$PKG_CONFIG_PATH \
+##         make binarypackage \
 ##         STATIC=1 \
 ##         CFLAGS="-I$PWD/deps/include -I/usr/local/opt/libarchive/include" \
 ##         LDFLAGS="-L$PWD/deps/lib -L/usr/local/opt/libarchive/lib"
