@@ -171,8 +171,8 @@ jobs:
          STATIC=1 \
          BINDIR=bin \
          OBJDIR=obj \
-         CFLAGS="-I$PWD/deps/include" \
-         LDFLAGS="-L$PWD/deps/lib"
+         CFLAGS="-DSTATIC -I$PWD/deps/include" \
+         LDFLAGS="-static -L$PWD/deps/lib"
 #    - name: Build package
 #      run: |
 #        PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:$PKG_CONFIG_PATH make binarypackage \
