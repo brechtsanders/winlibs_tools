@@ -21,15 +21,15 @@ jobs:
               cc: x86_64-w64-mingw32-gcc.exe,
               cxx: x86_64-w64-mingw32-g++.exe
             }
-#          - {
-#              name: "Windows 32-bit (gcc)",
-#              os: windows-latest,
-#              shell: 'msys2 {0}',
-#              msystem: MINGW32,
-#              arch: i686,
-#              cc: i686-w64-mingw32-gcc.exe,
-#              cxx: i686-w64-mingw32-g++.exe
-#            }
+          - {
+              name: "Windows 32-bit (gcc)",
+              os: windows-latest,
+              shell: 'msys2 {0}',
+              msystem: MINGW32,
+              arch: i686,
+              cc: i686-w64-mingw32-gcc.exe,
+              cxx: i686-w64-mingw32-g++.exe
+            }
     name: ${{ matrix.config.name }}
     runs-on: ${{ matrix.config.os }}
     defaults:
@@ -43,11 +43,11 @@ jobs:
 #    - if: matrix.config.os == 'ubuntu-latest'
 #      name: Install build dependencies (Linux)
 #      run: |
-#        sudo apt-get install cmake ninja-build
+#        sudo apt-get install cmake ninja-build libcurl4-gnutls-dev libgumbo-dev libpcre2-dev libsqlite3-dev libexpat1-dev libarchive-dev libavl-dev
 #    - if: matrix.config.os == 'macos-latest'
 #      name: Install build dependencies (macOS)
 #      run: |
-#        brew install ninja
+#        brew install ninja curl gumbo-parser pcre2 sqlite expat libarchive
     - if: matrix.config.os == 'windows-latest'
       name: Install build dependencies (Windows/MSYS)
       uses: msys2/setup-msys2@v2
@@ -68,6 +68,18 @@ jobs:
           mingw-w64-${{ matrix.config.arch }}-libarchive
 #    - uses: seanmiddleditch/gha-setup-ninja@master
     - uses: actions/checkout@v1
+    - if: matrix.config.os != 'ubuntu-latest'
+      name: Prerequisite libavl
+      run: |
+        curl -# http://ftp.debian.org/debian/pool/main/liba/libavl/libavl_0.3.5.orig.tar.gz --output libavl.tar.gz
+        tar xfz libavl.tar.gz
+        cd avl-0.3.5
+        ${{ matrix.config.cc }} -O2 -fomit-frame-pointer -pipe -w -c -o avl.o avl.c
+        ar rcs libavl.a avl.o
+        mkdir -p ../deps/include
+        mkdir -p ../deps/lib
+        sed -e "s/\(avl_node_t \*new\)/\1node/g" avl.h > ../deps/include/avl.h
+        cp libavl.a ../deps/lib/
     - name: Prerequisite miniargv
       run: |
         git clone https://github.com/brechtsanders/miniargv
@@ -111,17 +123,6 @@ jobs:
          -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }} \
          -S. -Bbuild_win &&
         ninja -Cbuild_win install/strip
-    - name: Prerequisite libavl
-      run: |
-        curl -# http://ftp.debian.org/debian/pool/main/liba/libavl/libavl_0.3.5.orig.tar.gz --output libavl.tar.gz
-        tar xfz libavl.tar.gz
-        cd avl-0.3.5
-        ${{ matrix.config.cc }} -O2 -fomit-frame-pointer -pipe -w -c -o avl.o avl.c
-        ar rcs libavl.a avl.o
-        mkdir -p ../deps/include
-        mkdir -p ../deps/lib
-        sed -e "s/\(avl_node_t \*new\)/\1node/g" avl.h > ../deps/include/avl.h
-        cp libavl.a ../deps/lib/
     - name: Build
       run: |
         pwd
