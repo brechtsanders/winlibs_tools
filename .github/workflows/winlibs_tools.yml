@@ -118,7 +118,7 @@ jobs:
       name: Install build dependencies (macOS)
       run: |
         brew install zip ninja curl gumbo-parser pcre2 sqlite expat libarchive
-    - uses: seanmiddleditch/gha-setup-ninja@master
+#    - uses: seanmiddleditch/gha-setup-ninja@master
     - uses: actions/checkout@v1
     - if: matrix.config.os != 'ubuntu-latest'
       name: Prerequisite libavl
@@ -181,8 +181,8 @@ jobs:
          PREFIX=$PWD/release \
          BINDIR=bin \
          OBJDIR=obj \
-         CFLAGS="-I$PWD/deps/include" \
-         LDFLAGS="-L$PWD/deps/lib"
+         CFLAGS="-I$PWD/deps/include -I/usr/local/opt/libarchive/include" \
+         LDFLAGS="-L$PWD/deps/lib -L/usr/local/opt/libarchive/lib"
 #    - if: matrix.config.os == 'windows-latest'
 #      name: Build static
 #      run: |
@@ -191,8 +191,8 @@ jobs:
 #         STATIC=1 \
 #         BINDIR=bin \
 #         OBJDIR=obj \
-#         CFLAGS="-DSTATIC -I$PWD/deps/include" \
-#         LDFLAGS="-static -L$PWD/deps/lib"
+#         CFLAGS="-DSTATIC -I$PWD/deps/include -I/usr/local/opt/libarchive/include" \
+#         LDFLAGS="-static -L$PWD/deps/lib -L/usr/local/opt/libarchive/lib"
 #    - if: matrix.config.os != 'windows-latest'
 #      name: Build shared
 #      run: |
@@ -200,14 +200,14 @@ jobs:
 #         PREFIX=$PWD/release \
 #         BINDIR=bin \
 #         OBJDIR=obj \
-#         CFLAGS="-I$PWD/deps/include" \
-#         LDFLAGS="-L$PWD/deps/lib"
+#         CFLAGS="-I$PWD/deps/include -I/usr/local/opt/libarchive/include" \
+#         LDFLAGS="-L$PWD/deps/lib -L/usr/local/opt/libarchive/lib"
 ##    - name: Build package
 ##      run: |
 ##        PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:$PKG_CONFIG_PATH make binarypackage \
 ##         STATIC=1 \
-##         CFLAGS="-I$PWD/deps/include" \
-##         LDFLAGS="-L$PWD/deps/lib"
+##         CFLAGS="-I$PWD/deps/include -I/usr/local/opt/libarchive/include" \
+##         LDFLAGS="-L$PWD/deps/lib -L/usr/local/opt/libarchive/lib"
 ##        mv winlibs-tools-*.zip winlibs-tools-${{ matrix.config.arch }}.zip
 #    - if: matrix.config.os == 'windows-latest'
 #      name: Upload
