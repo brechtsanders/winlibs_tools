@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <unistd.h>
 #ifdef STATIC
 #define CURL_STATICLIB 1
 #endif
