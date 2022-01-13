@@ -113,7 +113,7 @@ jobs:
     - name: Prerequisite pcre2_finder
       run: |
         git clone https://github.com/brechtsanders/pcre2_finder
-        cd pedeps
+        cd pcre2_finder
         mkdir -p build
         cmake -GNinja -DCMAKE_INSTALL_PREFIX:PATH=../deps \
          -DCMAKE_BUILD_TYPE:STRING=Release \
