@@ -75,7 +75,10 @@ SQLITE3_LDFLAGS = $(shell $(PKG_CONFIG) --libs sqlite3)
 endif
 EXPAT_LDFLAGS = $(shell $(PKG_CONFIG) --libs expat)
 ifdef STATIC
-LIBARCHIVE_LDFLAGS = $(shell $(PKG_CONFIG) --static --libs libarchive) -liconv
+LIBARCHIVE_LDFLAGS = $(shell $(PKG_CONFIG) --static --libs libarchive)
+ifeq ($(OS),Windows_NT)
+LIBARCHIVE_LDFLAGS += -liconv
+endif
 else
 LIBARCHIVE_LDFLAGS = $(shell $(PKG_CONFIG) --libs libarchive)
 endif
