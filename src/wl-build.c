@@ -393,7 +393,7 @@ static inline void strip_ansi_next_character (char c, struct strip_ansi_data_str
     case ANSI_STATUS_DATA:
       if (c == 27) {
         data->status = ANSI_STATUS_CSI1;
-      } else if (c == 0x9B) {
+      } else if ((unsigned char)c == 0x9B) {
         data->status = ANSI_STATUS_CSI_DONE;
       } else if (c == 7) {
         //skip beep
@@ -424,7 +424,7 @@ static inline void strip_ansi_next_character (char c, struct strip_ansi_data_str
         data->status = ANSI_STATUS_DATA;
       else if (c == 27)
         data->status = ANSI_STATUS_CSI_ALT_DONE_ESC;
-      else if (c == 0x9C)
+      else if ((unsigned char)c == 0x9C)
         data->status = ANSI_STATUS_DATA;
       break;
     case ANSI_STATUS_CSI_ALT_DONE_ESC:
