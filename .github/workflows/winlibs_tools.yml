@@ -66,6 +66,7 @@ jobs:
           mingw-w64-${{ matrix.config.arch }}-shishi
           mingw-w64-${{ matrix.config.arch }}-libidn
           mingw-w64-${{ matrix.config.arch }}-libntlm
+          mingw-w64-${{ matrix.config.arch }}-p11-kit
           mingw-w64-${{ matrix.config.arch }}-curl
           mingw-w64-${{ matrix.config.arch }}-gumbo-parser
           mingw-w64-${{ matrix.config.arch }}-pcre2
