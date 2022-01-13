@@ -40,17 +40,23 @@ void downloader_free (struct downloader* handle);
 //!custom MIME type used for FTP listings
 extern const char* custom_mimetype_ftp_listing;
 
-//!get HTML page
+//!download file contents to memory
 /*!
   \param  handle                downloader handle
   \param  url                   URL
   \param  info                  structure that will receive status information about the downloaded file
-  \param  responsecode          pointer that will receive HTTP response code (in case there was a HTTP error)
-  \param  status                pointer that will receive status information or error message
-  \param  actualurl             pointer that will receive actual URL reported by page (can be different, e.g. because of redirections)
   \return contents of HTML page or NULL on error
 */
 char* downloader_get_file (struct downloader* handle, const char* url, struct download_info_struct* info);
+
+//!download file
+/*!
+  \param  handle                downloader handle
+  \param  url                   URL
+  \param  outputfile            file where to save the downloaded data
+  \return HTTP status code
+*/
+long downloader_save_file (struct downloader* handle, const char* url, const char* outputfile);
 
 
 

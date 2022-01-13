@@ -205,6 +205,31 @@ char* downloader_get_file (struct downloader* handle, const char* url, struct do
   return data;
 }
 
+long downloader_save_file (struct downloader* handle, const char* url, const char* outputfile)
+{
+  CURLcode curlstatus;
+  FILE* dst;
+  long responsecode = -1;
+  //open destination file
+  if ((dst = fopen(outputfile, "wb")) == NULL) {
+    fprintf(stderr, "Error creating file: %s\n", outputfile);
+    return 999;
+  }
+  //download
+  curl_easy_setopt(handle->curl_handle, CURLOPT_URL, url);
+  curl_easy_setopt(handle->curl_handle, CURLOPT_WRITEFUNCTION, fwrite);
+  curl_easy_setopt(handle->curl_handle, CURLOPT_WRITEDATA, dst);
+  if ((curlstatus = curl_easy_perform(handle->curl_handle)) != CURLE_OK) {
+    fprintf(stderr, "libcurl error %i: %s", (int)curlstatus, curl_easy_strerror(curlstatus));
+  } else {
+    curl_easy_getinfo(handle->curl_handle, CURLINFO_RESPONSE_CODE, &responsecode);
+  }
+  fclose(dst);
+  if (responsecode < 200 || responsecode >= 300)
+    unlink(outputfile);
+  return responsecode;
+}
+
 ////////////////////////////////////////////////////////////////////////
 
 #define ISHEXDIGIT(c) ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f'))

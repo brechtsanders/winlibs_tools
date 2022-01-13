@@ -11,7 +11,7 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="-s \\SERVER\users\brecht\sources\CPP\mingwbuilder\inst_pcre2-10.31 -p \\SERVER\users\brecht\sources\CPP\mingwbuilder\_packages pcre2" />
+				<Option parameters="-a x86_64 -f D:\Prog\msys64\etc\fstab -i D:\Prog\winlibs64-11.2.0ucrt/custombuilt -s \\SERVER\Users\brecht\sources\CPP\winlibs_tools\build\inst_libuvc-0.0.6 -p \\SERVER\Users\brecht\sources\CPP\winlibs_tools\build\_packages libuvc -n 0.0.6 -v -v -c" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -21,7 +21,7 @@
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="-s Z:\mingwbuilder\inst_freetype2-2-9.1 -p \\SERVER\users\brecht\sources\CPP\mingwbuilder\_packages freetype2 -v" />
+				<Option parameters="-a x86_64 -f D:\Prog\msys64\etc\fstab -i D:\Prog\winlibs64-11.2.0ucrt/custombuilt -s \\SERVER\Users\brecht\sources\CPP\winlibs_tools\build\inst_libuvc-0.0.6 -p \\SERVER\Users\brecht\sources\CPP\winlibs_tools\build\_packages libuvc -n 0.0.6 -v -v -c" />
 				<Compiler>
 					<Add option="-Os" />
 				</Compiler>
@@ -57,7 +57,7 @@
 				<Option object_output="obj/Debug64/" />
 				<Option type="1" />
 				<Option compiler="MINGW64" />
-				<Option parameters="-a x86_64 -f D:\Prog\msys64\etc\fstab -i D:\Prog\winlibs64-11.2.0ucrt/custombuilt -s \\SERVER\users\brecht\sources\CPP\winlibs\build\inst_pcre2-10.35 -p \\SERVER\users\brecht\sources\CPP\winlibs\build\_packages pcre2 -n 10.35 -v -c" />
+				<Option parameters="-a x86_64 -f D:\Prog\msys64\etc\fstab -i D:\Prog\winlibs64-11.2.0ucrt/custombuilt -s \\SERVER\Users\brecht\sources\CPP\winlibs_tools\build\inst_pcre2-10.37 -p \\SERVER\Users\brecht\sources\CPP\winlibs_tools\build\_packages pcre2 -n 10.37 -v -v -c" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>

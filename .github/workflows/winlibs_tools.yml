@@ -1,0 +1,126 @@
+name: GitHub-CI for winlibs_tools
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false          # if a job fails don't abort other jobs
+      matrix:
+        config:
+          - {
+              name: "Windows 64-bit (gcc)",
+              os: windows-latest,
+              shell: 'msys2 {0}',
+              msystem: MINGW64,
+              arch: x86_64,
+              cc: x86_64-w64-mingw32-gcc.exe,
+              cxx: x86_64-w64-mingw32-g++.exe
+            }
+          - {
+              name: "Windows 32-bit (gcc)",
+              os: windows-latest,
+              shell: 'msys2 {0}',
+              msystem: MINGW32,
+              arch: i686,
+              cc: i686-w64-mingw32-gcc.exe,
+              cxx: i686-w64-mingw32-g++.exe
+            }
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    defaults:
+      run:
+        shell: ${{ matrix.config.shell }}
+    env:
+      CC: ${{ matrix.config.cc }}
+      CXX: ${{ matrix.config.cxx }}
+
+    steps:
+#    - if: matrix.config.os == 'ubuntu-latest'
+#      name: Install build dependencies (Linux)
+#      run: |
+#        sudo apt-get install cmake ninja-build
+#    - if: matrix.config.os == 'macos-latest'
+#      name: Install build dependencies (macOS)
+#      run: |
+#        brew install ninja
+    - if: matrix.config.os == 'windows-latest'
+      name: Install build dependencies (Windows)
+      uses: msys2/setup-msys2@v2
+      with:
+        update: false
+        msystem: ${{ matrix.config.msystem }}
+        install: >-
+          git
+          mingw-w64-${{ matrix.config.arch }}-cmake
+          mingw-w64-${{ matrix.config.arch }}-ninja
+          mingw-w64-${{ matrix.config.arch }}-toolchain
+          mingw-w64-${{ matrix.config.arch }}-curl
+          mingw-w64-${{ matrix.config.arch }}-gumbo-parser
+          mingw-w64-${{ matrix.config.arch }}-pcre2
+          mingw-w64-${{ matrix.config.arch }}-sqlite3
+          mingw-w64-${{ matrix.config.arch }}-expat
+          mingw-w64-${{ matrix.config.arch }}-libarchive
+#    - uses: seanmiddleditch/gha-setup-ninja@master
+    - uses: actions/checkout@v1
+    - name: Prerequisite miniargv
+      run: |
+        git clone https://github.com/brechtsanders/miniargv
+        cd miniargv
+        make install PREFIX=../deps DOXYGEN= CC=${{ matrix.config.cc }}
+    - name: Prerequisite portcolcon
+      run: |
+        git clone https://github.com/brechtsanders/portcolcon
+        cd portcolcon
+        make install PREFIX=../deps DOXYGEN= CC=${{ matrix.config.cc }}
+    - name: Prerequisite versioncmp
+      run: |
+        git clone https://github.com/brechtsanders/versioncmp
+        cd versioncmp
+        make install PREFIX=../deps DOXYGEN= CC=${{ matrix.config.cc }}
+    - name: Prerequisite libdirtrav
+      run: |
+        git clone https://github.com/brechtsanders/libdirtrav
+        cd libdirtrav
+        make install PREFIX=../deps DOXYGEN= CC=${{ matrix.config.cc }}
+    - name: Prerequisite crossrun
+      run: |
+        git clone https://github.com/brechtsanders/crossrun
+        cd crossrun
+        make install PREFIX=../deps DOXYGEN= CC=${{ matrix.config.cc }}
+    - name: Prerequisite pedeps
+      run: |
+        git clone https://github.com/brechtsanders/pedeps
+        cd pedeps
+        make install PREFIX=../deps DOXYGEN= CC=${{ matrix.config.cc }}
+    - name: Prerequisite pcre2_finder
+      run: |
+        git clone https://github.com/brechtsanders/pcre2_finder
+        cd pedeps
+        mkdir -p build
+        cmake -GNinja -DCMAKE_INSTALL_PREFIX:PATH=../deps \
+         -DCMAKE_BUILD_TYPE:STRING=Release \
+         -DBUILD_SHARED:BOOL=ON \
+         -DBUILD_STATIC:BOOL=ON \
+         -S. -Bbuild_win &&
+        ninja -Cbuild_win install/strip
+    - name: Prerequisite libavl
+      run: |
+        curl -# http://ftp.debian.org/debian/pool/main/liba/libavl/libavl_0.3.5.orig.tar.gz --output libavl.tar.gz
+        tar xfz libavl.tar.gz
+        cd avl-0.3.5
+        ${{ matrix.config.cc }} -O2 -fomit-frame-pointer -pipe -w -c -o avl.o avl.c
+        ar rcs libavl.a avl.o
+        mkdir -p ../deps/include
+        mkdir -p ../deps/lib
+        sed -e "s/\(avl_node_t \*new\)/\1node/g" avl.h > ../deps/include/avl.h
+        cp libavl.a ../deps/lib/
+    - name: Build
+      run: |
+        pwd
+        ls
+        PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:$PKG_CONFIG_PATH make STATIC=1 BINDIR=bin OBJDIR=obj CFLAGS="-I$PWD/deps/include" LDFLAGS="-L$PWD/deps/lib"
