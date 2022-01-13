@@ -38,6 +38,14 @@ jobs:
               cc: clang,
               cxx: clang++
             }
+          - {
+              name: "macOS (clang)",
+              os: macos-latest,
+              shell: bash,
+              cmake_generator: "Unix Makefiles",
+              cc: clang,
+              cxx: clang++
+            }
     name: ${{ matrix.config.name }}
     runs-on: ${{ matrix.config.os }}
     defaults:
@@ -52,7 +60,7 @@ jobs:
       name: Install build dependencies (Windows/MSYS)
       uses: msys2/setup-msys2@v2
       with:
-        update: false
+        update: true
         msystem: ${{ matrix.config.msystem }}
         install: >-
           git
@@ -106,11 +114,11 @@ jobs:
          libexpat1-dev \
          libarchive-dev \
          libavl-dev
-#    - if: matrix.config.os == 'macos-latest'
-#      name: Install build dependencies (macOS)
-#      run: |
-#        brew install zip ninja curl gumbo-parser pcre2 sqlite expat libarchive
-#    - uses: seanmiddleditch/gha-setup-ninja@master
+    - if: matrix.config.os == 'macos-latest'
+      name: Install build dependencies (macOS)
+      run: |
+        brew install zip ninja curl gumbo-parser pcre2 sqlite expat libarchive
+    - uses: seanmiddleditch/gha-setup-ninja@master
     - uses: actions/checkout@v1
     - if: matrix.config.os != 'ubuntu-latest'
       name: Prerequisite libavl
@@ -167,18 +175,7 @@ jobs:
          -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }} \
          -S. -Bbuild_win
         ninja -Cbuild_win install/strip
-    - if: matrix.config.os == 'windows-latest'
-      name: Build static
-      run: |
-        PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:$PKG_CONFIG_PATH make install \
-         PREFIX=$PWD/release \
-         STATIC=1 \
-         BINDIR=bin \
-         OBJDIR=obj \
-         CFLAGS="-DSTATIC -I$PWD/deps/include" \
-         LDFLAGS="-static -L$PWD/deps/lib"
-    - if: matrix.config.os != 'windows-latest'
-      name: Build shared
+    - name: Build
       run: |
         PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:$PKG_CONFIG_PATH make install \
          PREFIX=$PWD/release \
@@ -186,17 +183,36 @@ jobs:
          OBJDIR=obj \
          CFLAGS="-I$PWD/deps/include" \
          LDFLAGS="-L$PWD/deps/lib"
-#    - name: Build package
+#    - if: matrix.config.os == 'windows-latest'
+#      name: Build static
 #      run: |
-#        PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:$PKG_CONFIG_PATH make binarypackage \
+#        PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:$PKG_CONFIG_PATH make install \
+#         PREFIX=$PWD/release \
 #         STATIC=1 \
+#         BINDIR=bin \
+#         OBJDIR=obj \
+#         CFLAGS="-DSTATIC -I$PWD/deps/include" \
+#         LDFLAGS="-static -L$PWD/deps/lib"
+#    - if: matrix.config.os != 'windows-latest'
+#      name: Build shared
+#      run: |
+#        PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:$PKG_CONFIG_PATH make install \
+#         PREFIX=$PWD/release \
+#         BINDIR=bin \
+#         OBJDIR=obj \
 #         CFLAGS="-I$PWD/deps/include" \
 #         LDFLAGS="-L$PWD/deps/lib"
-#        mv winlibs-tools-*.zip winlibs-tools-${{ matrix.config.arch }}.zip
-    - if: matrix.config.os == 'windows-latest'
-      name: Upload
-      uses: actions/upload-artifact@v1
-      with:
-        path: ./release
-        name: winlibs-tools-${{ matrix.config.arch }}.zip
+##    - name: Build package
+##      run: |
+##        PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:$PKG_CONFIG_PATH make binarypackage \
+##         STATIC=1 \
+##         CFLAGS="-I$PWD/deps/include" \
+##         LDFLAGS="-L$PWD/deps/lib"
+##        mv winlibs-tools-*.zip winlibs-tools-${{ matrix.config.arch }}.zip
+#    - if: matrix.config.os == 'windows-latest'
+#      name: Upload
+#      uses: actions/upload-artifact@v1
+#      with:
+#        path: ./release
+#        name: winlibs-tools-${{ matrix.config.arch }}.zip
 
