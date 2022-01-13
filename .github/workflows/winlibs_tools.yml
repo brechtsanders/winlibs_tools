@@ -129,15 +129,15 @@ jobs:
          -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }} \
          -S. -Bbuild_win
         ninja -Cbuild_win install/strip
-    - name: Build
-      run: |
-        PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:$PKG_CONFIG_PATH make install \
-         PREFIX=$PWD/release \
-         STATIC=1 \
-         BINDIR=bin \
-         OBJDIR=obj \
-         CFLAGS="-I$PWD/deps/include" \
-         LDFLAGS="-L$PWD/deps/lib"
+#    - name: Build
+#      run: |
+#        PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:$PKG_CONFIG_PATH make install \
+#         PREFIX=$PWD/release \
+#         STATIC=1 \
+#         BINDIR=bin \
+#         OBJDIR=obj \
+#         CFLAGS="-I$PWD/deps/include" \
+#         LDFLAGS="-L$PWD/deps/lib"
     - name: Build package
       run: |
         PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:$PKG_CONFIG_PATH make binarypackage \
@@ -145,10 +145,10 @@ jobs:
          OBJDIR=obj \
          CFLAGS="-I$PWD/deps/include" \
          LDFLAGS="-L$PWD/deps/lib"
-        mv winlibs-tools-*.zip winlibs-tools.zip
+        mv winlibs-tools-*.zip winlibs-tools-${{ matrix.config.arch }}.zip
     - name: Upload
       uses: actions/upload-artifact@v1
       with:
-        path: ./winlibs-tools.zip
-        name: winlibs-tools.zip
+        path: ./winlibs-tools-${{ matrix.config.arch }}.zip
+        name: winlibs-tools-${{ matrix.config.arch }}.zip
 
