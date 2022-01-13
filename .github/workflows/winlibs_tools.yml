@@ -75,7 +75,7 @@ jobs:
     - if: matrix.config.os == 'ubuntu-latest'
       name: Install build dependencies (Linux)
       run: |
-        sudo apt-get install zip cmake ninja-build libcurl4-gnutls-dev libgumbo-dev libpcre2-dev libsqlite3-dev libexpat1-dev libarchive-dev libavl-dev
+        sudo apt-get install zip cmake ninja-build librtmp-dev libbrotli-dev libgcrypt20-dev libshishi-dev libgnutls28-dev libidn2-dev libntlm0-dev libcurl4-gnutls-dev libgumbo-dev libpcre2-dev libsqlite3-dev libexpat1-dev libarchive-dev libavl-dev
 #    - if: matrix.config.os == 'macos-latest'
 #      name: Install build dependencies (macOS)
 #      run: |
