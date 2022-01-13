@@ -90,12 +90,14 @@ jobs:
          libssh-dev \
          libpsl-dev \
          libkrb5-dev \
+         krb5-multidev \
          comerr-dev \
          libldap2-dev \
          libunistring-dev \
          libacl1-dev \
          libzstd-dev \
          liblz4-dev \
+         libp11-kit-dev \
          libcurl4-gnutls-dev \
          libgumbo-dev \
          libpcre2-dev \
