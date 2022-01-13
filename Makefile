@@ -168,9 +168,9 @@ endif
 version:
 	sed -ne "s/^#define\s*WINLIBS_VERSION_[A-Z]*\s*\([0-9]*\)\s*$$/\1./p" src/winlibs_common.h | tr -d "\n" | sed -e "s/\.$$//" > version
 
-OSALIAS := $(OS)
+OSALIAS = $(OS)
 ifeq ($(OS),Windows_NT)
-ifneq (,$(findstring x86_64,$(shell gcc --version)))
+ifneq (,$(findstring x86_64,$(shell $(CC) --version)))
 OSALIAS := win64
 else
 OSALIAS := win32

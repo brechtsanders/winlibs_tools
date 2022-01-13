@@ -43,11 +43,11 @@ jobs:
 #    - if: matrix.config.os == 'ubuntu-latest'
 #      name: Install build dependencies (Linux)
 #      run: |
-#        sudo apt-get install cmake ninja-build libcurl4-gnutls-dev libgumbo-dev libpcre2-dev libsqlite3-dev libexpat1-dev libarchive-dev libavl-dev
+#        sudo apt-get install zip cmake ninja-build libcurl4-gnutls-dev libgumbo-dev libpcre2-dev libsqlite3-dev libexpat1-dev libarchive-dev libavl-dev
 #    - if: matrix.config.os == 'macos-latest'
 #      name: Install build dependencies (macOS)
 #      run: |
-#        brew install ninja curl gumbo-parser pcre2 sqlite expat libarchive
+#        brew install zip ninja curl gumbo-parser pcre2 sqlite expat libarchive
     - if: matrix.config.os == 'windows-latest'
       name: Install build dependencies (Windows/MSYS)
       uses: msys2/setup-msys2@v2
@@ -57,6 +57,7 @@ jobs:
         install: >-
           git
           make
+          zip
           mingw-w64-${{ matrix.config.arch }}-toolchain
           mingw-w64-${{ matrix.config.arch }}-ninja
           mingw-w64-${{ matrix.config.arch }}-cmake
@@ -130,16 +131,24 @@ jobs:
         ninja -Cbuild_win install/strip
     - name: Build
       run: |
-        PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:$PKG_CONFIG_PATH make install PREFIX=$PWD/release STATIC=1 BINDIR=bin OBJDIR=obj CFLAGS="-I$PWD/deps/include" LDFLAGS="-L$PWD/deps/lib"
+        PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:$PKG_CONFIG_PATH make install \
+         PREFIX=$PWD/release \
+         STATIC=1 \
+         BINDIR=bin \
+         OBJDIR=obj \
+         CFLAGS="-I$PWD/deps/include" \
+         LDFLAGS="-L$PWD/deps/lib"
     - name: Build package
       run: |
-        PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:$PKG_CONFIG_PATH make binarypackage BINDIR=bin OBJDIR=obj CFLAGS="-I$PWD/deps/include" LDFLAGS="-L$PWD/deps/lib"
-#    - name: Pack
-#      run: |
-#        tar cfj ./${{ matrix.config.artifact }} --strip-components=1 release
-#    - name: Upload
-#      uses: actions/upload-artifact@v1
-#      with:
-#        path: ./${{ matrix.config.artifact }}
-#        name: ${{ matrix.config.artifact }}
+        PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:$PKG_CONFIG_PATH make binarypackage \
+         BINDIR=bin \
+         OBJDIR=obj \
+         CFLAGS="-I$PWD/deps/include" \
+         LDFLAGS="-L$PWD/deps/lib"
+        mv winlibs-tools-*.zip winlibs-tools.zip
+    - name: Upload
+      uses: actions/upload-artifact@v1
+      with:
+        path: ./winlibs-tools.zip
+        name: winlibs-tools.zip
 
