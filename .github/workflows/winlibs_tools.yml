@@ -30,6 +30,14 @@ jobs:
               cc: i686-w64-mingw32-gcc.exe,
               cxx: i686-w64-mingw32-g++.exe
             }
+          - {
+              name: "Ubuntu Linux (clang)",
+              os: ubuntu-latest,
+              shell: bash,
+              arch: x86_64,
+              cc: clang,
+              cxx: clang++
+            }
     name: ${{ matrix.config.name }}
     runs-on: ${{ matrix.config.os }}
     defaults:
@@ -146,7 +154,8 @@ jobs:
          CFLAGS="-I$PWD/deps/include" \
          LDFLAGS="-L$PWD/deps/lib"
         mv winlibs-tools-*.zip winlibs-tools-${{ matrix.config.arch }}.zip
-    - name: Upload
+    - if: matrix.config.os == 'windows-latest'
+      name: Upload
       uses: actions/upload-artifact@v1
       with:
         path: ./winlibs-tools-${{ matrix.config.arch }}.zip
