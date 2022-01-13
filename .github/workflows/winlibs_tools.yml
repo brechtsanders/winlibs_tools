@@ -125,6 +125,4 @@ jobs:
         ninja -Cbuild_win install/strip
     - name: Build
       run: |
-        pwd
-        ls
         PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:$PKG_CONFIG_PATH make STATIC=1 BINDIR=bin OBJDIR=obj CFLAGS="-I$PWD/deps/include" LDFLAGS="-L$PWD/deps/lib"
