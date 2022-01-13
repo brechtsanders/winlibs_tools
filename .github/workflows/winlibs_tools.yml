@@ -56,8 +56,8 @@ jobs:
         msystem: ${{ matrix.config.msystem }}
         install: >-
           git
+          make
           mingw-w64-${{ matrix.config.arch }}-toolchain
-          mingw-w64-${{ matrix.config.arch }}-make
           mingw-w64-${{ matrix.config.arch }}-ninja
           mingw-w64-${{ matrix.config.arch }}-cmake
           mingw-w64-${{ matrix.config.arch }}-curl
