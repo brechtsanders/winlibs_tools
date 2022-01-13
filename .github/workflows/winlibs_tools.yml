@@ -167,7 +167,8 @@ jobs:
          -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }} \
          -S. -Bbuild_win
         ninja -Cbuild_win install/strip
-    - name: Build
+    - if: matrix.config.os == 'windows-latest'
+      name: Build static
       run: |
         PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:$PKG_CONFIG_PATH make install \
          PREFIX=$PWD/release \
@@ -176,6 +177,15 @@ jobs:
          OBJDIR=obj \
          CFLAGS="-DSTATIC -I$PWD/deps/include" \
          LDFLAGS="-static -L$PWD/deps/lib"
+    - if: matrix.config.os != 'windows-latest'
+      name: Build shared
+      run: |
+        PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:$PKG_CONFIG_PATH make install \
+         PREFIX=$PWD/release \
+         BINDIR=bin \
+         OBJDIR=obj \
+         CFLAGS="-I$PWD/deps/include" \
+         LDFLAGS="-L$PWD/deps/lib"
 #    - name: Build package
 #      run: |
 #        PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:$PKG_CONFIG_PATH make binarypackage \
