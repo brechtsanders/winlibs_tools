@@ -48,14 +48,6 @@ jobs:
       CXX: ${{ matrix.config.cxx }}
 
     steps:
-#    - if: matrix.config.os == 'ubuntu-latest'
-#      name: Install build dependencies (Linux)
-#      run: |
-#        sudo apt-get install zip cmake ninja-build libcurl4-gnutls-dev libgumbo-dev libpcre2-dev libsqlite3-dev libexpat1-dev libarchive-dev libavl-dev
-#    - if: matrix.config.os == 'macos-latest'
-#      name: Install build dependencies (macOS)
-#      run: |
-#        brew install zip ninja curl gumbo-parser pcre2 sqlite expat libarchive
     - if: matrix.config.os == 'windows-latest'
       name: Install build dependencies (Windows/MSYS)
       uses: msys2/setup-msys2@v2
@@ -80,6 +72,14 @@ jobs:
           mingw-w64-${{ matrix.config.arch }}-sqlite3
           mingw-w64-${{ matrix.config.arch }}-expat
           mingw-w64-${{ matrix.config.arch }}-libarchive
+    - if: matrix.config.os == 'ubuntu-latest'
+      name: Install build dependencies (Linux)
+      run: |
+        sudo apt-get install zip cmake ninja-build libcurl4-gnutls-dev libgumbo-dev libpcre2-dev libsqlite3-dev libexpat1-dev libarchive-dev libavl-dev
+#    - if: matrix.config.os == 'macos-latest'
+#      name: Install build dependencies (macOS)
+#      run: |
+#        brew install zip ninja curl gumbo-parser pcre2 sqlite expat libarchive
 #    - uses: seanmiddleditch/gha-setup-ninja@master
     - uses: actions/checkout@v1
     - if: matrix.config.os != 'ubuntu-latest'
@@ -137,27 +137,26 @@ jobs:
          -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }} \
          -S. -Bbuild_win
         ninja -Cbuild_win install/strip
-#    - name: Build
-#      run: |
-#        PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:$PKG_CONFIG_PATH make install \
-#         PREFIX=$PWD/release \
-#         STATIC=1 \
-#         BINDIR=bin \
-#         OBJDIR=obj \
-#         CFLAGS="-I$PWD/deps/include" \
-#         LDFLAGS="-L$PWD/deps/lib"
-    - name: Build package
+    - name: Build
       run: |
-        PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:$PKG_CONFIG_PATH make binarypackage \
+        PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:$PKG_CONFIG_PATH make install \
+         PREFIX=$PWD/release \
+         STATIC=1 \
          BINDIR=bin \
          OBJDIR=obj \
          CFLAGS="-I$PWD/deps/include" \
          LDFLAGS="-L$PWD/deps/lib"
-        mv winlibs-tools-*.zip winlibs-tools-${{ matrix.config.arch }}.zip
+#    - name: Build package
+#      run: |
+#        PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:$PKG_CONFIG_PATH make binarypackage \
+#         STATIC=1 \
+#         CFLAGS="-I$PWD/deps/include" \
+#         LDFLAGS="-L$PWD/deps/lib"
+#        mv winlibs-tools-*.zip winlibs-tools-${{ matrix.config.arch }}.zip
     - if: matrix.config.os == 'windows-latest'
       name: Upload
       uses: actions/upload-artifact@v1
       with:
-        path: ./winlibs-tools-${{ matrix.config.arch }}.zip
+        path: ./release
         name: winlibs-tools-${{ matrix.config.arch }}.zip
 
