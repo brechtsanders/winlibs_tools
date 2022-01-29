@@ -34,7 +34,31 @@
 
 #define DB_SQL_PACKAGEVERSION_GET_SINCE "SELECT version FROM package_version WHERE basename = ?1 AND created >= ?2 ORDER BY id DESC"
 
-/////SELECT basename, version FROM package_version WHERE created >= strftime('%s') - 24 * 3600 ORDER BY created
+/*
+-- list package versions added in the last 24 hours
+SELECT basename, version FROM package_version WHERE created >= strftime('%s') - 3600 * 24 ORDER BY created DESC, version DESC;
+
+-- list packages with no versions found in the last 30 days
+SELECT package.*, COUNT(package_version.version) AS versions_found, datetime(MAX(package_version.updated), 'unixepoch') AS version_last_updated FROM package
+LEFT JOIN package_version
+ON package.basename = package_version.basename
+WHERE package.updated < strftime('%s') - 3600 * 24 * 30
+GROUP BY(package.basename)
+ORDER BY updated DESC;
+
+-- clean up packages with no versions found in the last 30 days
+DELETE FROM package_version WHERE basename IN (SELECT basename FROM package WHERE updated < strftime('%s') - 3600 * 24 * 30);
+DELETE FROM package WHERE basename IN (SELECT basename FROM package WHERE updated < strftime('%s') - 3600 * 24 * 30);
+
+
+-- list packages with no versions updated in the last 120 days
+SELECT package.*, COUNT(package_version.version) AS versions_found, datetime(MAX(package_version.updated), 'unixepoch') AS version_last_updated FROM package
+LEFT JOIN package_version
+ON package.basename = package_version.basename
+GROUP BY(package.basename)
+HAVING version_last_updated < strftime('%s') - 3600 * 24 * 120
+ORDER BY updated DESC;
+*/
 
 //!data structure for version check master database handle
 struct versioncheckmasterdb {

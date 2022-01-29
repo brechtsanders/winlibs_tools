@@ -54,8 +54,8 @@ int main (int argc, char *argv[], char *envp[])
   //parse environment and command line flags
   if (miniargv_process(argv, envp, argdef, envdef, NULL, NULL) != 0)
     return 1;
-  //show help if requested or if no command line arguments were given
-  if (showhelp || argc <= 1) {
+  //show help if requested
+  if (showhelp) {
     printf(
       PROGRAM_NAME " - Version " WINLIBS_VERSION_STRING " - " WINLIBS_LICENSE " - " WINLIBS_CREDITS "\n"
       PROGRAM_DESC "\n"

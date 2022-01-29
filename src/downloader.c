@@ -1,5 +1,6 @@
 #include "downloader.h"
 #include "memory_buffer.h"
+#include "winlibs_common.h"
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
@@ -206,10 +207,16 @@ char* downloader_get_file (struct downloader* handle, const char* url, struct do
   return data;
 }
 
+static size_t dummy_process_download_header (void* data, size_t size, size_t nitems, void* userdata)
+{
+  return nitems;
+}
+
 long downloader_save_file (struct downloader* handle, const char* url, const char* outputfile)
 {
-  CURLcode curlstatus;
   FILE* dst;
+  CURL* curl_handle;
+  CURLcode curlstatus;
   long responsecode = -1;
   //open destination file
   if ((dst = fopen(outputfile, "wb")) == NULL) {
@@ -217,14 +224,17 @@ long downloader_save_file (struct downloader* handle, const char* url, const cha
     return 999;
   }
   //download
-  curl_easy_setopt(handle->curl_handle, CURLOPT_URL, url);
-  curl_easy_setopt(handle->curl_handle, CURLOPT_WRITEFUNCTION, fwrite);
-  curl_easy_setopt(handle->curl_handle, CURLOPT_WRITEDATA, dst);
-  if ((curlstatus = curl_easy_perform(handle->curl_handle)) != CURLE_OK) {
-    fprintf(stderr, "libcurl error %i: %s", (int)curlstatus, curl_easy_strerror(curlstatus));
+  curl_handle = curl_easy_duphandle(handle->curl_handle);
+  curl_easy_setopt(curl_handle, CURLOPT_URL, url);
+  curl_easy_setopt(curl_handle, CURLOPT_HEADERFUNCTION, dummy_process_download_header);
+  curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, dst);
+  curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, fwrite);
+  if ((curlstatus = curl_easy_perform(curl_handle)) != CURLE_OK) {
+    fprintf(stderr, "libcurl error %i: %s\n", (int)curlstatus, curl_easy_strerror(curlstatus));
   } else {
-    curl_easy_getinfo(handle->curl_handle, CURLINFO_RESPONSE_CODE, &responsecode);
+    curl_easy_getinfo(curl_handle, CURLINFO_RESPONSE_CODE, &responsecode);
   }
+  curl_easy_cleanup(curl_handle);
   fclose(dst);
   if (responsecode < 200 || responsecode >= 300)
     unlink(outputfile);

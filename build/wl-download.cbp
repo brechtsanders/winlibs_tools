@@ -32,7 +32,7 @@
 				<Option object_output="obj/Debug32/" />
 				<Option type="1" />
 				<Option compiler="MINGW32" />
-				<Option parameters="-f -v -d C:\TEMP http://www.zlib.net/zlib-1.2.11.tar.gz" />
+				<Option parameters="-f -v -d C:\TEMP\sources http://www.zlib.net/zlib-1.2.11.tar.gz " />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -42,6 +42,7 @@
 				<Option object_output="obj/Release32/" />
 				<Option type="1" />
 				<Option compiler="MINGW32" />
+				<Option parameters="-f -d C:\TEMP\sources http://www.zlib.net/zlib-1.2.11.tar.gz" />
 				<Compiler>
 					<Add option="-O2" />
 				</Compiler>
@@ -67,7 +68,7 @@
 				<Option object_output="obj/Release64/" />
 				<Option type="1" />
 				<Option compiler="MINGW64" />
-				<Option parameters="-t 60 -d C:\TEMP https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz" />
+				<Option parameters="-t 60 -d C:\TEMP\sources https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz" />
 				<Compiler>
 					<Add option="-O2" />
 				</Compiler>
@@ -82,9 +83,10 @@
 			<Add directory="../src" />
 		</Compiler>
 		<Linker>
+			<Add option="-static-libgcc" />
 			<Add option="-static" />
 			<Add option="-Wl,--as-needed" />
-			<Add option="`pkg-config --static --libs libcurl librtmp libbrotlidec libgcrypt shishi gnutls libidn libntlm`" />
+			<Add option="`pkg-config.exe --static --libs libcurl librtmp libbrotlidec libgcrypt shishi gnutls libidn libntlm`" />
 			<Add option="-Wl,--allow-multiple-definition" />
 			<Add library="miniargv" />
 		</Linker>

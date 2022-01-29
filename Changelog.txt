@@ -1,4 +1,10 @@
+1.0.9
+
 1.0.8
+
+2022-01-13  Brecht Sanders  https://github.com/brechtsanders/
+
+  * added Github Actions
 
 2022-01-09  Brecht Sanders  https://github.com/brechtsanders/
 

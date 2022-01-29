@@ -79,9 +79,12 @@
 		<Compiler>
 			<Add option="-Os" />
 			<Add option="-Wall" />
+			<Add option="-DSTATIC" />
 			<Add directory="../src" />
 		</Compiler>
 		<Linker>
+			<Add option="-static-libgcc" />
+			<Add option="-static" />
 			<Add library="miniargv" />
 			<Add library="avl" />
 			<Add library="versioncmp" />

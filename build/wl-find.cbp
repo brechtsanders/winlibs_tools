@@ -67,9 +67,12 @@
 				<Option parameters="-i D:\Prog\winlibs64-11.2.0ucrt\custombuilt --foldername --fullpath Australia" />
 				<Compiler>
 					<Add option="-Os" />
+					<Add option="-DSTATIC" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+					<Add option="-static-libgcc" />
+					<Add option="-static" />
 				</Linker>
 			</Target>
 		</Build>

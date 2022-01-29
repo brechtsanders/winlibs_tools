@@ -72,18 +72,23 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+					<Add option="-static-libgcc" />
+					<Add option="-static" />
 				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
-			<Add option="-DCURL_STATICLIB" />
+			<Add option="-DSTATIC" />
 		</Compiler>
 		<Linker>
+			<Add option="-static-libgcc" />
+			<Add option="-static" />
 			<Add option="-Wl,--as-needed" />
+			<Add option="`pkg-config --static --libs libcurl librtmp libbrotlidec libgcrypt shishi gnutls libidn libntlm`" />
+			<Add option="-Wl,--allow-multiple-definition" />
 			<Add library="miniargv" />
 			<Add library="versioncmp" />
-			<Add library="curl" />
 			<Add library="gumbo" />
 			<Add library="pcre2-8" />
 			<Add library="avl" />

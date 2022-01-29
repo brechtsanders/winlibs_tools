@@ -45,25 +45,35 @@ static int is_directory (const char* path)
   return S_ISDIR(statbuf.st_mode);
 }
 
+exclusive_lock_file lock = NULL;
+char* dstpath = NULL;
+int dsthandle = -1;
+
+typedef int (*download_progress_callback_fn)(long long pos, long long len, void* callbackdata);
+
 struct process_download_data_struct {
   CURL* curl_handle;
   curl_off_t len;
   curl_off_t pos;
+  curl_off_t lastpos;
   int dst;
-  int verbose;
+  download_progress_callback_fn showprogress;
 #ifdef PROGRESS_UPDATE_INTERVAL
   clock_t nextstatusupdate;
 #endif
 };
 
-void show_progress (struct process_download_data_struct* dldata)
+int show_progress (long long pos, long long len, void* callbackdata)
 {
-  if (dldata->len > 0)
-    printf("\r%lu bytes (%u%%)", (unsigned long)dldata->pos, (unsigned)(100L * dldata->pos / dldata->len));
-    //printf("\r%lu/%lu bytes (%u%%)", (unsigned long)dldata->pos, (unsigned long)dldata->len, (unsigned)(100L * dldata->pos / dldata->len));
+  if (len > 0)
+    printf("\r%lu bytes (%u%%)", (unsigned long)pos, (unsigned)(100L * pos / len));
+    //printf("\r%lu/%lu bytes (%u%%)", (unsigned long)pos, (unsigned long)len, (unsigned)(100L * pos / len));
   else
-    printf("\r%lu bytes", (unsigned long)dldata->pos);
+    printf("\r%lu bytes", (unsigned long)pos);
+  if (pos == len)
+    printf("\n");
   fflush(stdout);
+  return 0;
 }
 
 static size_t process_download_data (void* data, size_t size, size_t nitems, void* userdata)
@@ -81,12 +91,14 @@ static size_t process_download_data (void* data, size_t size, size_t nitems, voi
   dldata->pos += size * nitems;
   //update status if needed
 #ifdef PROGRESS_UPDATE_INTERVAL
-  if (dldata->verbose && (currentclock = clock()) > dldata->nextstatusupdate) {
+  if ((currentclock = clock()) > dldata->nextstatusupdate) {
     dldata->nextstatusupdate = currentclock + CLOCKS_PER_SEC * PROGRESS_UPDATE_INTERVAL;
 #else
-  if (dldata->verbose) {
+  {
 #endif
-    show_progress(dldata);
+    if ((*dldata->showprogress)(dldata->pos, dldata->len, dldata) != 0)
+      return 0;
+    dldata->lastpos = dldata->pos;
   }
   //write data
   if (!size || !nitems)
@@ -96,9 +108,68 @@ static size_t process_download_data (void* data, size_t size, size_t nitems, voi
   return (len < 0 ? 0 : len);
 }
 
-exclusive_lock_file lock = NULL;
-char* dstpath = NULL;
-int dsthandle = -1;
+static size_t process_download_data_silent (void* data, size_t size, size_t nitems, void* userdata)
+{
+  ssize_t len;
+  struct process_download_data_struct* dldata = (struct process_download_data_struct*)userdata;
+  //write data
+  if (!size || !nitems)
+    len = 0;
+  else
+    len = write(dldata->dst, data, size * nitems);
+  return (len < 0 ? 0 : len);
+}
+
+long download_to_file (CURL* curl_handle, const char* url, const char* dstpath, int force, download_progress_callback_fn progresscallback, void* callbackdata)
+{
+  struct process_download_data_struct dldata;
+  CURLcode curlstatus;
+  long responsecode;
+  dldata.curl_handle = curl_handle;
+  dldata.len = -2;
+  dldata.pos = 0;
+  dldata.lastpos = -1;
+  dldata.showprogress = progresscallback;
+#ifdef PROGRESS_UPDATE_INTERVAL
+  dldata.nextstatusupdate = 0;
+#endif
+  //open destination file
+  if ((dsthandle = open(dstpath, O_WRONLY | O_CREAT | O_TRUNC | O_BINARY | (force ? 0 : O_EXCL), S_IWUSR | S_IWGRP | S_IWOTH)) < 0) {
+    if (errno == EEXIST)
+      fprintf(stderr, "File already exists: %s\n", dstpath);
+    else
+      fprintf(stderr, "Error creating file: %s\n", dstpath);
+    return -2;
+  }
+  //download contents
+  dldata.dst = dsthandle;
+  curl_easy_setopt(curl_handle, CURLOPT_URL, url);
+  curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, (progresscallback ? process_download_data : process_download_data_silent));
+  curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, &dldata);
+  curlstatus = curl_easy_perform(curl_handle);
+  if (progresscallback && dldata.lastpos < dldata.len)
+    (*progresscallback)(dldata.pos, (dldata.len >= 0 ? dldata.len : dldata.pos), &dldata);
+  //close destination file
+  close(dsthandle);
+  dsthandle = -1;
+  //check download status
+  if (curlstatus != CURLE_OK) {
+    fprintf(stderr, "libcurl error %i: %s\n", (int)curlstatus, curl_easy_strerror(curlstatus));
+    return curlstatus;
+  }
+  responsecode = -1;
+  curl_easy_getinfo(curl_handle, CURLINFO_RESPONSE_CODE, &responsecode);
+  //delete downloaded file in case of error
+  if (responsecode == -1 || !(responsecode >= 200 && responsecode < 300)) {
+    if (responsecode != -1) {
+      printf("HTTP response code: %li\n", responsecode);
+    }
+    unlink(dstpath);
+    return responsecode;
+  }
+  /////TO DO: handle other response codes (retry?)
+  return 0;
+}
 
 DEFINE_INTERRUPT_HANDLER_BEGIN(handle_break_signal)
 {
@@ -237,7 +308,6 @@ int main (int argc, char *argv[], char *envp[])
   curl_easy_setopt(curl_handle, CURLOPT_TCP_KEEPALIVE, 1L);                         //enable keepalive probes
   curl_easy_setopt(curl_handle, CURLOPT_LOW_SPEED_LIMIT, 1L);                       //abort if download speed is slower than 1 byte/sec ...
   curl_easy_setopt(curl_handle, CURLOPT_LOW_SPEED_TIME, connect_timeout);           //... during the period specified as connection timeout
-  curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, process_download_data);      //set incoming data callback function
 #ifdef PROGRAM_USER_AGENT
   curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, PROGRAM_USER_AGENT);             //set the user agent
 #endif
@@ -246,9 +316,6 @@ int main (int argc, char *argv[], char *envp[])
   i = 0;
   while ((i = miniargv_get_next_arg_param(i, argv, argdef, NULL)) > 0) {
     const char* filename;
-    CURLcode curlstatus;
-    long responsecode;
-    struct process_download_data_struct dldata;
 
     printf("%s\n", argv[i]);
 
@@ -256,13 +323,6 @@ int main (int argc, char *argv[], char *envp[])
     if ((filename = strrchr(argv[i], '/')) == NULL || *++filename == 0) {
       fprintf(stderr, "Unable to determine filename for URL: %s\n", argv[i]);
     } else {
-      dldata.curl_handle = curl_handle;
-      dldata.len = -2;
-      dldata.pos = 0;
-      dldata.verbose = verbose;
-#ifdef PROGRESS_UPDATE_INTERVAL
-      dldata.nextstatusupdate = 0;
-#endif
       //determine download file path
       if ((dstpath = (char*)malloc(dstdirlen + strlen(filename) + 2)) == NULL) {
         fprintf(stderr, "Memory allocation error\n");
@@ -290,40 +350,8 @@ int main (int argc, char *argv[], char *envp[])
           p++;
         }
       }
-      //open destination file
-      if ((dsthandle = open(dstpath, O_WRONLY | O_CREAT | O_TRUNC | O_BINARY | (force ? 0 : O_EXCL), S_IWUSR | S_IWGRP | S_IWOTH)) < 0) {
-        if (errno == EEXIST)
-          fprintf(stderr, "File already exists: %s\n", dstpath);
-        else
-          fprintf(stderr, "Error creating file: %s\n", dstpath);
-      }
-      //download contents
-      if (dsthandle >= 0) {
-        dldata.dst = dsthandle;
-        curl_easy_setopt(curl_handle, CURLOPT_URL, argv[i]);
-        curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, &dldata);
-        responsecode = -1;
-        curlstatus = curl_easy_perform(curl_handle);
-        if (dldata.verbose)
-          show_progress(&dldata);
-        printf("\n");
-        if (curlstatus != CURLE_OK) {
-          fprintf(stderr, "libcurl error %i: %s\n", (int)curlstatus, curl_easy_strerror(curlstatus));
-        } else {
-          curl_easy_getinfo(curl_handle, CURLINFO_RESPONSE_CODE, &responsecode);
-        }
-        close(dsthandle);
-        dsthandle = -1;
-        //delete downloaded file in case of error
-        if (responsecode == -1 || !(responsecode >= 200 && responsecode < 300)) {
-          if (responsecode != -1) {
-            printf("HTTP response code: %li\n", responsecode);
-          }
-          unlink(dstpath);
-        } else {
-          /////TO DO: handle other response codes (retry?)
-        }
-      }
+      //download file
+      download_to_file(curl_handle, argv[i], dstpath, force, (verbose > 0 ? show_progress : NULL), &verbose);
       free(dstpath);
       dstpath = NULL;
     }
