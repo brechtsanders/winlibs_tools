@@ -140,16 +140,16 @@ $(BINDIR)/wl-checknewreleases$(BINEXT): $(OBJDIR)/wl-checknewreleases.o $(OBJDIR
 $(BINDIR)/wl-makepackage$(BINEXT): $(OBJDIR)/wl-makepackage.o $(OBJDIR)/memory_buffer.o $(OBJDIR)/fstab.o $(OBJDIR)/filesystem.o $(OBJDIR)/sorted_unique_list.o
 	$(CC) $(STRIPFLAG) $(LDFLAGS) -o $@ $^ $(MINIARGV_LDFLAGS) $(LIBDIRTRAV_LDFLAGS) $(LIBARCHIVE_LDFLAGS) $(PCRE2_FINDER_LDFLAGS) $(PEDEPS_LDFLAGS) $(AVL_LDFLAGS)
 
-$(BINDIR)/wl-install$(BINEXT): $(OBJDIR)/wl-install.o $(OBJDIR)/filesystem.o $(OBJDIR)/memory_buffer.o $(OBJDIR)/sorted_unique_list.o $(OBJDIR)/pkgdb.o
+$(BINDIR)/wl-install$(BINEXT): $(OBJDIR)/wl-install.o $(OBJDIR)/filesystem.o $(OBJDIR)/memory_buffer.o $(OBJDIR)/sorted_unique_list.o $(OBJDIR)/pkg.o $(OBJDIR)/pkgdb.o
 	$(CC) $(STRIPFLAG) $(LDFLAGS) -o $@ $^ $(MINIARGV_LDFLAGS) $(AVL_LDFLAGS) $(EXPAT_LDFLAGS) $(LIBARCHIVE_LDFLAGS) $(SQLITE3_LDFLAGS)
 
-$(BINDIR)/wl-uninstall$(BINEXT): $(OBJDIR)/wl-uninstall.o $(OBJDIR)/filesystem.o $(OBJDIR)/memory_buffer.o $(OBJDIR)/sorted_unique_list.o $(OBJDIR)/pkgdb.o
+$(BINDIR)/wl-uninstall$(BINEXT): $(OBJDIR)/wl-uninstall.o $(OBJDIR)/filesystem.o $(OBJDIR)/memory_buffer.o $(OBJDIR)/sorted_unique_list.o $(OBJDIR)/pkg.o $(OBJDIR)/pkgdb.o
 	$(CC) $(STRIPFLAG) $(LDFLAGS) -o $@ $^ $(MINIARGV_LDFLAGS) $(LIBDIRTRAV_LDFLAGS) $(AVL_LDFLAGS) $(LIBARCHIVE_LDFLAGS) $(SQLITE3_LDFLAGS)
 
-$(BINDIR)/wl-build$(BINEXT): $(OBJDIR)/wl-build.o $(OBJDIR)/package_info.o $(OBJDIR)/pkgdb.o $(OBJDIR)/memory_buffer.o $(OBJDIR)/sorted_unique_list.o $(OBJDIR)/filesystem.o
+$(BINDIR)/wl-build$(BINEXT): $(OBJDIR)/wl-build.o $(OBJDIR)/package_info.o $(OBJDIR)/pkg.o $(OBJDIR)/pkgdb.o $(OBJDIR)/memory_buffer.o $(OBJDIR)/sorted_unique_list.o $(OBJDIR)/filesystem.o
 	$(CC) $(STRIPFLAG) $(LDFLAGS) -o $@ $^ $(MINIARGV_LDFLAGS) $(LIBDIRTRAV_LDFLAGS) $(VERSIONCMP_LDFLAGS) $(AVL_LDFLAGS) $(CROSSRUN_LDFLAGS) $(PTHREADS_LDFLAGS) $(SQLITE3_LDFLAGS)
 
-$(BINDIR)/wl-find$(BINEXT): $(OBJDIR)/wl-find.o $(OBJDIR)/package_info.o $(OBJDIR)/pkgdb.o $(OBJDIR)/memory_buffer.o $(OBJDIR)/sorted_unique_list.o $(OBJDIR)/filesystem.o
+$(BINDIR)/wl-find$(BINEXT): $(OBJDIR)/wl-find.o $(OBJDIR)/package_info.o $(OBJDIR)/pkg.o $(OBJDIR)/pkgdb.o $(OBJDIR)/memory_buffer.o $(OBJDIR)/sorted_unique_list.o $(OBJDIR)/filesystem.o
 	$(CC) $(STRIPFLAG) $(LDFLAGS) -o $@ $^ $(MINIARGV_LDFLAGS) $(PORTCOLCON_LDFLAGS) $(AVL_LDFLAGS) $(SQLITE3_LDFLAGS)
 
 .PHONY: install

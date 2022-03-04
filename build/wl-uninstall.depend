@@ -179,7 +179,7 @@
 	<stdlib.h>
 	<stdarg.h>
 
-1640770082 source:z:\winlibs_tools\src\pkgdb.c
+1646407466 source:z:\winlibs_tools\src\pkgdb.c
 	"pkgdb.h"
 	"filesystem.h"
 	"memory_buffer.h"
@@ -190,8 +190,8 @@
 	<unistd.h>
 	<windows.h>
 
-1640769849 z:\winlibs_tools\src\pkgdb.h
-	"sorted_unique_list.h"
+1646407254 z:\winlibs_tools\src\pkgdb.h
+	"pkg.h"
 	<stdint.h>
 	<stdlib.h>
 	<sqlite3.h>
@@ -222,4 +222,15 @@
 	"memory_buffer.h"
 	"filesystem.h"
 	"pkgdb.h"
+
+1646407792 source:z:\winlibs_tools\src\pkg.c
+	"pkg.h"
+	<stdlib.h>
+	<string.h>
+
+1646407161 z:\winlibs_tools\src\pkg.h
+	"sorted_unique_list.h"
+	<stdint.h>
+	<stdlib.h>
+	<sqlite3.h>
 

@@ -177,7 +177,7 @@
 1618569018 z:\winlibs_tools\src\sorted_unique_list.h
 	<stdlib.h>
 
-1640770181 source:z:\winlibs_tools\src\wl-build.c
+1642088614 source:z:\winlibs_tools\src\wl-build.c
 	<stdio.h>
 	<stdlib.h>
 	<stdint.h>
@@ -197,7 +197,6 @@
 	"filesystem.h"
 	"handle_interrupts.h"
 	"winlibs_common.h"
-	<malloc.h>
 	<string.h>
 	<windows.h>
 	<limits.h>
@@ -210,7 +209,7 @@
 
 1642176964 z:\winlibs_tools\src\winlibs_common.h
 
-1640770082 source:z:\winlibs_tools\src\pkgdb.c
+1646407466 source:z:\winlibs_tools\src\pkgdb.c
 	"pkgdb.h"
 	"filesystem.h"
 	"memory_buffer.h"
@@ -221,7 +220,18 @@
 	<unistd.h>
 	<windows.h>
 
-1640769849 z:\winlibs_tools\src\pkgdb.h
+1646407254 z:\winlibs_tools\src\pkgdb.h
+	"pkg.h"
+	<stdint.h>
+	<stdlib.h>
+	<sqlite3.h>
+
+1646407792 source:z:\winlibs_tools\src\pkg.c
+	"pkg.h"
+	<stdlib.h>
+	<string.h>
+
+1646407161 z:\winlibs_tools\src\pkg.h
 	"sorted_unique_list.h"
 	<stdint.h>
 	<stdlib.h>

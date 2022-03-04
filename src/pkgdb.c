@@ -151,62 +151,6 @@ int iterate_comma_separated_list_no_alloc (const char* list, iterate_comma_separ
 
 ////////////////////////////////////////////////////////////////////////
 
-const char* package_metadata_field_name[] = {
-  "Name",
-  "Version",
-  "Title",
-  "Description",
-  "Website URL",
-  "Downloads URL",
-  "Source code URL",
-  "Category",
-  "Type",
-  "Version date",
-  "License file",
-  "License type",
-  "Status",
-  NULL
-};
-
-struct package_metadata_struct* package_metadata_create ()
-{
-  int i;
-  struct package_metadata_struct* metadata;
-  if ((metadata = (struct package_metadata_struct*)malloc(sizeof(struct package_metadata_struct))) == NULL)
-    return NULL;
-  for (i = 0; i < PACKAGE_METADATA_TOTAL_FIELDS; i++)
-    metadata->datafield[i] = NULL;
-  metadata->fileexclusions = sorted_unique_list_create(strcmp, free);
-  metadata->folderexclusions = sorted_unique_list_create(strcmp, free);
-  metadata->filelist = sorted_unique_list_create(strcmp, free);
-  metadata->folderlist = sorted_unique_list_create(strcmp, free);
-  metadata->dependencies = sorted_unique_list_create(strcmp, free);
-  metadata->optionaldependencies = sorted_unique_list_create(strcmp, free);
-  metadata->builddependencies = sorted_unique_list_create(strcmp, free);
-  metadata->totalsize = 0;
-  return metadata;
-}
-
-void package_metadata_free (struct package_metadata_struct* metadata)
-{
-  int i;
-  if (!metadata)
-    return;
-  for (i = 0; i < PACKAGE_METADATA_TOTAL_FIELDS; i++)
-    if (metadata->datafield[i])
-      free(metadata->datafield[i]);
-  sorted_unique_list_free(metadata->fileexclusions);
-  sorted_unique_list_free(metadata->folderexclusions);
-  sorted_unique_list_free(metadata->filelist);
-  sorted_unique_list_free(metadata->folderlist);
-  sorted_unique_list_free(metadata->dependencies);
-  sorted_unique_list_free(metadata->optionaldependencies);
-  sorted_unique_list_free(metadata->builddependencies);
-  free(metadata);
-}
-
-////////////////////////////////////////////////////////////////////////
-
 #define RETRY_ATTEMPTS 12
 #define RETRY_WAIT_TIME 250
 #ifdef _WIN32
@@ -545,6 +489,10 @@ struct package_metadata_struct* pkgdb_read_package (pkgdb_handle handle, const c
           free(pkginfo->datafield[i]);
         pkginfo->datafield[i] = (s ? strdup(s) : NULL);
       }
+#ifdef EXPERIMENTAL
+      pkginfo->buildok = 1;
+      pkginfo->lastchanged = sqlite3_column_int64(sqlresult, PACKAGE_METADATA_TOTAL_FIELDS);
+#endif
     }
     sqlite3_finalize(sqlresult);
   }

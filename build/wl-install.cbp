@@ -95,6 +95,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../src/memory_buffer.h" />
+		<Unit filename="../src/pkg.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/pkg.h" />
 		<Unit filename="../src/pkgdb.c">
 			<Option compilerVar="CC" />
 		</Unit>

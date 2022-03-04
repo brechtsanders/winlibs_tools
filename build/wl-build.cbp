@@ -79,6 +79,7 @@
 			<Add option="-Os" />
 			<Add option="-Wall" />
 			<Add option="-DSTATIC" />
+			<Add option="-DEXPERIMENTAL" />
 			<Add directory="../src" />
 		</Compiler>
 		<Linker>
@@ -104,6 +105,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../src/package_info.h" />
+		<Unit filename="../src/pkg.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/pkg.h" />
 		<Unit filename="../src/pkgdb.c">
 			<Option compilerVar="CC" />
 		</Unit>
