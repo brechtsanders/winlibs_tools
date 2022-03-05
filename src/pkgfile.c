@@ -1,4 +1,4 @@
-#include "package_info.h"
+#include "pkgfile.h"
 #include "filesystem.h"
 #include "winlibs_common.h"
 #include <stdlib.h>
@@ -153,63 +153,19 @@ int check_packageinfo_paths (const char* infopath)
   return -count_good;
 }
 
-void free_packageinfo (struct package_info_struct* packageinfo)
-{
-  free(packageinfo->name);
-  free(packageinfo->status);
-  free(packageinfo->url);
-  free(packageinfo->basename);
-  free(packageinfo->description);
-  free(packageinfo->category);
-  free(packageinfo->type);
-  free(packageinfo->version);
-  free(packageinfo->versiondate);
-  free(packageinfo->dependencies);
-  free(packageinfo->optionaldependencies);
-  free(packageinfo->builddependencies);
-  free(packageinfo->licensefile);
-  free(packageinfo->licensetype);
-  free(packageinfo->downloadurldata);
-  free(packageinfo->downloadsourceurl);
-  if (packageinfo->extradata_free_fn)
-    (*packageinfo->extradata_free_fn)(packageinfo->extradata);
-  free(packageinfo);
-}
-
-struct package_info_struct* read_packageinfo (const char* infopath, const char* basename)
+struct package_metadata_struct* read_packageinfo (const char* infopath, const char* basename)
 {
   packageinfo_file pkgfile;
   char* line;
   size_t linenumber = 0;
-  struct package_info_struct* info = NULL;
+  struct package_metadata_struct* info = NULL;
   //abort on invalid parameters
   if (infopath == NULL || basename == NULL)
     return NULL;
   //process file
   if ((pkgfile = open_packageinfo_file(infopath, basename)) != NULL) {
     //initialize data
-    info = (struct package_info_struct*)malloc(sizeof(struct package_info_struct));
-    info->name = NULL;
-    info->status = NULL;
-    info->url = NULL;
-    info->basename = NULL;
-    info->description = NULL;
-    info->category = NULL;
-    info->type = NULL;
-    info->version = NULL;
-    info->version_linenumber = 0;
-    info->versiondate = NULL;
-    info->dependencies = NULL;
-    info->optionaldependencies = NULL;
-    info->builddependencies = NULL;
-    info->licensefile = NULL;
-    info->licensetype = NULL;
-    info->downloadurldata = NULL;
-    info->downloadsourceurl = NULL;
-    info->buildok = 0;
-    info->lastchanged = pkgfile->lastchanged;
-    info->extradata = NULL;
-    info->extradata_free_fn = NULL;
+    info = package_metadata_create();
     //process file
     while ((line = packageinfo_file_readline(pkgfile)) != NULL) {
       char* p;
@@ -228,38 +184,38 @@ struct package_info_struct* read_packageinfo (const char* infopath, const char* 
           if ((q = strchr(p, '=')) != NULL) {
             *q++ = 0;
             if (strcmp(p, "NAME") == 0)
-              set_var(&info->name, q);
+              set_var(&(info->datafield[PACKAGE_METADATA_INDEX_NAME]), q);
             else if (strcmp(p, "STATUS") == 0)
-              set_var(&info->status, q);
+              set_var(&(info->datafield[PACKAGE_METADATA_INDEX_STATUS]), q);
             else if (strcmp(p, "URL") == 0)
-              set_var(&info->url, q);
+              set_var(&(info->datafield[PACKAGE_METADATA_INDEX_URL]), q);
             else if (strcmp(p, "BASENAME") == 0)
-              set_var(&info->basename, q);
+              set_var(&(info->datafield[PACKAGE_METADATA_INDEX_BASENAME]), q);
             else if (strcmp(p, "DESCRIPTION") == 0)
-              set_var(&info->description, q);
+              set_var(&(info->datafield[PACKAGE_METADATA_INDEX_DESCRIPTION]), q);
             else if (strcmp(p, "CATEGORY") == 0)
-              set_var(&info->category, q);
+              set_var(&(info->datafield[PACKAGE_METADATA_INDEX_CATEGORY]), q);
             else if (strcmp(p, "TYPE") == 0)
-              set_var(&info->type, q);
+              set_var(&(info->datafield[PACKAGE_METADATA_INDEX_TYPE]), q);
             else if (strcmp(p, "VERSION") == 0) {
-              set_var(&info->version, q);
+              set_var(&(info->datafield[PACKAGE_METADATA_INDEX_VERSION]), q);
               info->version_linenumber = linenumber;
             } else if (strcmp(p, "VERSIONDATE") == 0)
-              set_var(&info->versiondate, q);
+              set_var(&(info->datafield[PACKAGE_METADATA_INDEX_VERSIONDATE]), q);
             else if (strcmp(p, "DEPENDENCIES") == 0 || strcmp(p, "DEPENDANCIES") == 0)
-              set_var(&info->dependencies, q);
+              sorted_unique_list_add_comma_separated_list(info->dependencies, q);
             else if (strcmp(p, "OPTIONALDEPENDENCIES") == 0 || strcmp(p, "OPTIONALDEPENDANCIES") == 0)
-              set_var(&info->optionaldependencies, q);
+              sorted_unique_list_add_comma_separated_list(info->optionaldependencies, q);
             else if (strcmp(p, "BUILDDEPENDENCIES") == 0 ||strcmp(p, "BUILDDEPENDANCIES") == 0)
-              set_var(&info->builddependencies, q);
+              sorted_unique_list_add_comma_separated_list(info->builddependencies, q);
             else if (strcmp(p, "LICENSEFILE") == 0)
-              set_var(&info->licensefile, q);
+              set_var(&(info->datafield[PACKAGE_METADATA_INDEX_LICENSEFILE]), q);
             else if (strcmp(p, "LICENSETYPE") == 0)
-              set_var(&info->licensetype, q);
+              set_var(&(info->datafield[PACKAGE_METADATA_INDEX_LICENSETYPE]), q);
             else if (strcmp(p, "DOWNLOADURL") == 0)
-              set_var(&info->downloadurldata, q);
+              set_var(&(info->datafield[PACKAGE_METADATA_INDEX_DOWNLOADURL]), q);
             else if (strcmp(p, "DOWNLOADSOURCEURL") == 0)
-              set_var(&info->downloadsourceurl, q);
+              set_var(&(info->datafield[PACKAGE_METADATA_INDEX_DOWNLOADSOURCEURL]), q);
           }
         } else if (memcmp(p, "~/makeDevPak.sh", 15) == 0 || memcmp(p, "wl-makepackage", 14) == 0) {
           info->buildok++;
@@ -286,7 +242,7 @@ char* my_strndup (const char* data, size_t datalen)
   return result;
 }
 
-void get_package_downloadurl_info (struct package_info_struct* packageinfo, char** purl, char** pprefix, char** psuffix)
+void get_package_downloadurl_info (struct package_metadata_struct* packageinfo, char** purl, char** pprefix, char** psuffix)
 {
   const char* url = NULL;
   size_t urllen = 0;
@@ -294,9 +250,9 @@ void get_package_downloadurl_info (struct package_info_struct* packageinfo, char
   size_t prefixlen = 0;
   const char* suffix = NULL;
   size_t suffixlen = 0;
-  if (packageinfo->downloadurldata) {
+  if (packageinfo->datafield[PACKAGE_METADATA_INDEX_DOWNLOADURL]) {
     const char* p;
-    p = packageinfo->downloadurldata;
+    p = packageinfo->datafield[PACKAGE_METADATA_INDEX_DOWNLOADURL];
     url = p;
     while (*p && !isspace(*p))
       p++;
@@ -374,6 +330,7 @@ size_t iterate_packages (const char* infopath, package_callback_fn callback, voi
   return count;
 }
 
+/*
 int iterate_packages_in_comma_separated_list (const char* list, package_callback_fn callback, void* callbackdata)
 {
   const char* p;
@@ -403,11 +360,24 @@ int iterate_packages_in_comma_separated_list (const char* list, package_callback
   }
   return 0;
 }
+*/
+
+int iterate_packages_in_list (const sorted_unique_list* sortuniqlist, package_callback_fn callback, void* callbackdata)
+{
+  int result;
+  unsigned int i;
+  unsigned int n = sorted_unique_list_size(sortuniqlist);
+  for (i = 0; i < n; i++) {
+    if ((result = (*callback)(sorted_unique_list_get(sortuniqlist, i), callbackdata)) != 0)
+      return result;
+  }
+  return 0;
+}
 
 ////////////////////////////////////////////////////////////////////////
 
-/*
-void insert_packageinfo_sorted_by_basename (struct package_info_list_struct** packagelist, struct package_info_struct* packageinfo)
+#if 0
+void insert_packageinfo_sorted_by_basename (struct package_info_list_struct** packagelist, struct package_metadata_struct* packageinfo)
 {
   struct package_info_list_struct* nextpackage;
   struct package_info_list_struct** currentpackage = packagelist;
@@ -419,7 +389,7 @@ void insert_packageinfo_sorted_by_basename (struct package_info_list_struct** pa
   (*currentpackage)->info = packageinfo;
   (*currentpackage)->next = nextpackage;
 }
-*/
+#endif
 
 void free_packageinfolist (struct package_info_list_struct* packagelist)
 {
@@ -427,7 +397,7 @@ void free_packageinfolist (struct package_info_list_struct* packagelist)
   struct package_info_list_struct* currentpackage = packagelist;
   while (currentpackage) {
     p = currentpackage->next;
-    free_packageinfo(currentpackage->info);
+    package_metadata_free(currentpackage->info);
     free(currentpackage);
     currentpackage = p;
   }
@@ -439,12 +409,13 @@ struct package_info_list_struct* search_packageinfolist_by_basename (struct pack
   if (packagelist == NULL || basename == NULL)
     return NULL;
   struct package_info_list_struct* currentpackage = packagelist;
-  while (currentpackage && strcmp(currentpackage->info->basename, basename) != 0) {
+  while (currentpackage && strcmp(currentpackage->info->datafield[PACKAGE_METADATA_INDEX_BASENAME], basename) != 0) {
     currentpackage = currentpackage->next;
   }
   return currentpackage;
 }
 
+/*
 int basename_is_in_commaseparatedlist (const char* basename, const char* commaseparatedlist)
 {
   //abort on invalid parameters
@@ -488,8 +459,21 @@ int remove_basename_from_commaseparatedlist (const char* basename, char* commase
   }
   return pos;
 }
+*/
 
-/**/
+int insert_packages_by_dependency (struct package_info_list_struct** packagelist, const char* infopath, const sorted_unique_list* packages)
+{
+  unsigned int i;
+  unsigned int n = sorted_unique_list_size(packages);
+  int result = 0;
+  for (i = 0; i < n; i++) {
+    if (insert_package_by_dependency(packagelist, infopath, sorted_unique_list_get(packages, i)))
+      result++;
+  }
+  return result;
+}
+
+/*
 int insert_packages_by_dependency (struct package_info_list_struct** packagelist, const char* infopath, const char* packagenames)
 {
   int result = 0;
@@ -514,6 +498,7 @@ int insert_packages_by_dependency (struct package_info_list_struct** packagelist
   }
   return result;
 }
+*/
 
 #if 0
 int insert_packages_by_dependency (struct package_info_list_struct** packagelist, const char* infopath, char* packagenamelist)
@@ -548,7 +533,7 @@ int insert_packages_by_dependency (struct package_info_list_struct** packagelist
 
 int insert_package_by_dependency (struct package_info_list_struct** packagelist, const char* infopath, const char* basename)
 {
-  struct package_info_struct* info;
+  struct package_metadata_struct* info;
   struct package_info_list_struct* nextpackage;
   struct package_info_list_struct** currentpackage = packagelist;
   //abort if package name is empty
@@ -560,43 +545,49 @@ int insert_package_by_dependency (struct package_info_list_struct** packagelist,
   //abort if no valid package information was found
   if ((info = read_packageinfo(infopath, basename)) == NULL)
     return -3;
-  if (!info->basename || !*info->basename) {
-    free_packageinfo(info);
+  if (!info->datafield[PACKAGE_METADATA_INDEX_BASENAME] || !*info->datafield[PACKAGE_METADATA_INDEX_BASENAME]) {
+    package_metadata_free(info);
     return -4;
   }
   //determine insert position (after last dependency and before first dependent package)
   //determine list of dependencies
-  char* remaining_dependencies = strdup(info->dependencies ? info->dependencies : "");
-  char* remaining_optionaldependencies = strdup(info->optionaldependencies ? info->optionaldependencies : "");
-  char* remaining_builddependencies = strdup(info->builddependencies ? info->builddependencies : "");
+  sorted_unique_list* remaining_dependencies = sorted_unique_list_duplicate(info->dependencies, NULL);
+  sorted_unique_list* remaining_optionaldependencies = sorted_unique_list_duplicate(info->optionaldependencies, NULL);
+  sorted_unique_list* remaining_builddependencies = sorted_unique_list_duplicate(info->builddependencies, NULL);
   //determine insert position
   while (*currentpackage) {
     //check if current package is in list of dependencies and remove if found
-    remove_basename_from_commaseparatedlist((*currentpackage)->info->basename, remaining_dependencies);
-    remove_basename_from_commaseparatedlist((*currentpackage)->info->basename, remaining_optionaldependencies);
-    remove_basename_from_commaseparatedlist((*currentpackage)->info->basename, remaining_builddependencies);
+    sorted_unique_list_remove(remaining_dependencies, (*currentpackage)->info->datafield[PACKAGE_METADATA_INDEX_BASENAME]);
+    sorted_unique_list_remove(remaining_optionaldependencies, (*currentpackage)->info->datafield[PACKAGE_METADATA_INDEX_BASENAME]);
+    sorted_unique_list_remove(remaining_builddependencies, (*currentpackage)->info->datafield[PACKAGE_METADATA_INDEX_BASENAME]);
     //if all dependencies are met and the minimal insert position is reached, insert in alfabetical order
-    if (!*remaining_dependencies && !*remaining_optionaldependencies && !*remaining_builddependencies && strcasecmp((*currentpackage)->info->basename, basename) >= 0)
+    if (sorted_unique_list_size(remaining_dependencies) == 0 && sorted_unique_list_size(remaining_optionaldependencies) == 0 && sorted_unique_list_size(remaining_builddependencies) == 0 && strcasecmp((*currentpackage)->info->datafield[PACKAGE_METADATA_INDEX_BASENAME], basename) >= 0)
       break;
     //if a dependent package is reached, insert before
-    if (basename_is_in_commaseparatedlist(basename, (*currentpackage)->info->dependencies) >= 0 ||
-        //basename_is_in_commaseparatedlist(basename, (*currentpackage)->info->optionaldependencies) >= 0 ||  /////TO DO: shouldn't this only be done under certain conditions?
-        basename_is_in_commaseparatedlist(basename, (*currentpackage)->info->builddependencies) >= 0) {
+    if (sorted_unique_list_find((*currentpackage)->info->dependencies, basename) >= 0 ||
+        //sorted_unique_list_find((*currentpackage)->info->optionaldependencies, basename) >= 0 ||  /////TO DO: shouldn't this only be done under certain conditions?
+        sorted_unique_list_find((*currentpackage)->info->builddependencies, basename) >= 0) {
 #if 1
-      if (*remaining_dependencies || /**remaining_optionaldependencies ||*/ *remaining_builddependencies) {
+      if (sorted_unique_list_size(remaining_dependencies) > 0 || /*sorted_unique_list_size(remaining_optionaldependencies) > 0 ||*/ sorted_unique_list_size(remaining_builddependencies) > 0) {
         //if any dependencies still appear after this position there is probably a cyclic dependency problem
         struct package_info_list_struct* nextpackage = *currentpackage;
         while ((nextpackage = nextpackage->next) != NULL) {
-          if (basename_is_in_commaseparatedlist(nextpackage->info->basename, remaining_dependencies) >= 0 ||
-              /*basename_is_in_commaseparatedlist(nextpackage->info->basename, remaining_optionaldependencies) >= 0 ||*/
-              basename_is_in_commaseparatedlist(nextpackage->info->basename, remaining_builddependencies) >= 0)
+          if (sorted_unique_list_find(remaining_dependencies, nextpackage->info->datafield[PACKAGE_METADATA_INDEX_BASENAME]) >= 0 ||
+              /*sorted_unique_list_find(remaining_optionaldependencies, nextpackage->info->datafield[PACKAGE_METADATA_INDEX_BASENAME]) >= 0 ||*/
+              sorted_unique_list_find(remaining_builddependencies, nextpackage->info->datafield[PACKAGE_METADATA_INDEX_BASENAME]) >= 0)
             break;
         }
         if (nextpackage) {
-          fprintf(stderr, "Cyclic dependency detected for %s and %s\n", basename, nextpackage->info->basename);
-          fprintf(stderr, " - remaining dependencies: %s\n", remaining_dependencies);
-          fprintf(stderr, " - remaining optional dependencies: %s\n", remaining_optionaldependencies);
-          fprintf(stderr, " - remaining build dependencies: %s\n", remaining_builddependencies);
+          fprintf(stderr, "Cyclic dependency detected for %s and %s\n", basename, nextpackage->info->datafield[PACKAGE_METADATA_INDEX_BASENAME]);
+          fprintf(stderr, " - remaining dependencies: ");
+          fprintf(stderr, "\n");
+          sorted_unique_list_print(remaining_dependencies, ",");
+          fprintf(stderr, " - remaining optional dependencies: ");
+          fprintf(stderr, "\n");
+          sorted_unique_list_print(remaining_optionaldependencies, ",");
+          fprintf(stderr, " - remaining build dependencies: ");
+          fprintf(stderr, "\n");
+          sorted_unique_list_print(remaining_builddependencies, ",");
         }
       }
 #endif

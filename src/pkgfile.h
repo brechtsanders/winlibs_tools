@@ -1,12 +1,12 @@
 /*
-  header file for package information functions
+  header file for functions related to writing to the database of installed packages
 */
 
-#ifndef INCLUDED_PACKAGE_INFO_H
-#define INCLUDED_PACKAGE_INFO_H
+#ifndef INCLUDED_PKGFILE_H
+#define INCLUDED_PKGFILE_H
 
+#include "pkg.h"
 #include <stddef.h>
-#include <time.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -24,44 +24,13 @@ char* packageinfo_file_readline (packageinfo_file pkgfile);
 */
 int check_packageinfo_paths (const char* infopath);
 
-//!data structure for package information
-struct package_info_struct {
-  char* name;
-  char* status;
-  char* url;
-  char* basename;
-  char* description;
-  char* category;
-  char* type;
-  char* version;
-  size_t version_linenumber;
-  char* versiondate;
-  char* dependencies;
-  char* optionaldependencies;
-  char* builddependencies;
-  char* licensefile;
-  char* licensetype;
-  char* downloadurldata;
-  char* downloadsourceurl;
-  int buildok;
-  time_t lastchanged;
-  void* extradata;
-  void (*extradata_free_fn)(void*);
-};
-
-//!free package information
-/*!
-  \param  packageinfo           package information
-*/
-void free_packageinfo (struct package_info_struct* packageinfo);
-
 //!get build package information from file
 /*!
   \param  infopath              full path(s) of directory containing build information files
   \param  basename              name of package
   \return package information (or NULL on error), the caller must clean up with free_packageinfo()
 */
-struct package_info_struct* read_packageinfo (const char* infopath, const char* basename);
+struct package_metadata_struct* read_packageinfo (const char* infopath, const char* basename);
 
 //!get download information from package information
 /*!
@@ -70,7 +39,7 @@ struct package_info_struct* read_packageinfo (const char* infopath, const char* 
   \param  filematchprefix       pointer that will receive the source file matching prefix (or NULL if none specified)
   \param  filematchsuffix       pointer that will receive the source file matching suffix (or NULL if none specified)
 */
-void get_package_downloadurl_info (struct package_info_struct* packageinfo, char** url, char** filematchprefix, char** filematchsuffix);
+void get_package_downloadurl_info (struct package_metadata_struct* packageinfo, char** url, char** filematchprefix, char** filematchsuffix);
 
 //!callback function used by read_packageinfolist (can be used to show progress)
 /*!
@@ -91,16 +60,16 @@ size_t iterate_packages (const char* infopath, package_callback_fn callback, voi
 
 //!iterate through build package information
 /*!
-  \param  list                  comma separated list of package names
+  \param  list                  list of package names
   \param  callback              callback function to be called for each package name
   \param  callbackdata          callback data passed to be passed to callback function
   \return last result from callback (should be zero if all entries were processed)
 */
-int iterate_packages_in_comma_separated_list (const char* list, package_callback_fn callback, void* callbackdata);
+int iterate_packages_in_list (const sorted_unique_list* sortuniqlist, package_callback_fn callback, void* callbackdata);
 
 //!data structure for package information list
 struct package_info_list_struct {
-  struct package_info_struct* info;
+  struct package_metadata_struct* info;
   struct package_info_list_struct* next;
 };
 
@@ -187,4 +156,4 @@ int packages_remove_missing_from_list (const char* installpath, char* packagelis
 }
 #endif
 
-#endif //INCLUDED_PACKAGE_INFO_H
+#endif //INCLUDED_PKGFILE_H

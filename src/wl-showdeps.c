@@ -2,7 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <miniargv.h>
-#include "package_info.h"
+#include "pkgfile.h"
+#include "sorted_unique_list.h"
 #include "filesystem.h"
 #include "winlibs_common.h"
 
@@ -24,7 +25,7 @@ struct package_list_struct {
 
 void show_package_dependencies (const char* packagename, const char* basepath, const char* packageinfopath, int recursive, int level, char bullet, struct package_list_struct* parent)
 {
-  struct package_info_struct* pkginfo;
+  struct package_metadata_struct* pkginfo;
   struct package_list_struct* listitem;
   //show information
   show_package_item(packagename, level, bullet);
@@ -41,72 +42,38 @@ void show_package_dependencies (const char* packagename, const char* basepath, c
   if ((pkginfo = read_packageinfo(packageinfopath, packagename)) == NULL) {
     fprintf(stderr, "Error reading package information for: %s\n", packagename);
   } else {
-    char *p;
-    char *q;
-    char* dep;
+    unsigned int i;
+    unsigned int n;
     struct package_list_struct current = {packagename, parent};
     //process depenancies
-    p = pkginfo->dependencies;
-    while (*p) {
-      q = p;
-      while (*q && *q != ',')
-        q++;
-      if (q - p > 0 && (dep = (char*)malloc((q - p) + 1)) != NULL) {
-        memcpy(dep, p, q - p);
-        dep[q - p] = 0;
-        if (!recursive) {
-          show_package_item(dep, level + 1, DEPENDANCY_BULLET_MANDATORY);
-        } else {
-          show_package_dependencies(dep, basepath, packageinfopath, recursive, level + 1, DEPENDANCY_BULLET_MANDATORY, &current);
-        }
-        free(dep);
+    n = sorted_unique_list_size(pkginfo->dependencies);
+    for (i = 0; i < n; i++) {
+      if (!recursive) {
+        show_package_item(sorted_unique_list_get(pkginfo->dependencies, i), level + 1, DEPENDANCY_BULLET_MANDATORY);
+      } else {
+        show_package_dependencies(sorted_unique_list_get(pkginfo->dependencies, i), basepath, packageinfopath, recursive, level + 1, DEPENDANCY_BULLET_MANDATORY, &current);
       }
-      if (*q)
-        q++;
-      p = q;
     }
     //process optional depenancies
-    p = pkginfo->optionaldependencies;
-    while (*p) {
-      q = p;
-      while (*q && *q != ',')
-        q++;
-      if (q - p > 0 && (dep = (char*)malloc((q - p) + 1)) != NULL) {
-        memcpy(dep, p, q - p);
-        dep[q - p] = 0;
-        if (!recursive) {
-          show_package_item(dep, level + 1, DEPENDANCY_BULLET_OPTIONAL);
-        } else {
-          show_package_dependencies(dep, basepath, packageinfopath, recursive, level + 1, DEPENDANCY_BULLET_OPTIONAL, &current);
-        }
-        free(dep);
+    n = sorted_unique_list_size(pkginfo->optionaldependencies);
+    for (i = 0; i < n; i++) {
+      if (!recursive) {
+        show_package_item(sorted_unique_list_get(pkginfo->optionaldependencies, i), level + 1, DEPENDANCY_BULLET_OPTIONAL);
+      } else {
+        show_package_dependencies(sorted_unique_list_get(pkginfo->optionaldependencies, i), basepath, packageinfopath, recursive, level + 1, DEPENDANCY_BULLET_OPTIONAL, &current);
       }
-      if (*q)
-        q++;
-      p = q;
     }
     //process build depenancies
-    p = pkginfo->builddependencies;
-    while (*p) {
-      q = p;
-      while (*q && *q != ',')
-        q++;
-      if (q - p > 0 && (dep = (char*)malloc((q - p) + 1)) != NULL) {
-        memcpy(dep, p, q - p);
-        dep[q - p] = 0;
-        if (!recursive) {
-          show_package_item(dep, level + 1, DEPENDANCY_BULLET_BUILD);
-        } else {
-          show_package_dependencies(dep, basepath, packageinfopath, recursive, level + 1, DEPENDANCY_BULLET_BUILD, &current);
-        }
-        free(dep);
+    n = sorted_unique_list_size(pkginfo->builddependencies);
+    for (i = 0; i < n; i++) {
+      if (!recursive) {
+        show_package_item(sorted_unique_list_get(pkginfo->builddependencies, i), level + 1, DEPENDANCY_BULLET_BUILD);
+      } else {
+        show_package_dependencies(sorted_unique_list_get(pkginfo->builddependencies, i), basepath, packageinfopath, recursive, level + 1, DEPENDANCY_BULLET_BUILD, &current);
       }
-      if (*q)
-        q++;
-      p = q;
     }
     //clean up
-    free_packageinfo(pkginfo);
+    package_metadata_free(pkginfo);
   }
 }
 

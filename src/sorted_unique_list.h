@@ -20,6 +20,9 @@ typedef int (*sorted_unique_compare_fn)(const char* data1, const char* data2);
 //!free function
 typedef void (*sorted_unique_free_fn)(void* data);
 
+//!duplication function
+typedef char* (*sorted_unique_duplicate_fn)(const char* data);
+
 //!create new sorted unique list
 /*!
   \param  comparefunction       comparison function used for sorting
@@ -64,6 +67,14 @@ int sorted_unique_list_add_buf (sorted_unique_list* sortuniqlist, const char* da
   \return zero on success or non-zero on error (memory allocation error or sortuniqlist NULL or empty)
 */
 int sorted_unique_list_add_allocated (sorted_unique_list* sortuniqlist, char* data);
+
+//!add copies of entries from a comma separated list to sorted unique list (uses malloc() to allocate memory, so only works with free() as freefunction)
+/*!
+  \param  sortuniqlist          sorted unique list
+  \param  list                  comma sperated list of data to add to sorted unique list
+  \return zero on success or non-zero on error (memory allocation error or sortuniqlist NULL or empty)
+*/
+size_t sorted_unique_list_add_comma_separated_list (sorted_unique_list* sortuniqlist, const char* list);
 
 //!remove data from sorted unique list
 /*!
@@ -140,6 +151,21 @@ typedef int (*sorted_unique_list_compare_callback_fn)(const char* data, void* ca
   \return first entry data, the caller must free()
 */
 int sorted_unique_list_compare_lists (const sorted_unique_list* sortuniqlist1, const sorted_unique_list* sortuniqlist2, sorted_unique_list_compare_callback_fn callback_both_fn, sorted_unique_list_compare_callback_fn callback_only1_fn, sorted_unique_list_compare_callback_fn callback_only2_fn, void* callbackdata);
+
+//!create copy of sorted unique list
+/*!
+  \param  sortuniqlist          sorted unique list to copy
+  \param  duplicatefunction     duplication function (e.g. strdup), or NULL to point items to same data is in source tree
+  \return copy of sorted unique list or NULL on error
+*/
+sorted_unique_list* sorted_unique_list_duplicate (const sorted_unique_list* sortuniqlist, sorted_unique_duplicate_fn duplicatefunction);
+
+//!print values in a sorted unique list
+/*!
+  \param  sortuniqlist          sorted unique list to print
+  \param  separator             separator to use between listed entries
+*/
+void sorted_unique_list_print (const sorted_unique_list* sortuniqlist, const char* separator);
 
 #ifdef __cplusplus
 }

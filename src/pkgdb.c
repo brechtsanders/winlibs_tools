@@ -489,10 +489,8 @@ struct package_metadata_struct* pkgdb_read_package (pkgdb_handle handle, const c
           free(pkginfo->datafield[i]);
         pkginfo->datafield[i] = (s ? strdup(s) : NULL);
       }
-#ifdef EXPERIMENTAL
       pkginfo->buildok = 1;
       pkginfo->lastchanged = sqlite3_column_int64(sqlresult, PACKAGE_METADATA_TOTAL_FIELDS);
-#endif
     }
     sqlite3_finalize(sqlresult);
   }

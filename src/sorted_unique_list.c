@@ -77,6 +77,28 @@ int sorted_unique_list_add_allocated (sorted_unique_list* sortuniqlist, char* da
   return 0;
 }
 
+size_t sorted_unique_list_add_comma_separated_list (sorted_unique_list* sortuniqlist, const char* list)
+{
+  const char* p;
+  const char* q;
+  size_t count = 0;
+  p = list;
+  while (p && *p) {
+    q = p;
+    while (*q && *q != ',')
+      q++;
+    if (q > p) {
+      if (sorted_unique_list_add_buf(sortuniqlist, p, q - p) == 0)
+        count++;
+      p = q;
+    }
+    if (*p)
+      p++;
+  }
+  return count;
+}
+
+
 void sorted_unique_list_remove (sorted_unique_list* sortuniqlist, const char* data)
 {
   if (!sortuniqlist || !data || !*data)
@@ -275,3 +297,35 @@ int sorted_unique_list_compare_lists (const sorted_unique_list* sortuniqlist1, c
   }
   return 0;
 }
+
+sorted_unique_list* sorted_unique_list_duplicate (const sorted_unique_list* sortuniqlist, sorted_unique_duplicate_fn duplicatefunction)
+{
+  int i;
+  int n;
+  avl_node_t* node;
+  sorted_unique_list* list;
+  if ((list = sorted_unique_list_create(sortuniqlist->cmp_fn, (duplicatefunction ? sortuniqlist->free_fn : NULL))) == NULL)
+    return NULL;
+  n = avl_count(sortuniqlist->tree);
+  for (i = 0; i < n; i++) {
+    if ((node = avl_at(sortuniqlist->tree, i)) != NULL) {
+      if (duplicatefunction)
+        sorted_unique_list_add(list, (*duplicatefunction)(node->item));
+      else
+        sorted_unique_list_add_allocated(list, node->item);
+    }
+  }
+  return list;
+}
+
+void sorted_unique_list_print (const sorted_unique_list* sortuniqlist, const char* separator)
+{
+  unsigned int i;
+  unsigned int n = sorted_unique_list_size(sortuniqlist);
+  for (i = 0; i < n; i++) {
+    if (i && separator)
+      printf("%s", separator);
+    printf("%s", sorted_unique_list_get(sortuniqlist, i));
+  }
+}
+

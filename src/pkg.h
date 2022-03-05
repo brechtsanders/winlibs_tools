@@ -1,5 +1,5 @@
 /*
-  header file for functions related to writing to the database of installed packages
+  header file for the package information data structure
 */
 
 #ifndef INCLUDED_PKG_H
@@ -8,7 +8,7 @@
 #include "sorted_unique_list.h"
 #include <stdint.h>
 #include <stdlib.h>
-#include <sqlite3.h>
+#include <time.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -52,13 +52,11 @@ struct package_metadata_struct {
   sorted_unique_list* optionaldependencies;
   sorted_unique_list* builddependencies;
   uint64_t totalsize;
-#ifdef EXPERIMENTAL
   size_t version_linenumber;
   int buildok;
   time_t lastchanged;
   void* extradata;
   void (*extradata_free_fn)(void*);
-#endif
 };
 
 //!create and initialize data structure for package information

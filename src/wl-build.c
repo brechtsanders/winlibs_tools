@@ -16,7 +16,7 @@
 #include <versioncmp.h>
 #include <crossrun.h>
 #include <dirtrav.h>
-#include "package_info.h"
+#include "pkgfile.h"
 #include "pkgdb.h"
 #include "sorted_unique_list.h"
 #include "memory_buffer.h"
@@ -74,8 +74,8 @@ struct package_info_extradata_struct {
   enum package_filter_type_enum filtertype;
   unsigned char visited;
   unsigned char checkingcyclic;
-  struct package_info_struct* cyclic_start_pkginfo;
-  struct package_info_struct* cyclic_next_pkginfo;
+  struct package_metadata_struct* cyclic_start_pkginfo;
+  struct package_metadata_struct* cyclic_next_pkginfo;
   size_t cyclic_size;
 };
 
@@ -83,15 +83,15 @@ struct package_info_extradata_struct {
 
 int packageinfo_cmp (const char* data1, const char* data2)
 {
-  return strcasecmp(((struct package_info_struct*)data1)->basename, ((struct package_info_struct*)data2)->basename);
+  return strcasecmp(((struct package_metadata_struct*)data1)->datafield[PACKAGE_METADATA_INDEX_BASENAME], ((struct package_metadata_struct*)data2)->datafield[PACKAGE_METADATA_INDEX_BASENAME]);
 }
 
 int add_package_and_dependencies_to_list (const char* basename, struct add_package_and_dependencies_to_list_struct* data)
 {
-  struct package_info_struct* pkginfo;
-  struct package_info_struct searchpkginfo;
+  struct package_metadata_struct* pkginfo;
+  struct package_metadata_struct searchpkginfo;
   //check if package is already in list
-  searchpkginfo.basename = (char*)basename;
+  searchpkginfo.datafield[PACKAGE_METADATA_INDEX_BASENAME] = (char*)basename;
   if (!sorted_unique_list_find(data->packagenamelist, (char*)&searchpkginfo)) {
     //read package information
     if ((pkginfo = read_packageinfo(data->packageinfopath, basename)) == NULL) {
@@ -100,7 +100,7 @@ int add_package_and_dependencies_to_list (const char* basename, struct add_packa
     }
     //skip package if it doesn't build
     if (!pkginfo->buildok) {
-      free_packageinfo(pkginfo);
+      package_metadata_free(pkginfo);
       return 0;
     }
     //add additional data
@@ -117,9 +117,9 @@ int add_package_and_dependencies_to_list (const char* basename, struct add_packa
     //add package information to list
     if (!interrupted && sorted_unique_list_add_allocated(data->packagenamelist, (char*)pkginfo) == 0) {
       //recurse for each dependency
-      iterate_packages_in_comma_separated_list(pkginfo->dependencies, (package_callback_fn)add_package_and_dependencies_to_list, data);
-      iterate_packages_in_comma_separated_list(pkginfo->builddependencies, (package_callback_fn)add_package_and_dependencies_to_list, data);
-      iterate_packages_in_comma_separated_list(pkginfo->optionaldependencies, (package_callback_fn)add_package_and_dependencies_to_list, data);
+      iterate_packages_in_list(pkginfo->dependencies, (package_callback_fn)add_package_and_dependencies_to_list, data);
+      iterate_packages_in_list(pkginfo->builddependencies, (package_callback_fn)add_package_and_dependencies_to_list, data);
+      iterate_packages_in_list(pkginfo->optionaldependencies, (package_callback_fn)add_package_and_dependencies_to_list, data);
     }
   }
   return 0;
@@ -134,23 +134,23 @@ typedef enum {
   dep_type_optional = 3,
 } package_dependency_type;
 
-typedef void (*cyclic_graph_detected_fn)(struct package_info_struct* pkginfo, package_dependency_type dependency_type, struct package_info_struct* startpkginfo, void* callbackdata);
+typedef void (*cyclic_graph_detected_fn)(struct package_metadata_struct* pkginfo, package_dependency_type dependency_type, struct package_metadata_struct* startpkginfo, void* callbackdata);
 
 struct check_node_for_cyclic_graph_struct {
   sorted_unique_list* sortedpackagelist;
   size_t count_loops;
   package_dependency_type current_link_type;
-  struct package_info_struct* parent_pkginfo;
-  struct package_info_struct* cyclic_start_pkginfo;
+  struct package_metadata_struct* parent_pkginfo;
+  struct package_metadata_struct* cyclic_start_pkginfo;
 };
 
 int check_node_for_cyclic_graph_iterate_dependencies (const char* entryname, struct check_node_for_cyclic_graph_struct* data);
 
-size_t check_node_for_cyclic_graph (struct package_info_struct* pkginfo, struct check_node_for_cyclic_graph_struct* data)
+size_t check_node_for_cyclic_graph (struct package_metadata_struct* pkginfo, struct check_node_for_cyclic_graph_struct* data)
 {
   size_t result;
   package_dependency_type prev_link_type;
-  struct package_info_struct* prev_pkginfo;
+  struct package_metadata_struct* prev_pkginfo;
   //mark package as being checked
   PKG_XTRA(pkginfo)->checkingcyclic = 1;
   //recursively process dependencies
@@ -158,14 +158,14 @@ size_t check_node_for_cyclic_graph (struct package_info_struct* pkginfo, struct 
   data->current_link_type = dep_type_normal;
   prev_pkginfo = data->parent_pkginfo;
   data->parent_pkginfo = pkginfo;
-  result = iterate_packages_in_comma_separated_list(pkginfo->dependencies, (package_callback_fn)check_node_for_cyclic_graph_iterate_dependencies, data);
+  result = iterate_packages_in_list(pkginfo->dependencies, (package_callback_fn)check_node_for_cyclic_graph_iterate_dependencies, data);
   if (!result) {
     data->current_link_type = dep_type_build;
-    result = iterate_packages_in_comma_separated_list(pkginfo->builddependencies, (package_callback_fn)check_node_for_cyclic_graph_iterate_dependencies, data);
+    result = iterate_packages_in_list(pkginfo->builddependencies, (package_callback_fn)check_node_for_cyclic_graph_iterate_dependencies, data);
   }
   if (!result) {
     data->current_link_type = dep_type_optional;
-    result = iterate_packages_in_comma_separated_list(pkginfo->optionaldependencies, (package_callback_fn)check_node_for_cyclic_graph_iterate_dependencies, data);
+    result = iterate_packages_in_list(pkginfo->optionaldependencies, (package_callback_fn)check_node_for_cyclic_graph_iterate_dependencies, data);
   }
   data->current_link_type = prev_link_type;
   data->parent_pkginfo = prev_pkginfo;
@@ -193,12 +193,12 @@ size_t check_node_for_cyclic_graph (struct package_info_struct* pkginfo, struct 
 
 int check_node_for_cyclic_graph_iterate_dependencies (const char* entryname, struct check_node_for_cyclic_graph_struct* data)
 {
-  struct package_info_struct searchpkginfo;
-  struct package_info_struct* pkginfo;
+  struct package_metadata_struct searchpkginfo;
+  struct package_metadata_struct* pkginfo;
   int result = 0;
   //get entry from list
-  searchpkginfo.basename = (char*)entryname;
-  if ((pkginfo = (struct package_info_struct*)sorted_unique_list_search(data->sortedpackagelist, (const char*)&searchpkginfo)) != NULL) {
+  searchpkginfo.datafield[PACKAGE_METADATA_INDEX_BASENAME] = (char*)entryname;
+  if ((pkginfo = (struct package_metadata_struct*)sorted_unique_list_search(data->sortedpackagelist, (const char*)&searchpkginfo)) != NULL) {
     //don't check entry if it was checked before
     if (!PKG_XTRA(pkginfo)->visited) {
       //cyclic graph detected if package already being checked
@@ -229,13 +229,13 @@ int check_node_for_cyclic_graph_iterate_dependencies (const char* entryname, str
 }
 
 /*
-void cyclic_graph_detected (struct package_info_struct* pkginfo, package_dependency_type dependency_type, struct package_info_struct* startpkginfo, void* callbackdata)
+void cyclic_graph_detected (struct package_metadata_struct* pkginfo, package_dependency_type dependency_type, struct package_metadata_struct* startpkginfo, void* callbackdata)
 {
   static const char* package_dependency_type_left_arrow[] = {"|", "<-", "<=", "<~"};
   if (pkginfo == startpkginfo && dependency_type != none) {
-    printf("Cyclic dependency detected for %s:\n  ", pkginfo->basename);
+    printf("Cyclic dependency detected for %s:\n  ", pkginfo->datafield[PACKAGE_METADATA_INDEX_BASENAME]);
   }
-  printf("%s", pkginfo->basename);
+  printf("%s", pkginfo->datafield[PACKAGE_METADATA_INDEX_BASENAME]);
   if (dependency_type != none) {
     printf(" %s ", package_dependency_type_left_arrow[dependency_type]);
   } else {
@@ -251,32 +251,32 @@ void cyclic_graph_detected (struct package_info_struct* pkginfo, package_depende
 struct topological_sort_depth_first_search_struct {
   sorted_unique_list* sortedpackagelist;
   size_t pkgorderpos;
-  struct package_info_struct** pkgorder;
+  struct package_metadata_struct** pkgorder;
 };
 
 int topological_sort_depth_first_search_iterate_dependencies (const char* entryname, struct topological_sort_depth_first_search_struct* data);
 
-void topological_sort_depth_first_search (struct package_info_struct* pkginfo, struct topological_sort_depth_first_search_struct* data)
+void topological_sort_depth_first_search (struct package_metadata_struct* pkginfo, struct topological_sort_depth_first_search_struct* data)
 {
   //mark package as visited
   PKG_XTRA(pkginfo)->visited = 1;
   //recursively process dependencies
-  iterate_packages_in_comma_separated_list(pkginfo->dependencies, (package_callback_fn)topological_sort_depth_first_search_iterate_dependencies, data);
-  iterate_packages_in_comma_separated_list(pkginfo->builddependencies, (package_callback_fn)topological_sort_depth_first_search_iterate_dependencies, data);
+  iterate_packages_in_list(pkginfo->dependencies, (package_callback_fn)topological_sort_depth_first_search_iterate_dependencies, data);
+  iterate_packages_in_list(pkginfo->builddependencies, (package_callback_fn)topological_sort_depth_first_search_iterate_dependencies, data);
   if (!PKG_XTRA(pkginfo)->cyclic_start_pkginfo)
-    iterate_packages_in_comma_separated_list(pkginfo->optionaldependencies, (package_callback_fn)topological_sort_depth_first_search_iterate_dependencies, data);
-  ////else printf("Skipping optional dependencies for %s (%lu-step loop via: %s)\n", pkginfo->basename, (unsigned long)PKG_XTRA(PKG_XTRA(pkginfo)->cyclic_start_pkginfo)->cyclic_size, PKG_XTRA(pkginfo)->cyclic_start_pkginfo->basename);/////
+    iterate_packages_in_list(pkginfo->optionaldependencies, (package_callback_fn)topological_sort_depth_first_search_iterate_dependencies, data);
+  ////else printf("Skipping optional dependencies for %s (%lu-step loop via: %s)\n", pkginfo->datafield[PACKAGE_METADATA_INDEX_BASENAME], (unsigned long)PKG_XTRA(PKG_XTRA(pkginfo)->cyclic_start_pkginfo)->cyclic_size, PKG_XTRA(pkginfo)->cyclic_start_pkginfo->basename);/////
   //store current package as next in line
   data->pkgorder[data->pkgorderpos++] = pkginfo;
 }
 
 int topological_sort_depth_first_search_iterate_dependencies (const char* entryname, struct topological_sort_depth_first_search_struct* data)
 {
-  struct package_info_struct searchpkginfo;
-  struct package_info_struct* pkginfo;
+  struct package_metadata_struct searchpkginfo;
+  struct package_metadata_struct* pkginfo;
   //get entry from list
-  searchpkginfo.basename = (char*)entryname;
-  if ((pkginfo = (struct package_info_struct*)sorted_unique_list_search(data->sortedpackagelist, (const char*)&searchpkginfo)) != NULL) {
+  searchpkginfo.datafield[PACKAGE_METADATA_INDEX_BASENAME] = (char*)entryname;
+  if ((pkginfo = (struct package_metadata_struct*)sorted_unique_list_search(data->sortedpackagelist, (const char*)&searchpkginfo)) != NULL) {
     //recurse if not already visited
     if (!PKG_XTRA(pkginfo)->visited) {
       topological_sort_depth_first_search(pkginfo, data);
@@ -291,7 +291,7 @@ struct package_info_list_struct* generate_build_list (sorted_unique_list* sorted
 {
   size_t i;
   size_t n;
-  struct package_info_struct* pkginfo;
+  struct package_metadata_struct* pkginfo;
   struct check_node_for_cyclic_graph_struct cyclic_check_data;
   struct topological_sort_depth_first_search_struct topsort_data;
   struct package_info_list_struct* packagebuildlist = NULL;
@@ -305,28 +305,28 @@ struct package_info_list_struct* generate_build_list (sorted_unique_list* sorted
   if ((n = sorted_unique_list_size(sortedpackagelist)) > 0) {
     //process all entries
     for (i = 0; i < n; i++) {
-      pkginfo = (struct package_info_struct*)sorted_unique_list_get(sortedpackagelist, i);
+      pkginfo = (struct package_metadata_struct*)sorted_unique_list_get(sortedpackagelist, i);
       if (!PKG_XTRA(pkginfo)->visited) {
         check_node_for_cyclic_graph(pkginfo, &cyclic_check_data);
       }
     }
     //clear visited flags
     for (i = 0; i < n; i++) {
-      pkginfo = (struct package_info_struct*)sorted_unique_list_get(sortedpackagelist, i);
+      pkginfo = (struct package_metadata_struct*)sorted_unique_list_get(sortedpackagelist, i);
       PKG_XTRA(pkginfo)->visited = 0;
     }
   }
 
   //determine build order based on dependencies using topological sort algorithm for directed acyclic graph
   if ((n = sorted_unique_list_size(sortedpackagelist)) > 0) {
-    if ((topsort_data.pkgorder = (struct package_info_struct**)malloc(n * sizeof(struct package_info_struct*))) == NULL) {
+    if ((topsort_data.pkgorder = (struct package_metadata_struct**)malloc(n * sizeof(struct package_metadata_struct*))) == NULL) {
       fprintf(stderr, "Memory allocation error\n");
       return NULL;
     }
     topsort_data.sortedpackagelist = sortedpackagelist;
     topsort_data.pkgorderpos = 0;
     for (i = 0; i < n; i++) {
-      pkginfo = (struct package_info_struct*)sorted_unique_list_get(sortedpackagelist, i);
+      pkginfo = (struct package_metadata_struct*)sorted_unique_list_get(sortedpackagelist, i);
       if (!PKG_XTRA(pkginfo)->visited) {
         topological_sort_depth_first_search(pkginfo, &topsort_data);
       }
@@ -348,7 +348,7 @@ struct package_info_list_struct* generate_build_list (sorted_unique_list* sorted
       PKG_XTRA(PKG_XTRA(topsort_data.pkgorder[i])->cyclic_start_pkginfo)->cyclic_size--;
       if (PKG_XTRA(PKG_XTRA(topsort_data.pkgorder[i])->cyclic_start_pkginfo)->cyclic_size == 0) {
         pkginfo = PKG_XTRA(topsort_data.pkgorder[i])->cyclic_start_pkginfo;
-        struct package_info_struct* pkginfo;
+        struct package_metadata_struct* pkginfo;
         pkginfo = PKG_XTRA(topsort_data.pkgorder[i])->cyclic_start_pkginfo;
         //skip to current package
         while (pkginfo && pkginfo != topsort_data.pkgorder[i])
@@ -662,29 +662,40 @@ int dependancies_listed_but_not_depended_on_iteration (const char* basename, voi
   return 0;
 }
 
-size_t dependancies_listed_but_not_depended_on (const char* dstdir, struct package_info_struct* pkginfo)
+size_t dependancies_listed_but_not_depended_on (const char* dstdir, struct package_metadata_struct* pkginfo)
 {
   struct memory_buffer* pkginfopath = memory_buffer_create();
   struct memory_buffer* filepath = memory_buffer_create();
   struct dependancies_listed_but_not_depended_on_struct data = {0, sorted_unique_list_create(strcmp, free)};
   //determine package information path
-  memory_buffer_set_printf(pkginfopath, "%s%s%c%s%c", dstdir, PACKAGE_INFO_PATH, PATH_SEPARATOR, pkginfo->basename, PATH_SEPARATOR);
+  memory_buffer_set_printf(pkginfopath, "%s%s%c%s%c", dstdir, PACKAGE_INFO_PATH, PATH_SEPARATOR, pkginfo->datafield[PACKAGE_METADATA_INDEX_BASENAME], PATH_SEPARATOR);
   //check dependancies
   sorted_unique_list_load_from_file(&data.dependencies, memory_buffer_get(memory_buffer_set_printf(filepath, "%s%s", memory_buffer_get(pkginfopath), PACKAGE_INFO_DEPENDENCIES_FILE)));
-  iterate_packages_in_comma_separated_list(pkginfo->dependencies, dependancies_listed_but_not_depended_on_iteration, &data);
+  iterate_packages_in_list(pkginfo->dependencies, dependancies_listed_but_not_depended_on_iteration, &data);
   sorted_unique_list_clear(data.dependencies);
   //check optional dependancies
   sorted_unique_list_load_from_file(&data.dependencies, memory_buffer_get(memory_buffer_set_printf(filepath, "%s%s", memory_buffer_get(pkginfopath), PACKAGE_INFO_OPTIONALDEPENDENCIES_FILE)));
-  iterate_packages_in_comma_separated_list(pkginfo->optionaldependencies, dependancies_listed_but_not_depended_on_iteration, &data);
+  iterate_packages_in_list(pkginfo->optionaldependencies, dependancies_listed_but_not_depended_on_iteration, &data);
   sorted_unique_list_clear(data.dependencies);
   //check build dependancies
   sorted_unique_list_load_from_file(&data.dependencies, memory_buffer_get(memory_buffer_set_printf(filepath, "%s%s", memory_buffer_get(pkginfopath), PACKAGE_INFO_BUILDDEPENDENCIES_FILE)));
-  iterate_packages_in_comma_separated_list(pkginfo->builddependencies, dependancies_listed_but_not_depended_on_iteration, &data);
+  iterate_packages_in_list(pkginfo->builddependencies, dependancies_listed_but_not_depended_on_iteration, &data);
   //clean up
   sorted_unique_list_free(data.dependencies);
   memory_buffer_free(pkginfopath);
   memory_buffer_free(filepath);
   return data.countmissing;
+}
+
+////////////////////////////////////////////////////////////////////////
+
+int pkgdb_is_package_installed_callback (const char* basename, void* callbackdata)
+{
+  struct package_metadata_struct* pkginfo;
+  if ((pkginfo = pkgdb_read_package((pkgdb_handle)callbackdata, basename)) == NULL)
+    return -1;
+  package_metadata_free(pkginfo);
+  return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -813,7 +824,7 @@ int main (int argc, char** argv, char *envp[])
   //collect data for supplied packages
   sorted_unique_list* sortedpackagelist;
   struct add_package_and_dependencies_to_list_struct add_package_and_dependencies_to_list_data;
-  sortedpackagelist = sorted_unique_list_create(packageinfo_cmp, (sorted_unique_free_fn)free_packageinfo);
+  sortedpackagelist = sorted_unique_list_create(packageinfo_cmp, (sorted_unique_free_fn)package_metadata_free);
   add_package_and_dependencies_to_list_data.packagenamelist = sortedpackagelist;
   add_package_and_dependencies_to_list_data.packageinfopath = packageinfopath;
   {
@@ -866,34 +877,34 @@ int main (int argc, char** argv, char *envp[])
     int skip;
     unsigned long exitcode;
     struct package_info_list_struct* current;
-    struct package_info_struct* pkginfo;
+    struct package_metadata_struct* pkginfo;
     struct package_metadata_struct* dbpkginfo;
     while (!interrupted && (current = packagebuildlist) != NULL) {
       skip = 0;
       //check installed version
-      dbpkginfo = pkgdb_read_package(db, current->info->basename);
-      printf("--> %s %s (", current->info->basename, current->info->version);
+      dbpkginfo = pkgdb_read_package(db, current->info->datafield[PACKAGE_METADATA_INDEX_BASENAME]);
+      printf("--> %s %s (", current->info->datafield[PACKAGE_METADATA_INDEX_BASENAME], current->info->datafield[PACKAGE_METADATA_INDEX_VERSION]);
       if (!dbpkginfo)
         printf("currently not installed");
       else if (!dbpkginfo->datafield[PACKAGE_METADATA_INDEX_VERSION])
         printf("installed without version information");
-      else if (strcmp(dbpkginfo->datafield[PACKAGE_METADATA_INDEX_VERSION], current->info->version) == 0)
+      else if (strcmp(dbpkginfo->datafield[PACKAGE_METADATA_INDEX_VERSION], current->info->datafield[PACKAGE_METADATA_INDEX_VERSION]) == 0)
           printf("already installed");
       else
         printf("installed version: %s", dbpkginfo->datafield[PACKAGE_METADATA_INDEX_VERSION]);
       printf(")\n");
       //check latest package information and determine if package should be skipped
-      if ((pkginfo = read_packageinfo(packageinfopath, current->info->basename)) == NULL) {
-        printf("package information for %s can no longer be found, skipping\n", current->info->basename);
+      if ((pkginfo = read_packageinfo(packageinfopath, current->info->datafield[PACKAGE_METADATA_INDEX_BASENAME])) == NULL) {
+        printf("package information for %s can no longer be found, skipping\n", current->info->datafield[PACKAGE_METADATA_INDEX_BASENAME]);
         skip++;
       } else {
         //check if package still builds
         if (!pkginfo->buildok) {
-          printf("%s is no longer marked as possible to build, skipping\n", current->info->basename);
+          printf("%s is no longer marked as possible to build, skipping\n", current->info->datafield[PACKAGE_METADATA_INDEX_BASENAME]);
           skip++;
         }
         //check if prerequisites are installed
-        if (dstdir && (pkgdb_packages_are_installed(db, pkginfo->dependencies) == 0 || pkgdb_packages_are_installed(db, pkginfo->builddependencies) == 0)) {
+        if (dstdir && (iterate_packages_in_list(pkginfo->dependencies, pkgdb_is_package_installed_callback, db) != 0 || iterate_packages_in_list(pkginfo->builddependencies, pkgdb_is_package_installed_callback, db) != 0)) {
           printf("missing dependencies, skipping\n");
           skip++;
         }
@@ -902,14 +913,14 @@ int main (int argc, char** argv, char *envp[])
       if (!skip && dstdir && dbpkginfo) {
         if (PKG_XTRA(current->info)->cyclic_start_pkginfo) {
           //part of cyclic loop
-          struct package_info_struct* cyclic_pkginfo;
-          if ((cyclic_pkginfo = read_packageinfo(packageinfopath, PKG_XTRA(current->info)->cyclic_start_pkginfo->basename)) != NULL) {
+          struct package_metadata_struct* cyclic_pkginfo;
+          if ((cyclic_pkginfo = read_packageinfo(packageinfopath, PKG_XTRA(current->info)->cyclic_start_pkginfo->datafield[PACKAGE_METADATA_INDEX_BASENAME])) != NULL) {
             if (!dependancies_listed_but_not_depended_on(dstdir, cyclic_pkginfo))
               skip++;
-            free_packageinfo(cyclic_pkginfo);
+            package_metadata_free(cyclic_pkginfo);
           }
           if (!skip)
-            printf("part of cyclic dependency (via %s), building anyway\n", PKG_XTRA(current->info)->cyclic_start_pkginfo->basename);
+            printf("part of cyclic dependency (via %s), building anyway\n", PKG_XTRA(current->info)->cyclic_start_pkginfo->datafield[PACKAGE_METADATA_INDEX_BASENAME]);
           else
             skip++;
         } else {
@@ -921,8 +932,8 @@ int main (int argc, char** argv, char *envp[])
       if (skip && dstdir && pkginfo && pkginfo->lastchanged) {
         if (PKG_XTRA(current->info)->filtertype == filter_type_changed) {
           time_t install_lastchanged;
-          if ((install_lastchanged = installed_package_lastchanged(dstdir, current->info->basename)) != 0 && install_lastchanged < pkginfo->lastchanged) {
-            printf("build recipe for %s was changed, rebuilding (installed: %lu, package: %lu)\n", pkginfo->basename, (unsigned long)install_lastchanged, (unsigned long)pkginfo->lastchanged);
+          if ((install_lastchanged = installed_package_lastchanged(dstdir, current->info->datafield[PACKAGE_METADATA_INDEX_BASENAME])) != 0 && install_lastchanged < pkginfo->lastchanged) {
+            printf("build recipe for %s was changed, rebuilding (installed: %lu, package: %lu)\n", pkginfo->datafield[PACKAGE_METADATA_INDEX_BASENAME], (unsigned long)install_lastchanged, (unsigned long)pkginfo->lastchanged);
             skip = 0;
           }
         }
@@ -931,23 +942,23 @@ int main (int argc, char** argv, char *envp[])
       if (dbpkginfo)
         package_metadata_free(dbpkginfo);
       if (pkginfo)
-        free_packageinfo(pkginfo);
+        package_metadata_free(pkginfo);
       //build package (unless it should be skipped)
       if (!skip) {
         //determine log file path
         logfile = NULL;
         if (logdir) {
           size_t logdirlen = strlen(logdir);
-          size_t basenamelen = strlen(current->info->basename);
+          size_t basenamelen = strlen(current->info->datafield[PACKAGE_METADATA_INDEX_BASENAME]);
           if ((logfile = (char*)malloc(logdirlen + basenamelen + LOG_FILE_EXTENSION_LEN + 2)) != NULL) {
             memcpy(logfile, logdir, logdirlen);
             logfile[logdirlen] = PATH_SEPARATOR;
-            memcpy(logfile + logdirlen + 1, current->info->basename, basenamelen);
+            memcpy(logfile + logdirlen + 1, current->info->datafield[PACKAGE_METADATA_INDEX_BASENAME], basenamelen);
             strcpy(logfile + logdirlen + 1 + basenamelen, LOG_FILE_EXTENSION);
           }
         }
         //build package
-        exitcode = build_package(packageinfopath, current->info->basename, shellcmd, logfile, builddir);
+        exitcode = build_package(packageinfopath, current->info->datafield[PACKAGE_METADATA_INDEX_BASENAME], shellcmd, logfile, builddir);
         //clean up log file
         if (logfile) {
           if (removelog && exitcode == 0)

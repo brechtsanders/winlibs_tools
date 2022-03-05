@@ -85,7 +85,7 @@
 			<Add option="-static-libgcc" />
 			<Add option="-static" />
 			<Add option="-Wl,--as-needed" />
-			<Add option="`pkg-config --static --libs libcurl librtmp libbrotlidec libgcrypt shishi gnutls libidn libntlm`" />
+			<Add option="`pkg-config.exe --static --libs libcurl librtmp libbrotlidec libgcrypt shishi gnutls libidn libntlm`" />
 			<Add option="-Wl,--allow-multiple-definition" />
 			<Add library="miniargv" />
 			<Add library="versioncmp" />
@@ -114,10 +114,14 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../src/memory_buffer.h" />
-		<Unit filename="../src/package_info.c">
+		<Unit filename="../src/pkg.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../src/package_info.h" />
+		<Unit filename="../src/pkg.h" />
+		<Unit filename="../src/pkgfile.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/pkgfile.h" />
 		<Unit filename="../src/sorted_item_queue.c">
 			<Option compilerVar="CC" />
 		</Unit>

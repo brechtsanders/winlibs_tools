@@ -7,7 +7,7 @@
 #include <miniargv.h>
 #include <versioncmp.h>
 #include "winlibs_common.h"
-#include "package_info.h"
+#include "pkgfile.h"
 #include "sorted_unique_list.h"
 #include "filesystem.h"
 
@@ -16,35 +16,41 @@
 
 int packageinfo_show (const char* basename, void* callbackdata)
 {
-  struct package_info_struct* pkginfo;
+  struct package_metadata_struct* pkginfo;
   const char* packageinfopath = (const char*)callbackdata;
   if ((pkginfo = read_packageinfo(packageinfopath, basename)) == NULL) {
     fprintf(stderr, "Error reading package information for: %s\n", basename);
   } else {
-    printf("[%s]\n", pkginfo->basename);
-    if (!pkginfo->basename || strcmp(basename, pkginfo->basename) != 0) {
-      fprintf(stderr, "Name mismatch for package %s (name in file: %s)\n", basename, (pkginfo->basename ? pkginfo->basename : "NULL"));
+    printf("[%s]\n", pkginfo->datafield[PACKAGE_METADATA_INDEX_BASENAME]);
+    if (!pkginfo->datafield[PACKAGE_METADATA_INDEX_BASENAME] || strcmp(basename, pkginfo->datafield[PACKAGE_METADATA_INDEX_BASENAME]) != 0) {
+      fprintf(stderr, "Name mismatch for package %s (name in file: %s)\n", basename, (pkginfo->datafield[PACKAGE_METADATA_INDEX_BASENAME] ? pkginfo->datafield[PACKAGE_METADATA_INDEX_BASENAME] : "NULL"));
     }
-    printf("basename=%s\n", pkginfo->basename);
-    printf("version=%s\n", pkginfo->version);
-    printf("versiondate=%s\n", pkginfo->versiondate);
-    printf("name=%s\n", pkginfo->name);
-    printf("description=%s\n", pkginfo->description);
-    printf("url=%s\n", pkginfo->url);
-    printf("category=%s\n", pkginfo->category);
-    printf("type=%s\n", pkginfo->type);
+    printf("basename=%s\n", pkginfo->datafield[PACKAGE_METADATA_INDEX_BASENAME]);
+    printf("version=%s\n", pkginfo->datafield[PACKAGE_METADATA_INDEX_VERSION]);
+    printf("versiondate=%s\n", pkginfo->datafield[PACKAGE_METADATA_INDEX_VERSION]);
+    printf("name=%s\n", pkginfo->datafield[PACKAGE_METADATA_INDEX_NAME]);
+    printf("description=%s\n", pkginfo->datafield[PACKAGE_METADATA_INDEX_DESCRIPTION]);
+    printf("url=%s\n", pkginfo->datafield[PACKAGE_METADATA_INDEX_URL]);
+    printf("category=%s\n", pkginfo->datafield[PACKAGE_METADATA_INDEX_CATEGORY]);
+    printf("type=%s\n", pkginfo->datafield[PACKAGE_METADATA_INDEX_CATEGORY]);
     printf("builds=%s\n", (pkginfo->buildok ? "yes" : "no"));
-    printf("status=%s\n", pkginfo->status);
-    printf("dependencies=%s\n", pkginfo->dependencies);
-    printf("optionaldependencies=%s\n", pkginfo->optionaldependencies);
-    printf("builddependencies=%s\n", pkginfo->builddependencies);
-    printf("licensefile=%s\n", pkginfo->licensefile);
-    printf("licensetype=%s\n", pkginfo->licensetype);
-    printf("downloadurldata=%s\n", pkginfo->downloadurldata);
+    printf("status=%s\n", pkginfo->datafield[PACKAGE_METADATA_INDEX_STATUS]);
+    printf("dependencies=");
+    sorted_unique_list_print(pkginfo->dependencies, ",");
+    printf("\n");
+    printf("optionaldependencies=");
+    sorted_unique_list_print(pkginfo->optionaldependencies, ",");
+    printf("\n");
+    printf("builddependencies=");
+    sorted_unique_list_print(pkginfo->builddependencies, ",");
+    printf("\n");
+    printf("licensefile=%s\n", pkginfo->datafield[PACKAGE_METADATA_INDEX_LICENSEFILE]);
+    printf("licensetype=%s\n", pkginfo->datafield[PACKAGE_METADATA_INDEX_LICENSETYPE]);
+    printf("downloadurldata=%s\n", pkginfo->datafield[PACKAGE_METADATA_INDEX_DOWNLOADURL]);
     //printf("downloadsourceurl=%s\n", pkginfo->downloadsourceurl);
     //pkginfo->time_t lastchanged;
     printf("\n");
-    free_packageinfo(pkginfo);
+    package_metadata_free(pkginfo);
   }
   return 0;
 }

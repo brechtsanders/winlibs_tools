@@ -71,7 +71,7 @@
 	<stddef.h>
 	<time.h>
 
-1642176964 z:\winlibs_tools\src\winlibs_common.h
+1646511577 z:\winlibs_tools\src\winlibs_common.h
 
 1619372395 z:\winlibs_tools\src\filesystem.h
 	<stdio.h>
@@ -101,6 +101,41 @@
 	"sorted_unique_list.h"
 	"filesystem.h"
 
-1618569018 z:\winlibs_tools\src\sorted_unique_list.h
+1646511479 z:\winlibs_tools\src\sorted_unique_list.h
 	<stdlib.h>
+
+1646509439 source:z:\winlibs_tools\src\pkg.c
+	"pkg.h"
+	<stdlib.h>
+	<string.h>
+
+1646509439 z:\winlibs_tools\src\pkg.h
+	"sorted_unique_list.h"
+	<stdint.h>
+	<stdlib.h>
+	<time.h>
+
+1646511489 source:z:\winlibs_tools\src\pkgfile.c
+	"pkgfile.h"
+	"filesystem.h"
+	"winlibs_common.h"
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	<dirent.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<unistd.h>
+
+1646511489 z:\winlibs_tools\src\pkgfile.h
+	"pkg.h"
+	<stddef.h>
+
+1646511489 source:z:\winlibs_tools\src\sorted_unique_list.c
+	"sorted_unique_list.h"
+	<avl.h>
+	<string.h>
+	<ctype.h>
+	<stdio.h>
 

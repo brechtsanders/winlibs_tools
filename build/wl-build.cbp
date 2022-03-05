@@ -79,7 +79,6 @@
 			<Add option="-Os" />
 			<Add option="-Wall" />
 			<Add option="-DSTATIC" />
-			<Add option="-DEXPERIMENTAL" />
 			<Add directory="../src" />
 		</Compiler>
 		<Linker>
@@ -101,10 +100,6 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../src/memory_buffer.h" />
-		<Unit filename="../src/package_info.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../src/package_info.h" />
 		<Unit filename="../src/pkg.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -113,6 +108,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../src/pkgdb.h" />
+		<Unit filename="../src/pkgfile.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/pkgfile.h" />
 		<Unit filename="../src/sorted_unique_list.c">
 			<Option compilerVar="CC" />
 		</Unit>

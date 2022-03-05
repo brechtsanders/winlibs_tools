@@ -7,7 +7,7 @@
 #include <versioncmp.h>
 #include "winlibs_common.h"
 #include "sorted_unique_list.h"
-#include "package_info.h"
+#include "pkgfile.h"
 
 #define PROGRAM_NAME    "wl-listall"
 #define PROGRAM_DESC    "Command line utility to list available package recipes"
@@ -31,7 +31,7 @@ int main (int argc, char *argv[], char *envp[])
   size_t i;
   size_t n;
   sorted_unique_list* packagelist;
-  struct package_info_struct* pkginfo;
+  struct package_metadata_struct* pkginfo;
   const char* basename;
   size_t totalbuilding = 0;
   size_t totalproblems = 0;
@@ -92,15 +92,15 @@ int main (int argc, char *argv[], char *envp[])
       fprintf(stderr, "Error reading package information for: %s\n", basename);
       totalproblems++;
     } else {
-      if (!pkginfo->basename || strcmp(basename, pkginfo->basename) != 0) {
-        fprintf(stderr, "Name mismatch for package %s (name in file: %s)\n", basename, (pkginfo->basename ? pkginfo->basename : "NULL"));
+      if (!pkginfo->datafield[PACKAGE_METADATA_INDEX_BASENAME] || strcmp(basename, pkginfo->datafield[PACKAGE_METADATA_INDEX_BASENAME]) != 0) {
+        fprintf(stderr, "Name mismatch for package %s (name in file: %s)\n", basename, (pkginfo->datafield[PACKAGE_METADATA_INDEX_BASENAME] ? pkginfo->datafield[PACKAGE_METADATA_INDEX_BASENAME] : "NULL"));
         totalproblems++;
       }
       if (verbose)
-        printf("%s %s%s\n", pkginfo->basename, pkginfo->version, (pkginfo->buildok ? "" : " (not building)"));
+        printf("%s %s%s\n", pkginfo->datafield[PACKAGE_METADATA_INDEX_BASENAME], pkginfo->datafield[PACKAGE_METADATA_INDEX_VERSION], (pkginfo->buildok ? "" : " (not building)"));
       if (pkginfo->buildok)
         totalbuilding++;
-      free_packageinfo(pkginfo);
+      package_metadata_free(pkginfo);
     }
   }
   //show summary

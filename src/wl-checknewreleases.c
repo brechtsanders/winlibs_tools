@@ -19,7 +19,7 @@
 #include "winlibs_common.h"
 #include "sorted_unique_list.h"
 #include "sorted_item_queue.h"
-#include "package_info.h"
+#include "pkgfile.h"
 #include "downloader.h"
 #include "common_output.h"
 #include "version_check_db.h"
@@ -356,7 +356,7 @@ sorted_unique_list* get_package_versions_from_url (struct check_package_versions
 struct new_version_callback_struct {
   size_t counter;
   time_t starttime;
-  struct package_info_struct* pkginfo;
+  struct package_metadata_struct* pkginfo;
   struct memory_buffer* outputbuffer;
 };
 
@@ -366,7 +366,7 @@ int new_version_callback (const char* version, struct new_version_callback_struc
   if (callbackdata->counter++ == 0) {
     char buf[20] = "(missing timestamp)";
     strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", localtime(&callbackdata->starttime));
-    memory_buffer_append_printf(callbackdata->outputbuffer, "%s - %s - line %lu - lastest version: %s%s\n", buf, callbackdata->pkginfo->basename, (unsigned long)callbackdata->pkginfo->version_linenumber, callbackdata->pkginfo->version, (callbackdata->pkginfo->buildok ? "" : " (not building)"));
+    memory_buffer_append_printf(callbackdata->outputbuffer, "%s - %s - line %lu - lastest version: %s%s\n", buf, callbackdata->pkginfo->datafield[PACKAGE_METADATA_INDEX_BASENAME], (unsigned long)callbackdata->pkginfo->version_linenumber, callbackdata->pkginfo->datafield[PACKAGE_METADATA_INDEX_VERSION], (callbackdata->pkginfo->buildok ? "" : " (not building)"));
   }
   //display version
   memory_buffer_append_printf(callbackdata->outputbuffer, "  %s\n", (version ? version : "NULL"));
@@ -381,7 +381,7 @@ int check_package_versions (struct check_package_versions_struct* info, struct c
   long responsecode;
   char* status;
   sorted_unique_list* versions;
-  struct package_info_struct* pkginfo;
+  struct package_metadata_struct* pkginfo;
   time_t starttime = time(NULL);
   //read package information
   if ((pkginfo = read_packageinfo(info->packageinfopath, packagename)) == NULL) {
@@ -392,21 +392,21 @@ int check_package_versions (struct check_package_versions_struct* info, struct c
   //get versions from package download page (if specified)
   get_package_downloadurl_info(pkginfo, &url, &prefix, &suffix);
   if (!url || !*url) {
-    versioncheckdb_update_package(threadinfo->versiondb, packagename, -1, "No URL", pkginfo->version, pkginfo->downloadurldata);
+    versioncheckdb_update_package(threadinfo->versiondb, packagename, -1, "No URL", pkginfo->datafield[PACKAGE_METADATA_INDEX_VERSION], pkginfo->datafield[PACKAGE_METADATA_INDEX_DOWNLOADURL]);
   } else {
     unsigned int i;
     unsigned int n = 0;
     responsecode = 0;
     status = NULL;
-    if ((versions = get_package_versions_from_url(info, threadinfo, url, pkginfo->basename, prefix, suffix, &responsecode, &status)) != NULL && (n = sorted_unique_list_size(versions)) > 0) {
+    if ((versions = get_package_versions_from_url(info, threadinfo, url, pkginfo->datafield[PACKAGE_METADATA_INDEX_BASENAME], prefix, suffix, &responsecode, &status)) != NULL && (n = sorted_unique_list_size(versions)) > 0) {
       versioncheckdb_group_start(threadinfo->versiondb);
       for (i = 0; i < n; i++) {
         versioncheckdb_update_package_version(threadinfo->versiondb, packagename, sorted_unique_list_get(versions, i));
       }
-      versioncheckdb_update_package(threadinfo->versiondb, packagename, responsecode, status, pkginfo->version, pkginfo->downloadurldata);
+      versioncheckdb_update_package(threadinfo->versiondb, packagename, responsecode, status, pkginfo->datafield[PACKAGE_METADATA_INDEX_VERSION], pkginfo->datafield[PACKAGE_METADATA_INDEX_DOWNLOADURL]);
       versioncheckdb_group_end(threadinfo->versiondb);
     } else {
-      versioncheckdb_update_package(threadinfo->versiondb, packagename, responsecode, status, pkginfo->version, pkginfo->downloadurldata);
+      versioncheckdb_update_package(threadinfo->versiondb, packagename, responsecode, status, pkginfo->datafield[PACKAGE_METADATA_INDEX_VERSION], pkginfo->datafield[PACKAGE_METADATA_INDEX_DOWNLOADURL]);
     }
     if (versions)
       sorted_unique_list_free(versions);
@@ -427,7 +427,7 @@ int check_package_versions (struct check_package_versions_struct* info, struct c
   free(url);
   free(prefix);
   free(suffix);
-  free_packageinfo(pkginfo);
+  package_metadata_free(pkginfo);
   return 0;
 }
 

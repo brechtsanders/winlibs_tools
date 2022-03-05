@@ -93,10 +93,19 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../src/filesystem.h" />
-		<Unit filename="../src/package_info.c">
+		<Unit filename="../src/package_info.h" />
+		<Unit filename="../src/pkg.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../src/package_info.h" />
+		<Unit filename="../src/pkg.h" />
+		<Unit filename="../src/pkgfile.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/pkgfile.h" />
+		<Unit filename="../src/sorted_unique_list.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/sorted_unique_list.h" />
 		<Unit filename="../src/winlibs_common.h" />
 		<Unit filename="../src/wl-info.c">
 			<Option compilerVar="CC" />
