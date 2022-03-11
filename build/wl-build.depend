@@ -177,25 +177,17 @@
 1646511479 z:\winlibs_tools\src\sorted_unique_list.h
 	<stdlib.h>
 
-1646509251 source:z:\winlibs_tools\src\wl-build.c
-	<stdio.h>
-	<stdlib.h>
-	<stdint.h>
-	<string.h>
-	<ctype.h>
+1647007962 source:z:\winlibs_tools\src\wl-build.c
 	<unistd.h>
-	<pthread.h>
 	<windows.h>
 	<miniargv.h>
 	<versioncmp.h>
-	<crossrun.h>
-	<dirtrav.h>
 	"pkgfile.h"
 	"pkgdb.h"
-	"sorted_unique_list.h"
-	"memory_buffer.h"
 	"filesystem.h"
 	"handle_interrupts.h"
+	"build-order.h"
+	"build-package.h"
 	"winlibs_common.h"
 	<string.h>
 	<windows.h>
@@ -209,7 +201,7 @@
 
 1646989838 z:\winlibs_tools\src\winlibs_common.h
 
-1646509439 source:z:\winlibs_tools\src\pkgdb.c
+1647007994 source:z:\winlibs_tools\src\pkgdb.c
 	"pkgdb.h"
 	"filesystem.h"
 	"memory_buffer.h"
@@ -220,7 +212,7 @@
 	<unistd.h>
 	<windows.h>
 
-1646407254 z:\winlibs_tools\src\pkgdb.h
+1647007962 z:\winlibs_tools\src\pkgdb.h
 	"pkg.h"
 	<stdint.h>
 	<stdlib.h>
@@ -237,7 +229,7 @@
 	<stdlib.h>
 	<time.h>
 
-1646511489 source:z:\winlibs_tools\src\pkgfile.c
+1647007962 source:z:\winlibs_tools\src\pkgfile.c
 	"pkgfile.h"
 	"filesystem.h"
 	"winlibs_common.h"
@@ -254,31 +246,31 @@
 	"pkg.h"
 	<stddef.h>
 
-1647004135 source:z:\winlibs_tools\src\build-order.c
+1647007259 source:z:\winlibs_tools\src\build-order.c
 	"build-order.h"
 	<stdio.h>
-	<stdlib.h>
-	<stdint.h>
+	<string.h>
+	"pkgfile.h"
+	"pkgdb.h"
+	"memory_buffer.h"
+	"winlibs_common.h"
+
+1647007259 z:\winlibs_tools\src\build-order.h
+	"pkgfile.h"
+
+1647003818 z:\winlibs_tools\src\build-package.h
+
+1647005237 source:z:\winlibs_tools\src\build-package.c
+	"build-package.h"
+	"memory_buffer.h"
+	"filesystem.h"
+	"pkgfile.h"
+	"winlibs_common.h"
+	<stdio.h>
 	<string.h>
 	<ctype.h>
 	<unistd.h>
 	<pthread.h>
-	<windows.h>
-	<miniargv.h>
-	<versioncmp.h>
 	<crossrun.h>
 	<dirtrav.h>
-	"pkgfile.h"
-	"pkgdb.h"
-	"sorted_unique_list.h"
-	"memory_buffer.h"
-	"filesystem.h"
-	"handle_interrupts.h"
-	"build-package.h"
-	"winlibs_common.h"
-
-1647004040 z:\winlibs_tools\src\build-order.h
-	"pkgfile.h"
-
-1647003818 z:\winlibs_tools\src\build-package.h
 

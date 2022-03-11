@@ -369,6 +369,10 @@ size_t pkgdb_add_sorted_unique_list (pkgdb_handle handle, const char* sql, const
   const char* value;
   sqlite3_stmt* sqlresult;
   size_t count = 0;
+  //abort if handle is not set
+  if (!handle)
+    return 0;
+  //add data to database
   if ((n = sorted_unique_list_size(sortuniqlist)) == 0)
     return 0;
   if ((status = sqlite3_prepare_v2(handle->db, sql, -1, &sqlresult, NULL)) == SQLITE_OK) {
@@ -418,10 +422,15 @@ int pkgdb_install_package (pkgdb_handle handle, const struct package_metadata_st
   struct set_package_category_callback_struct categorydata;
   sqlite3_stmt* sqlresult;
   char* detectedversion;
+  //abort if handle is not set
+  if (!handle)
+    return -1;
+  //check if already installed
   if ((detectedversion = get_sql_str_param_str(handle->db, SQL_GET_PACKAGE_VERSION, pkginfo->datafield[PACKAGE_METADATA_INDEX_BASENAME])) != NULL) {
     /////printf("Version already installed: %s\n", detectedversion);
     free(detectedversion);
   }
+  //add data to database
   execute_sql_cmd(handle->db, SQL_BEGIN_TRANSACTION);
   n = 0;
   if ((status = sqlite3_prepare_v2(handle->db, SQL_ADD_PACKAGE, -1, &sqlresult, NULL)) == SQLITE_OK) {
@@ -451,6 +460,10 @@ int pkgdb_uninstall_package (pkgdb_handle handle, const char* package)
 {
   int status;
   int abort = 0;
+  //abort if handle is not set
+  if (!handle)
+    return -1;
+  //remove data from database
   execute_sql_cmd(handle->db, SQL_BEGIN_TRANSACTION);
   if (!abort && (status = execute_sql_cmd_param_str(handle->db, SQL_DEL_PACKAGE_PATHS, package)) != SQLITE_OK && status != SQLITE_DONE)
     abort = 1;
@@ -476,6 +489,9 @@ struct package_metadata_struct* pkgdb_read_package (pkgdb_handle handle, const c
   const char* s;
   sqlite3_stmt* sqlresult;
   struct package_metadata_struct* pkginfo = NULL;
+  //abort if handle is not set
+  if (!handle)
+    return NULL;
   //allocate structure to hold package information
   if ((pkginfo = package_metadata_create()) == NULL)
     return NULL;
@@ -544,6 +560,9 @@ int pkgdb_interate_package_files_or_folders (pkgdb_handle handle, const char* pa
   sqlite3_stmt* sqlresult;
   const char* s;
   int abort = 0;
+  //abort if handle is not set
+  if (!handle)
+    return 0;
   //get list of files/folders
   if ((sqlresult = execute_sql_query_param_str_int(handle->db, SQL_GET_PACKAGE_FILES_OR_FOLDERS, &status, package, type)) == NULL)
     return -1;

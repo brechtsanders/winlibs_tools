@@ -312,15 +312,14 @@ int dependancies_listed_but_not_depended_on_iteration (const char* basename, voi
   return 0;
 }
 
+#if 0
+
 size_t dependancies_listed_but_not_depended_on (const char* dstdir, struct package_metadata_struct* pkginfo)
 {
   struct memory_buffer* pkginfopath = memory_buffer_create();
   struct memory_buffer* filepath = memory_buffer_create();
   struct dependancies_listed_but_not_depended_on_struct data = {0, sorted_unique_list_create(strcmp, free)};
   //determine package information path
-/*
-  TO DO: use package sqlite3 database
-*/
   memory_buffer_set_printf(pkginfopath, "%s%s%c%s%c", dstdir, PACKAGE_INFO_PATH, PATH_SEPARATOR, pkginfo->datafield[PACKAGE_METADATA_INDEX_BASENAME], PATH_SEPARATOR);
   //check dependancies
   sorted_unique_list_load_from_file(&data.dependencies, memory_buffer_get(memory_buffer_set_printf(filepath, "%s%s", memory_buffer_get(pkginfopath), PACKAGE_INFO_DEPENDENCIES_FILE)));
@@ -340,3 +339,24 @@ size_t dependancies_listed_but_not_depended_on (const char* dstdir, struct packa
   return data.countmissing;
 }
 
+#else
+
+size_t dependancies_listed_but_not_depended_on (struct package_metadata_struct* pkginfo, struct package_metadata_struct* dbpkginfo)
+{
+  struct dependancies_listed_but_not_depended_on_struct data = {0, NULL};
+  if (dbpkginfo) {
+    //check dependancies
+    data.dependencies = dbpkginfo->dependencies;
+    iterate_packages_in_list(pkginfo->dependencies, dependancies_listed_but_not_depended_on_iteration, &data);
+    //check optional dependancies
+    data.dependencies = dbpkginfo->optionaldependencies;
+    iterate_packages_in_list(pkginfo->optionaldependencies, dependancies_listed_but_not_depended_on_iteration, &data);
+    sorted_unique_list_clear(data.dependencies);
+    //check build dependancies
+    data.dependencies = dbpkginfo->builddependencies;
+    iterate_packages_in_list(pkginfo->builddependencies, dependancies_listed_but_not_depended_on_iteration, &data);
+  }
+  return data.countmissing;
+}
+
+#endif

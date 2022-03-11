@@ -41,6 +41,7 @@ const char* pkgdb_get_rootpath (pkgdb_handle handle);
 /*!
   \param  handle                database handle
   \param  pkginfo               package information
+  \return 0 on success
 */
 int pkgdb_install_package (pkgdb_handle handle, const struct package_metadata_struct* pkginfo);
 

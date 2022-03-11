@@ -366,10 +366,13 @@ int iterate_packages_in_list (const sorted_unique_list* sortuniqlist, package_ca
 {
   int result;
   unsigned int i;
-  unsigned int n = sorted_unique_list_size(sortuniqlist);
-  for (i = 0; i < n; i++) {
-    if ((result = (*callback)(sorted_unique_list_get(sortuniqlist, i), callbackdata)) != 0)
-      return result;
+  unsigned int n;
+  if (sortuniqlist) {
+    n = sorted_unique_list_size(sortuniqlist);
+    for (i = 0; i < n; i++) {
+      if ((result = (*callback)(sorted_unique_list_get(sortuniqlist, i), callbackdata)) != 0)
+        return result;
+    }
   }
   return 0;
 }
