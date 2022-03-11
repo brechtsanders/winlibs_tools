@@ -7,7 +7,7 @@
 
 extern unsigned int interrupted;           //variable set by signal handler
 
-//!iterate through all folders in installed package
+//!build package from source
 /*!
   \param  infopath              full path(s) of directory containing build information files
   \param  basename              name of package

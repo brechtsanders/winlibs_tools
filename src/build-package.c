@@ -289,5 +289,3 @@ unsigned long build_package (const char* infopath, const char* basename, const c
   return exitcode;
 }
 
-////////////////////////////////////////////////////////////////////////
-
