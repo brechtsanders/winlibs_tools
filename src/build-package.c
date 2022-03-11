@@ -4,6 +4,9 @@
 #include "pkgfile.h"
 #include "winlibs_common.h"
 #include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#include <unistd.h>
 #include <pthread.h>
 #include <crossrun.h>
 #include <dirtrav.h>
