@@ -112,4 +112,11 @@
 /*! \brief base name for lock file used for downloads */
 #define SOURCE_DOWNLOAD_LOCK_FILE_BASE ".winlibsdownload"
 
+/*! \brief sleep for specified number of seconds */
+#ifdef _WIN32
+#define SLEEP_SECONDS(s) Sleep(s * 1000);
+#else
+#define SLEEP_SECONDS(s) sleep(s);
+#endif
+
 #endif //INCLUDED_WINLIBS_COMMON_H

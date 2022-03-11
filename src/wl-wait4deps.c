@@ -18,12 +18,6 @@
 #define PROGRAM_DESC    "Command line utility to wait for package dependencies to be installed"
 #define DEFAULT_WAIT_SECONDS 3
 
-#ifdef _WIN32
-#define SLEEP_SECONDS(s) Sleep(s * 1000);
-#else
-#define SLEEP_SECONDS(s) sleep(s);
-#endif
-
 #define PACKAGE_INFO_PATH_LEN (sizeof(PACKAGE_INFO_PATH) - 1)
 #define PACKAGE_INFO_VERSION_FILE_LEN (sizeof(PACKAGE_INFO_VERSION_FILE) - 1)
 

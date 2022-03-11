@@ -91,6 +91,10 @@
 			<Add library="dirtrav" />
 			<Add library="sqlite3" />
 		</Linker>
+		<Unit filename="../src/build-package.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/build-package.h" />
 		<Unit filename="../src/filesystem.c">
 			<Option compilerVar="CC" />
 		</Unit>
