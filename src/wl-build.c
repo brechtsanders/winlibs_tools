@@ -1,3 +1,4 @@
+#include <string.h>
 #include <unistd.h>
 #ifdef _WIN32
 #include <windows.h>
