@@ -184,39 +184,18 @@ jobs:
          OBJDIR=obj \
          CFLAGS="-I$PWD/deps/include -I/usr/local/opt/libarchive/include" \
          LDFLAGS="-L$PWD/deps/lib -L/usr/local/opt/libarchive/lib"
-#    - if: matrix.config.os == 'windows-latest'
-#      name: Build static
-#      run: |
-#        PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:/usr/local/opt/libarchive/lib/pkgconfig:$PKG_CONFIG_PATH \
-#         make install \
-#         PREFIX=$PWD/release \
-#         STATIC=1 \
-#         BINDIR=bin \
-#         OBJDIR=obj \
-#         CFLAGS="-DSTATIC -I$PWD/deps/include -I/usr/local/opt/libarchive/include" \
-#         LDFLAGS="-static -L$PWD/deps/lib -L/usr/local/opt/libarchive/lib"
-#    - if: matrix.config.os != 'windows-latest'
-#      name: Build shared
-#      run: |
-#        PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:/usr/local/opt/libarchive/lib/pkgconfig:$PKG_CONFIG_PATH \
-#         make install \
-#         PREFIX=$PWD/release \
-#         BINDIR=bin \
-#         OBJDIR=obj \
-#         CFLAGS="-I$PWD/deps/include -I/usr/local/opt/libarchive/include" \
-#         LDFLAGS="-L$PWD/deps/lib -L/usr/local/opt/libarchive/lib"
-##    - name: Build package
-##      run: |
-##        PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:/usr/local/opt/libarchive/lib/pkgconfig:$PKG_CONFIG_PATH \
-##         make binarypackage \
-##         STATIC=1 \
-##         CFLAGS="-I$PWD/deps/include -I/usr/local/opt/libarchive/include" \
-##         LDFLAGS="-L$PWD/deps/lib -L/usr/local/opt/libarchive/lib"
-##        mv winlibs-tools-*.zip winlibs-tools-${{ matrix.config.arch }}.zip
-#    - if: matrix.config.os == 'windows-latest'
-#      name: Upload
-#      uses: actions/upload-artifact@v1
-#      with:
-#        path: ./release
-#        name: winlibs-tools-${{ matrix.config.arch }}.zip
-
+    - if: matrix.config.os == 'windows-latest'
+      name: Build package
+      run: |
+        PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:/usr/local/opt/libarchive/lib/pkgconfig:$PKG_CONFIG_PATH \
+         make binarypackage \
+         STATIC=1 \
+         CFLAGS="-I$PWD/deps/include -I/usr/local/opt/libarchive/include" \
+         LDFLAGS="-L$PWD/deps/lib -L/usr/local/opt/libarchive/lib"
+        mv winlibs-tools-*.zip winlibs-tools-${{ matrix.config.arch }}.zip
+    - if: matrix.config.os == 'windows-latest'
+      name: Upload
+      uses: actions/upload-artifact@v1
+      with:
+        path: ./release
+        name: winlibs-tools-${{ matrix.config.arch }}.zip
