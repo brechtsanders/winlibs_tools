@@ -1,5 +1,9 @@
 1.0.9
 
+2022-03-12  Brecht Sanders  https://github.com/brechtsanders/
+
+  * allow multiple paths for -s/--source-path/BUILDSCRIPTS
+
 2022-03-05  Brecht Sanders  https://github.com/brechtsanders/
 
   * separate non-sqlite3 stuff from pkg.h/pkg.c from pkgdb.h/pkgdb.c

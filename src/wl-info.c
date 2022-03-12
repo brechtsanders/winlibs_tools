@@ -64,7 +64,7 @@ int main (int argc, char *argv[], char *envp[])
   //definition of command line arguments
   const miniargv_definition argdef[] = {
     {'h', "help",          NULL,      miniargv_cb_increment_int, &showhelp,        "show command line help"},
-    {'s', "source-path",   "PATH",    miniargv_cb_set_const_str, &packageinfopath, "path containing build recipes\noverrides environment variable BUILDSCRIPTS"},
+    {'s', "source-path",   "PATH",    miniargv_cb_set_const_str, &packageinfopath, "path containing build recipes\noverrides environment variable BUILDSCRIPTS\ncan be multpiple paths separated by \"" WINLIBS_CHR2STR(PATHLIST_SEPARATOR) "\""},
     {'v', "verbose",       NULL,      miniargv_cb_increment_int, &verbose,         "verbose mode"},
     //{0,   NULL,            "PACKAGE", process_arg_param,         NULL,             "package(s) to build (or \"all\" to list all packages)"},
     {0,   NULL,            "PACKAGE", miniargv_cb_error,         NULL,             "package(s) to build (or \"all\" to list all packages)"},

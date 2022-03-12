@@ -104,7 +104,7 @@ int main (int argc, char** argv, char *envp[])
     {'h', "help",         NULL,      miniargv_cb_increment_int, &showhelp,        "show command line help"},
     {'i', "install-path", "PATH",    miniargv_cb_set_const_str, &dstdir,          "path where to install packages\noverrides environment variable MINGWPREFIX"},
     //{'u', "source-path",  "PATH",    miniargv_cb_set_const_str, &packageinfopath, "path containing build recipes\noverrides environment variable BUILDSCRIPTS"},
-    {'s', "source-path",  "PATH",    miniargv_cb_set_const_str, &packageinfopath, "path containing build recipes\noverrides environment variable BUILDSCRIPTS"},
+    {'s', "source-path",  "PATH",    miniargv_cb_set_const_str, &packageinfopath, "path containing build recipes\noverrides environment variable BUILDSCRIPTS\ncan be multpiple paths separated by \"" WINLIBS_CHR2STR(PATHLIST_SEPARATOR) "\""},
     {'x', "shell",        "CMD",     miniargv_cb_set_const_str, &shellcmd,        "shell command to execute, defaults to:\n\"" DEFAULT_SHELL_COMMAND "\""},
     {'b', "build-path",   "PATH",    miniargv_cb_set_const_str, &builddir,        "path temporary build folder will be created"},
     {'l', "logs",         "PATH",    miniargv_cb_set_const_str, &logdir,          "path where output logs will be saved"},
