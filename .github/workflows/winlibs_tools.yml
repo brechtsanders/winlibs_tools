@@ -194,7 +194,7 @@ jobs:
          LDFLAGS="-L$PWD/deps/lib -L/usr/local/opt/libarchive/lib"
         mv winlibs-tools-*.zip winlibs-tools-${{ matrix.config.arch }}.zip
     - if: matrix.config.os == 'windows-latest'
-      name: Upload
+      name: Upload package
       uses: actions/upload-artifact@v1
       with:
         path: ./release

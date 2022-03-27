@@ -268,13 +268,8 @@ int main (int argc, char** argv, char *envp[])
       if (!skip && dbpkginfo) {
         if (PKG_XTRA(current->info)->cyclic_start_pkginfo) {
           //part of cyclic loop
-          struct package_metadata_struct* cyclic_pkginfo;
-          if ((cyclic_pkginfo = read_packageinfo(packageinfopath, PKG_XTRA(current->info)->cyclic_start_pkginfo->datafield[PACKAGE_METADATA_INDEX_BASENAME])) != NULL) {
-            //if (dependancies_listed_but_not_depended_on(dstdir, cyclic_pkginfo) == 0)
-            if (dependancies_listed_but_not_depended_on(cyclic_pkginfo, dbpkginfo) == 0)
-              skip++;
-            package_metadata_free(cyclic_pkginfo);
-          }
+          if (dependancies_listed_but_not_depended_on(pkginfo, dbpkginfo) == 0)
+            skip++;
           if (!skip)
             printf("part of cyclic dependency (via %s), building anyway\n", PKG_XTRA(current->info)->cyclic_start_pkginfo->datafield[PACKAGE_METADATA_INDEX_BASENAME]);
           else

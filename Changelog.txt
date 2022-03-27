@@ -1,3 +1,9 @@
+1.0.10
+
+2022-03-27  Brecht Sanders  https://github.com/brechtsanders/
+
+  * fix issue with cyclic dependency rebuild decision in wl-build
+
 1.0.9
 
 2022-03-12  Brecht Sanders  https://github.com/brechtsanders/
