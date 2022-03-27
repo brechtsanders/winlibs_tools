@@ -1,24 +1,15 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <miniargv.h>
 #include <versioncmp.h>
 #include "winlibs_common.h"
 #include "sorted_unique_list.h"
+#include "filesystem.h"
 #include "pkgfile.h"
 
 #define PROGRAM_NAME    "wl-listall"
 #define PROGRAM_DESC    "Command line utility to list available package recipes"
-
-int folder_exists (const char* path)
-{
-  struct stat statbuf;
-  if (stat(path, &statbuf) == 0 && S_ISDIR(statbuf.st_mode))
-    return 1;
-  return 0;
-}
 
 int packageinfo_callback (const char* basename, void* callbackdata)
 {

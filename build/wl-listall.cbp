@@ -57,7 +57,7 @@
 				<Option object_output="obj/Debug64/" />
 				<Option type="1" />
 				<Option compiler="MINGW64" />
-				<Option parameters="-s \\SERVER\users\brecht\sources\porting_to_win32\build_scripts" />
+				<Option parameters="-s \\SERVER\users\brecht\sources\porting_to_win32\build_scripts;\\SERVER\Users\brecht\sources\CPP\winlibs_recipes\recipes;\\SERVER\Users\brecht\sources\CPP\winlibs_recipes\recipes_work_in_progress;\\SERVER\Users\brecht\sources\CPP\winlibs_recipes\recipes_not_portable" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -89,6 +89,10 @@
 			<Add library="avl" />
 			<Add library="versioncmp" />
 		</Linker>
+		<Unit filename="../src/filesystem.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/filesystem.h" />
 		<Unit filename="../src/pkg.c">
 			<Option compilerVar="CC" />
 		</Unit>

@@ -125,7 +125,7 @@ $(BINDIR)/wl-download$(BINEXT): $(OBJDIR)/wl-download.o $(OBJDIR)/exclusive_lock
 $(BINDIR)/wl-wait4deps$(BINEXT): $(OBJDIR)/wl-wait4deps.o $(OBJDIR)/filesystem.o
 	$(CC) $(STRIPFLAG) $(LDFLAGS) -o $@ $^ $(MINIARGV_LDFLAGS) $(PORTCOLCON_LDFLAGS)
 
-$(BINDIR)/wl-listall$(BINEXT): $(OBJDIR)/wl-listall.o $(OBJDIR)/pkg.o $(OBJDIR)/pkgfile.o $(OBJDIR)/sorted_unique_list.o
+$(BINDIR)/wl-listall$(BINEXT): $(OBJDIR)/wl-listall.o $(OBJDIR)/pkg.o $(OBJDIR)/pkgfile.o $(OBJDIR)/sorted_unique_list.o $(OBJDIR)/filesystem.o
 	$(CC) $(STRIPFLAG) $(LDFLAGS) -o $@ $^ $(MINIARGV_LDFLAGS) $(VERSIONCMP_LDFLAGS) $(AVL_LDFLAGS)
 
 $(BINDIR)/wl-info$(BINEXT): $(OBJDIR)/wl-info.o $(OBJDIR)/pkg.o $(OBJDIR)/pkgfile.o $(OBJDIR)/sorted_unique_list.o $(OBJDIR)/filesystem.o
