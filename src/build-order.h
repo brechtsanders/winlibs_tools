@@ -64,7 +64,7 @@ struct package_info_list_struct* generate_build_list (sorted_unique_list* sorted
   \param  pkginfo               package information from build recipe
   \return number of dependencies specified in build information that are not currently installed
 */
-size_t dependancies_listed_but_not_depended_on (const char* dstdir, struct package_metadata_struct* pkginfo);
+size_t dependencies_listed_but_not_depended_on (const char* dstdir, struct package_metadata_struct* pkginfo);
 #else
 //!get number of dependency packages specified that are currently not installed for a specific package
 /*!
@@ -72,7 +72,7 @@ size_t dependancies_listed_but_not_depended_on (const char* dstdir, struct packa
   \param  dbpkginfo             package information from database for same package as pkginfo
   \return number of dependencies specified in build information that are not currently installed
 */
-size_t dependancies_listed_but_not_depended_on (struct package_metadata_struct* pkginfo, struct package_metadata_struct* dbpkginfo);
+size_t dependencies_listed_but_not_depended_on (struct package_metadata_struct* pkginfo, struct package_metadata_struct* dbpkginfo);
 #endif
 
 #ifdef __cplusplus

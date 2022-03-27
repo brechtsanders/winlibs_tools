@@ -1340,4 +1340,4 @@ int main (int argc, char** argv, char *envp[])
 }
 
 /////TO DO: add error detection (e.g. if folder does not exist)
-/////TO DO: add information if optional dependancy was installed during build
+/////TO DO: add information if optional dependency was installed during build

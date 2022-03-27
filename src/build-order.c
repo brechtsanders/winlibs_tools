@@ -300,38 +300,38 @@ struct package_info_list_struct* generate_build_list (sorted_unique_list* sorted
 
 ////////////////////////////////////////////////////////////////////////
 
-struct dependancies_listed_but_not_depended_on_struct {
+struct dependencies_listed_but_not_depended_on_struct {
   size_t countmissing;
   sorted_unique_list* dependencies;
 };
 
-int dependancies_listed_but_not_depended_on_iteration (const char* basename, void* callbackdata)
+int dependencies_listed_but_not_depended_on_iteration (const char* basename, void* callbackdata)
 {
-  if (!sorted_unique_list_find(((struct dependancies_listed_but_not_depended_on_struct*)callbackdata)->dependencies, basename))
-    ((struct dependancies_listed_but_not_depended_on_struct*)callbackdata)->countmissing++;
+  if (!sorted_unique_list_find(((struct dependencies_listed_but_not_depended_on_struct*)callbackdata)->dependencies, basename))
+    ((struct dependencies_listed_but_not_depended_on_struct*)callbackdata)->countmissing++;
   return 0;
 }
 
 #if 0
 
-size_t dependancies_listed_but_not_depended_on (const char* dstdir, struct package_metadata_struct* pkginfo)
+size_t dependencies_listed_but_not_depended_on (const char* dstdir, struct package_metadata_struct* pkginfo)
 {
   struct memory_buffer* pkginfopath = memory_buffer_create();
   struct memory_buffer* filepath = memory_buffer_create();
-  struct dependancies_listed_but_not_depended_on_struct data = {0, sorted_unique_list_create(strcmp, free)};
+  struct dependencies_listed_but_not_depended_on_struct data = {0, sorted_unique_list_create(strcmp, free)};
   //determine package information path
   memory_buffer_set_printf(pkginfopath, "%s%s%c%s%c", dstdir, PACKAGE_INFO_PATH, PATH_SEPARATOR, pkginfo->datafield[PACKAGE_METADATA_INDEX_BASENAME], PATH_SEPARATOR);
-  //check dependancies
+  //check dependencies
   sorted_unique_list_load_from_file(&data.dependencies, memory_buffer_get(memory_buffer_set_printf(filepath, "%s%s", memory_buffer_get(pkginfopath), PACKAGE_INFO_DEPENDENCIES_FILE)));
-  iterate_packages_in_list(pkginfo->dependencies, dependancies_listed_but_not_depended_on_iteration, &data);
+  iterate_packages_in_list(pkginfo->dependencies, dependencies_listed_but_not_depended_on_iteration, &data);
   sorted_unique_list_clear(data.dependencies);
-  //check optional dependancies
+  //check optional dependencies
   sorted_unique_list_load_from_file(&data.dependencies, memory_buffer_get(memory_buffer_set_printf(filepath, "%s%s", memory_buffer_get(pkginfopath), PACKAGE_INFO_OPTIONALDEPENDENCIES_FILE)));
-  iterate_packages_in_list(pkginfo->optionaldependencies, dependancies_listed_but_not_depended_on_iteration, &data);
+  iterate_packages_in_list(pkginfo->optionaldependencies, dependencies_listed_but_not_depended_on_iteration, &data);
   sorted_unique_list_clear(data.dependencies);
-  //check build dependancies
+  //check build dependencies
   sorted_unique_list_load_from_file(&data.dependencies, memory_buffer_get(memory_buffer_set_printf(filepath, "%s%s", memory_buffer_get(pkginfopath), PACKAGE_INFO_BUILDDEPENDENCIES_FILE)));
-  iterate_packages_in_list(pkginfo->builddependencies, dependancies_listed_but_not_depended_on_iteration, &data);
+  iterate_packages_in_list(pkginfo->builddependencies, dependencies_listed_but_not_depended_on_iteration, &data);
   //clean up
   sorted_unique_list_free(data.dependencies);
   memory_buffer_free(pkginfopath);
@@ -341,20 +341,20 @@ size_t dependancies_listed_but_not_depended_on (const char* dstdir, struct packa
 
 #else
 
-size_t dependancies_listed_but_not_depended_on (struct package_metadata_struct* pkginfo, struct package_metadata_struct* dbpkginfo)
+size_t dependencies_listed_but_not_depended_on (struct package_metadata_struct* pkginfo, struct package_metadata_struct* dbpkginfo)
 {
-  struct dependancies_listed_but_not_depended_on_struct data = {0, NULL};
+  struct dependencies_listed_but_not_depended_on_struct data = {0, NULL};
   if (dbpkginfo) {
-    //check dependancies
+    //check dependencies
     data.dependencies = dbpkginfo->dependencies;
-    iterate_packages_in_list(pkginfo->dependencies, dependancies_listed_but_not_depended_on_iteration, &data);
-    //check optional dependancies
+    iterate_packages_in_list(pkginfo->dependencies, dependencies_listed_but_not_depended_on_iteration, &data);
+    //check optional dependencies
     data.dependencies = dbpkginfo->optionaldependencies;
-    iterate_packages_in_list(pkginfo->optionaldependencies, dependancies_listed_but_not_depended_on_iteration, &data);
+    iterate_packages_in_list(pkginfo->optionaldependencies, dependencies_listed_but_not_depended_on_iteration, &data);
     sorted_unique_list_clear(data.dependencies);
-    //check build dependancies
+    //check build dependencies
     data.dependencies = dbpkginfo->builddependencies;
-    iterate_packages_in_list(pkginfo->builddependencies, dependancies_listed_but_not_depended_on_iteration, &data);
+    iterate_packages_in_list(pkginfo->builddependencies, dependencies_listed_but_not_depended_on_iteration, &data);
   }
   return data.countmissing;
 }

@@ -102,7 +102,7 @@
 
 1648382871 z:\winlibs_tools\src\winlibs_common.h
 
-1646510462 source:z:\winlibs_tools\src\wl-showdeps.c
+1647101218 source:z:\winlibs_tools\src\wl-showdeps.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>

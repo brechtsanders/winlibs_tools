@@ -54,7 +54,7 @@
 				<Option object_output="obj/Debug64/" />
 				<Option type="1" />
 				<Option compiler="MINGW64" />
-				<Option parameters="-i D:\Prog\winlibs64-11.2.0ucrt\custombuilt -s \\SERVER\users\brecht\sources\porting_to_win32\build_scripts -r cmake" />
+				<Option parameters="-i D:\Prog\winlibs64-11.2.0ucrt\custombuilt -s \\SERVER\users\brecht\sources\porting_to_win32\build_scripts;\\SERVER\Users\brecht\sources\CPP\winlibs_recipes\recipes;\\SERVER\Users\brecht\sources\CPP\winlibs_recipes\recipes_work_in_progress;\\SERVER\Users\brecht\sources\CPP\winlibs_recipes\recipes_not_portable -r xz" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>

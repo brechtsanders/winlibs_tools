@@ -33,7 +33,7 @@ void show_package_dependencies (const char* packagename, const char* basepath, c
   listitem = parent;
   while (listitem) {
     if (strcmp(packagename, listitem->packagename) == 0) {
-      printf("%*s! CIRCULAR DEPENDANCY\n", (level + 1) * 2, "");
+      printf("%*s^ (circular dependency)\n", (level + 1) * 2, "");
       return;
     }
     listitem = listitem->next;
