@@ -27,10 +27,9 @@
 
 1636806968 \\server\users\brecht\sources\cpp\winlibs\src\winlibs_common.h
 
-1638779472 source:z:\winlibs_tools\src\wl-showstatus.c
+1642087661 source:z:\winlibs_tools\src\wl-showstatus.c
 	<stdio.h>
 	<stdlib.h>
-	<malloc.h>
 	<string.h>
 	<windows.h>
 	<limits.h>
@@ -39,5 +38,5 @@
 	<portcolcon.h>
 	"winlibs_common.h"
 
-1641756023 z:\winlibs_tools\src\winlibs_common.h
+1648379271 z:\winlibs_tools\src\winlibs_common.h
 

@@ -93,6 +93,7 @@
 			<Add library="pcre2-8" />
 			<Add library="avl" />
 			<Add library="sqlite3" />
+			<Add library="dl" />
 		</Linker>
 		<Unit filename="../src/common_output.c">
 			<Option compilerVar="CC" />

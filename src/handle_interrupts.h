@@ -16,9 +16,16 @@
   \param  function_name         name of function to handle interrupt signals
 */
 #ifdef _WIN32
-#  define DEFINE_INTERRUPT_HANDLER_BEGIN(function_name) BOOL WINAPI function_name (DWORD interrupt_signal) {  if (interrupt_signal == CTRL_C_EVENT || interrupt_signal == CTRL_BREAK_EVENT || interrupt_signal == CTRL_CLOSE_EVENT || interrupt_signal == CTRL_LOGOFF_EVENT || interrupt_signal == CTRL_SHUTDOWN_EVENT) {
+#  define DEFINE_INTERRUPT_HANDLER_BEGIN(function_name) \
+  BOOL WINAPI function_name (DWORD interrupt_signal) { \
+    if (interrupt_signal == CTRL_C_EVENT || \
+        interrupt_signal == CTRL_BREAK_EVENT || \
+        interrupt_signal == CTRL_CLOSE_EVENT || \
+        interrupt_signal == CTRL_LOGOFF_EVENT || \
+        interrupt_signal == CTRL_SHUTDOWN_EVENT) {
 #else
-#  define DEFINE_INTERRUPT_HANDLER_BEGIN(function_name) void function_name (int interrupt_signal) {
+#  define DEFINE_INTERRUPT_HANDLER_BEGIN(function_name) \
+  void function_name (int interrupt_signal) {
 #endif
 
 //!finish definition of function to handle interrupt signals

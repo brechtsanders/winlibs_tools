@@ -14,7 +14,7 @@
 /*! \brief minor version number */
 #define WINLIBS_VERSION_MINOR 0
 /*! \brief micro version number */
-#define WINLIBS_VERSION_MICRO 10
+#define WINLIBS_VERSION_MICRO 11
 /*! @} */
 
 /*! \brief packed version number */

@@ -80,7 +80,7 @@
 		<Linker>
 			<Add option="-static-libgcc" />
 			<Add option="-static" />
-			<Add option="`pkg-config --static --libs libarchive sqlite3`" />
+			<Add option="`pkg-config.exe --static --libs libarchive sqlite3`" />
 			<Add library="miniargv" />
 			<Add library="dirtrav" />
 			<Add library="avl" />

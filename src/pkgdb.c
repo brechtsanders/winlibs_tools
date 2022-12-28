@@ -87,7 +87,7 @@ const char* pkgdb_sql_create[] = {
 
 #define PACKAGE_DEPENDENCY_TYPE_OPTIONAL         0
 #define PACKAGE_DEPENDENCY_TYPE_MANDATORY        1
-//#define PACKAGE_DEPENDENCY_TYPE_BUILD_OPTIONAL   2
+#define PACKAGE_DEPENDENCY_TYPE_BUILD_OPTIONAL   2
 #define PACKAGE_DEPENDENCY_TYPE_BUILD            3
 
 #define PACKAGE_PATH_TYPE_FILE              0
@@ -445,6 +445,7 @@ int pkgdb_install_package (pkgdb_handle handle, const struct package_metadata_st
     pkgdb_add_sorted_unique_list(handle, SQL_ADD_PACKAGE_DEPENDENCY, pkginfo->datafield[PACKAGE_METADATA_INDEX_BASENAME], pkginfo->dependencies, PACKAGE_DEPENDENCY_TYPE_MANDATORY);
     pkgdb_add_sorted_unique_list(handle, SQL_ADD_PACKAGE_DEPENDENCY, pkginfo->datafield[PACKAGE_METADATA_INDEX_BASENAME], pkginfo->optionaldependencies, PACKAGE_DEPENDENCY_TYPE_OPTIONAL);
     pkgdb_add_sorted_unique_list(handle, SQL_ADD_PACKAGE_DEPENDENCY, pkginfo->datafield[PACKAGE_METADATA_INDEX_BASENAME], pkginfo->builddependencies, PACKAGE_DEPENDENCY_TYPE_BUILD);
+    pkgdb_add_sorted_unique_list(handle, SQL_ADD_PACKAGE_DEPENDENCY, pkginfo->datafield[PACKAGE_METADATA_INDEX_BASENAME], pkginfo->optionalbuilddependencies, PACKAGE_DEPENDENCY_TYPE_BUILD_OPTIONAL);
     pkgdb_add_sorted_unique_list(handle, SQL_ADD_PACKAGE_PATH, pkginfo->datafield[PACKAGE_METADATA_INDEX_BASENAME], pkginfo->filelist, PACKAGE_PATH_TYPE_FILE);
     pkgdb_add_sorted_unique_list(handle, SQL_ADD_PACKAGE_PATH, pkginfo->datafield[PACKAGE_METADATA_INDEX_BASENAME], pkginfo->folderlist, PACKAGE_PATH_TYPE_FOLDER);
     execute_sql_cmd_param_str(handle->db, SQL_DEL_PACKAGE_CATEGORIES, pkginfo->datafield[PACKAGE_METADATA_INDEX_BASENAME]);
@@ -528,6 +529,9 @@ struct package_metadata_struct* pkgdb_read_package (pkgdb_handle handle, const c
           break;
         case PACKAGE_DEPENDENCY_TYPE_BUILD:
           sorted_unique_list_add(pkginfo->builddependencies, s);
+          break;
+        case PACKAGE_DEPENDENCY_TYPE_BUILD_OPTIONAL:
+          sorted_unique_list_add(pkginfo->optionalbuilddependencies, s);
           break;
       }
       status = pkgdb_sql_query_next_row(sqlresult);

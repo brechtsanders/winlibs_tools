@@ -51,6 +51,7 @@ struct package_metadata_struct {
   sorted_unique_list* dependencies;
   sorted_unique_list* optionaldependencies;
   sorted_unique_list* builddependencies;
+  sorted_unique_list* optionalbuilddependencies;
   uint64_t totalsize;
   size_t version_linenumber;
   int buildok;

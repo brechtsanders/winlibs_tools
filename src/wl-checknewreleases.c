@@ -509,7 +509,7 @@ int main (int argc, char** argv, char *envp[])
   //definition of command line arguments
   const miniargv_definition argdef[] = {
     {'h', "help",            NULL,      miniargv_cb_increment_int, &showhelp,             "show command line help"},
-    {'s', "source-path",     "PATH",    miniargv_cb_set_const_str, &info.packageinfopath, "build recipe path\noverrides environment variable BUILDSCRIPTS\ncan be multpiple paths separated by \"" WINLIBS_CHR2STR(PATHLIST_SEPARATOR) "\""},
+    {'s', "source-path",     "PATH",    miniargv_cb_set_const_str, &info.packageinfopath, "build recipe path\noverrides environment variable BUILDSCRIPTS\ncan be multiple paths separated by \"" WINLIBS_CHR2STR(PATHLIST_SEPARATOR) "\""},
     {'d', "db-file",         "FILE",    miniargv_cb_set_const_str, &versiondbpath,        "version database file (default: " DEFAULT_DATABASE ")"},
     {'c', "cache",           "FILE",    miniargv_cb_set_const_str, &cachedbfile,          "set cache database (\"-\" for none, default: temporary database)"},
     {'x', "cache-expires",   "S",       miniargv_cb_set_long/*u*/, &cache_expiration,     "set cache expiration in seconds or zero for none (default: " STRINGIZE(DEFAULT_CACHE_LIFETIME) "s)"},

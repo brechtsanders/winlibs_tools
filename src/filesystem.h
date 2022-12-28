@@ -44,7 +44,7 @@ int delete_file (const char* path);
   \param  f                     open file handle to read line from
   \return line read from file or NULL on end of file or error, caller must free() the result
 */
-char* readline (FILE* f);
+char* readline_from_file (FILE* f);
 
 //!write data to file
 /*!

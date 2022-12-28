@@ -84,7 +84,7 @@ int delete_file (const char* path)
   return 0;
 }
 
-char* readline (FILE* f)
+char* readline_from_file (FILE* f)
 {
   int datalen;
   char data[128];

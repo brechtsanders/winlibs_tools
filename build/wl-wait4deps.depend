@@ -34,7 +34,7 @@
 	<windows.h>
 	<signal.h>
 
-1619372395 source:z:\winlibs_tools\src\filesystem.c
+1650269513 source:z:\winlibs_tools\src\filesystem.c
 	"filesystem.h"
 	<sys/types.h>
 	<sys/stat.h>
@@ -45,13 +45,12 @@
 	<sys/stat.h>
 	<errno.h>
 
-1619372395 z:\winlibs_tools\src\filesystem.h
+1650269513 z:\winlibs_tools\src\filesystem.h
 	<stdio.h>
 
-1638779472 source:z:\winlibs_tools\src\wl-wait4deps.c
+1646989838 source:z:\winlibs_tools\src\wl-wait4deps.c
 	<stdio.h>
 	<stdlib.h>
-	<malloc.h>
 	<string.h>
 	<windows.h>
 	<limits.h>
@@ -63,9 +62,9 @@
 	"handle_interrupts.h"
 	"winlibs_common.h"
 
-1629915790 z:\winlibs_tools\src\handle_interrupts.h
+1667930335 z:\winlibs_tools\src\handle_interrupts.h
 	<windows.h>
 	<signal.h>
 
-1641756023 z:\winlibs_tools\src\winlibs_common.h
+1648379271 z:\winlibs_tools\src\winlibs_common.h
 

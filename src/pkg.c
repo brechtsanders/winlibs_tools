@@ -34,6 +34,7 @@ struct package_metadata_struct* package_metadata_create ()
   pkginfo->dependencies = sorted_unique_list_create(strcmp, free);
   pkginfo->optionaldependencies = sorted_unique_list_create(strcmp, free);
   pkginfo->builddependencies = sorted_unique_list_create(strcmp, free);
+  pkginfo->optionalbuilddependencies = sorted_unique_list_create(strcmp, free);
   pkginfo->totalsize = 0;
   pkginfo->version_linenumber = 0;
   pkginfo->buildok = 0;
@@ -58,6 +59,7 @@ void package_metadata_free (struct package_metadata_struct* pkginfo)
   sorted_unique_list_free(pkginfo->dependencies);
   sorted_unique_list_free(pkginfo->optionaldependencies);
   sorted_unique_list_free(pkginfo->builddependencies);
+  sorted_unique_list_free(pkginfo->optionalbuilddependencies);
   if (pkginfo->extradata && pkginfo->extradata_free_fn)
     (*(pkginfo->extradata_free_fn))(pkginfo->extradata);
   free(pkginfo);

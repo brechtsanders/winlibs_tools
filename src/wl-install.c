@@ -515,7 +515,7 @@ int main (int argc, char** argv, char *envp[])
     return 4;
   } else {
     if (miniargv_get_next_arg_param(i, argv, argdef, NULL) > 0) {
-      fprintf(stderr, "Only one package name allowed\n");
+      fprintf(stderr, "Only one package name allowed (additional parameter: %s)\n", argv[i]);
       return 5;
     }
   }

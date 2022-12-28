@@ -127,7 +127,7 @@
 1619372395 \\server\users\brecht\sources\cpp\winlibs\src\filesystem.h
 	<stdio.h>
 
-1619375995 source:z:\winlibs_tools\src\filesystem.c
+1650269513 source:z:\winlibs_tools\src\filesystem.c
 	"filesystem.h"
 	<sys/types.h>
 	<sys/stat.h>
@@ -138,15 +138,15 @@
 	<sys/stat.h>
 	<errno.h>
 
-1619375995 z:\winlibs_tools\src\filesystem.h
+1650269513 z:\winlibs_tools\src\filesystem.h
 	<stdio.h>
 
-1637768173 source:z:\winlibs_tools\src\memory_buffer.c
+1637764573 source:z:\winlibs_tools\src\memory_buffer.c
 	"memory_buffer.h"
 	<string.h>
 	<stdio.h>
 
-1637743819 z:\winlibs_tools\src\memory_buffer.h
+1637740219 z:\winlibs_tools\src\memory_buffer.h
 	<stdlib.h>
 	<stdarg.h>
 
@@ -167,17 +167,17 @@
 	<stddef.h>
 	<time.h>
 
-1646515089 source:z:\winlibs_tools\src\sorted_unique_list.c
+1646511489 source:z:\winlibs_tools\src\sorted_unique_list.c
 	"sorted_unique_list.h"
 	<avl.h>
 	<string.h>
 	<ctype.h>
 	<stdio.h>
 
-1646515079 z:\winlibs_tools\src\sorted_unique_list.h
+1646511479 z:\winlibs_tools\src\sorted_unique_list.h
 	<stdlib.h>
 
-1648382689 source:z:\winlibs_tools\src\wl-build.c
+1663001150 source:z:\winlibs_tools\src\wl-build.c
 	<string.h>
 	<unistd.h>
 	<windows.h>
@@ -196,13 +196,13 @@
 	<unistd.h>
 	<portcolcon.h>
 
-1629919390 z:\winlibs_tools\src\handle_interrupts.h
+1667930335 z:\winlibs_tools\src\handle_interrupts.h
 	<windows.h>
 	<signal.h>
 
-1648382871 z:\winlibs_tools\src\winlibs_common.h
+1648379271 z:\winlibs_tools\src\winlibs_common.h
 
-1647011594 source:z:\winlibs_tools\src\pkgdb.c
+1672234573 source:z:\winlibs_tools\src\pkgdb.c
 	"pkgdb.h"
 	"filesystem.h"
 	"memory_buffer.h"
@@ -213,24 +213,24 @@
 	<unistd.h>
 	<windows.h>
 
-1647011562 z:\winlibs_tools\src\pkgdb.h
+1647007962 z:\winlibs_tools\src\pkgdb.h
 	"pkg.h"
 	<stdint.h>
 	<stdlib.h>
 	<sqlite3.h>
 
-1646513039 source:z:\winlibs_tools\src\pkg.c
+1672234194 source:z:\winlibs_tools\src\pkg.c
 	"pkg.h"
 	<stdlib.h>
 	<string.h>
 
-1646513039 z:\winlibs_tools\src\pkg.h
+1672234197 z:\winlibs_tools\src\pkg.h
 	"sorted_unique_list.h"
 	<stdint.h>
 	<stdlib.h>
 	<time.h>
 
-1647011562 source:z:\winlibs_tools\src\pkgfile.c
+1672234441 source:z:\winlibs_tools\src\pkgfile.c
 	"pkgfile.h"
 	"filesystem.h"
 	"winlibs_common.h"
@@ -243,11 +243,11 @@
 	<sys/stat.h>
 	<unistd.h>
 
-1646515089 z:\winlibs_tools\src\pkgfile.h
+1646511489 z:\winlibs_tools\src\pkgfile.h
 	"pkg.h"
 	<stddef.h>
 
-1648382554 source:z:\winlibs_tools\src\build-order.c
+1648393673 source:z:\winlibs_tools\src\build-order.c
 	"build-order.h"
 	<stdio.h>
 	<string.h>
@@ -256,12 +256,12 @@
 	"memory_buffer.h"
 	"winlibs_common.h"
 
-1647010859 z:\winlibs_tools\src\build-order.h
+1648393673 z:\winlibs_tools\src\build-order.h
 	"pkgfile.h"
 
-1647007418 z:\winlibs_tools\src\build-package.h
+1647003818 z:\winlibs_tools\src\build-package.h
 
-1647008837 source:z:\winlibs_tools\src\build-package.c
+1647005237 source:z:\winlibs_tools\src\build-package.c
 	"build-package.h"
 	"memory_buffer.h"
 	"filesystem.h"
@@ -274,4 +274,84 @@
 	<pthread.h>
 	<crossrun.h>
 	<dirtrav.h>
+
+1650273113 source:\\server\users\brecht\sources\cpp\winlibs_tools\src\filesystem.c
+	"filesystem.h"
+	<sys/types.h>
+	<sys/stat.h>
+	<unistd.h>
+	<stdlib.h>
+	<string.h>
+	<direct.h>
+	<sys/stat.h>
+	<errno.h>
+
+1650273113 \\server\users\brecht\sources\cpp\winlibs_tools\src\filesystem.h
+	<stdio.h>
+
+1637768173 source:\\server\users\brecht\sources\cpp\winlibs_tools\src\memory_buffer.c
+	"memory_buffer.h"
+	<string.h>
+	<stdio.h>
+
+1637743819 \\server\users\brecht\sources\cpp\winlibs_tools\src\memory_buffer.h
+	<stdlib.h>
+	<stdarg.h>
+
+1646513039 source:\\server\users\brecht\sources\cpp\winlibs_tools\src\pkg.c
+	"pkg.h"
+	<stdlib.h>
+	<string.h>
+
+1646513039 \\server\users\brecht\sources\cpp\winlibs_tools\src\pkg.h
+	"sorted_unique_list.h"
+	<stdint.h>
+	<stdlib.h>
+	<time.h>
+
+1646515079 \\server\users\brecht\sources\cpp\winlibs_tools\src\sorted_unique_list.h
+	<stdlib.h>
+
+1647011594 source:\\server\users\brecht\sources\cpp\winlibs_tools\src\pkgdb.c
+	"pkgdb.h"
+	"filesystem.h"
+	"memory_buffer.h"
+	"winlibs_common.h"
+	<stdint.h>
+	<stdlib.h>
+	<string.h>
+	<unistd.h>
+	<windows.h>
+
+1647011562 \\server\users\brecht\sources\cpp\winlibs_tools\src\pkgdb.h
+	"pkg.h"
+	<stdint.h>
+	<stdlib.h>
+	<sqlite3.h>
+
+1648382871 \\server\users\brecht\sources\cpp\winlibs_tools\src\winlibs_common.h
+
+1647011562 source:\\server\users\brecht\sources\cpp\winlibs_tools\src\pkgfile.c
+	"pkgfile.h"
+	"filesystem.h"
+	"winlibs_common.h"
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	<dirent.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<unistd.h>
+
+1646515089 \\server\users\brecht\sources\cpp\winlibs_tools\src\pkgfile.h
+	"pkg.h"
+	<stddef.h>
+
+1646515089 source:\\server\users\brecht\sources\cpp\winlibs_tools\src\sorted_unique_list.c
+	"sorted_unique_list.h"
+	<avl.h>
+	<string.h>
+	<ctype.h>
+	<stdio.h>
 

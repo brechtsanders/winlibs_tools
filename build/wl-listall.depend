@@ -55,45 +55,44 @@
 	<stddef.h>
 	<time.h>
 
-1619375995 z:\winlibs_tools\src\filesystem.h
+1650269513 z:\winlibs_tools\src\filesystem.h
 	<stdio.h>
 
-1648382871 z:\winlibs_tools\src\winlibs_common.h
+1648379271 z:\winlibs_tools\src\winlibs_common.h
 
-1646515089 source:z:\winlibs_tools\src\sorted_unique_list.c
+1646511489 source:z:\winlibs_tools\src\sorted_unique_list.c
 	"sorted_unique_list.h"
 	<avl.h>
 	<string.h>
 	<ctype.h>
 	<stdio.h>
 
-1646515079 z:\winlibs_tools\src\sorted_unique_list.h
+1646511479 z:\winlibs_tools\src\sorted_unique_list.h
 	<stdlib.h>
 
-1647101218 source:z:\winlibs_tools\src\wl-listall.c
+1663001196 source:z:\winlibs_tools\src\wl-listall.c
 	<stdlib.h>
 	<stdio.h>
 	<string.h>
-	<sys/types.h>
-	<sys/stat.h>
 	<miniargv.h>
 	<versioncmp.h>
 	"winlibs_common.h"
 	"sorted_unique_list.h"
+	"filesystem.h"
 	"pkgfile.h"
 
-1646513039 source:z:\winlibs_tools\src\pkg.c
+1646509439 source:z:\winlibs_tools\src\pkg.c
 	"pkg.h"
 	<stdlib.h>
 	<string.h>
 
-1646513039 z:\winlibs_tools\src\pkg.h
+1646509439 z:\winlibs_tools\src\pkg.h
 	"sorted_unique_list.h"
 	<stdint.h>
 	<stdlib.h>
 	<time.h>
 
-1647011562 source:z:\winlibs_tools\src\pkgfile.c
+1647007962 source:z:\winlibs_tools\src\pkgfile.c
 	"pkgfile.h"
 	"filesystem.h"
 	"winlibs_common.h"
@@ -106,11 +105,11 @@
 	<sys/stat.h>
 	<unistd.h>
 
-1646515089 z:\winlibs_tools\src\pkgfile.h
+1646511489 z:\winlibs_tools\src\pkgfile.h
 	"pkg.h"
 	<stddef.h>
 
-1619375995 source:z:\winlibs_tools\src\filesystem.c
+1650269513 source:z:\winlibs_tools\src\filesystem.c
 	"filesystem.h"
 	<sys/types.h>
 	<sys/stat.h>
@@ -120,4 +119,18 @@
 	<direct.h>
 	<sys/stat.h>
 	<errno.h>
+
+1650273113 source:\\server\users\brecht\sources\cpp\winlibs_tools\src\filesystem.c
+	"filesystem.h"
+	<sys/types.h>
+	<sys/stat.h>
+	<unistd.h>
+	<stdlib.h>
+	<string.h>
+	<direct.h>
+	<sys/stat.h>
+	<errno.h>
+
+1650273113 \\server\users\brecht\sources\cpp\winlibs_tools\src\filesystem.h
+	<stdio.h>
 

@@ -949,6 +949,8 @@ struct metadata_envvar_info_struct metadata_envvar_info[] = {
   {"OPTIONALDEPENDANCIES", "optionaldependencies"},
   {"BUILDDEPENDENCIES", "builddependencies"},
   {"BUILDDEPENDANCIES", "builddependencies"},
+  {"OPTIONALBUILDDEPENDENCIES", "optionalbuilddependencies"},
+  {"OPTIONALBUILDDEPENDANCIES", "optionalbuilddependencies"},
 */
   {"LICENSEFILE", "licensefile"},
   {"LICENSETYPE", "licensetype"},
@@ -1028,7 +1030,7 @@ int main (int argc, char** argv, char *envp[])
   //check parameters
   if ((i = miniargv_get_next_arg_param(0, argv, argdef, NULL)) > 0) {
     if (miniargv_get_next_arg_param(i, argv, argdef, NULL) > 0) {
-      fprintf(stderr, "Only one package name allowed\n");
+      fprintf(stderr, "Only one package name allowed (additional parameter: %s)\n", argv[i]);
       return 1;
     }
   }
@@ -1223,6 +1225,8 @@ int main (int argc, char** argv, char *envp[])
     csv_entries_append(metadata, getenv("OPTIONALDEPENDANCIES"), "\t\t<dependency type=\"optional\" name=\"", "\"/>\n");
     csv_entries_append(metadata, getenv("BUILDDEPENDENCIES"), "\t\t<dependency type=\"build\" name=\"", "\"/>\n");
     csv_entries_append(metadata, getenv("BUILDDEPENDANCIES"), "\t\t<dependency type=\"build\" name=\"", "\"/>\n");
+    csv_entries_append(metadata, getenv("OPTIONALBUILDDEPENDENCIES"), "\t\t<dependency type=\"optionalbuild\" name=\"", "\"/>\n");
+    csv_entries_append(metadata, getenv("OPTIONALBUILDDEPENDANCIES"), "\t\t<dependency type=\"optionalbuild\" name=\"", "\"/>\n");
     memory_buffer_append(metadata, "\t</dependencies>\n");
 #ifndef NO_PEDEPS
     dirtrav_traverse_directory(srcdir, check_pe_dependencies_callback, NULL, NULL, &callbackdata);

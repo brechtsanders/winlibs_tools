@@ -103,7 +103,7 @@
 1618569018 \\server\users\brecht\sources\cpp\winlibs\src\sorted_unique_list.h
 	<stdlib.h>
 
-1619375995 source:z:\winlibs_tools\src\filesystem.c
+1650269513 source:z:\winlibs_tools\src\filesystem.c
 	"filesystem.h"
 	<sys/types.h>
 	<sys/stat.h>
@@ -114,29 +114,29 @@
 	<sys/stat.h>
 	<errno.h>
 
-1619375995 z:\winlibs_tools\src\filesystem.h
+1650269513 z:\winlibs_tools\src\filesystem.h
 	<stdio.h>
 
-1637768173 source:z:\winlibs_tools\src\memory_buffer.c
+1637764573 source:z:\winlibs_tools\src\memory_buffer.c
 	"memory_buffer.h"
 	<string.h>
 	<stdio.h>
 
-1637743819 z:\winlibs_tools\src\memory_buffer.h
+1637740219 z:\winlibs_tools\src\memory_buffer.h
 	<stdlib.h>
 	<stdarg.h>
 
-1646515089 source:z:\winlibs_tools\src\sorted_unique_list.c
+1646511489 source:z:\winlibs_tools\src\sorted_unique_list.c
 	"sorted_unique_list.h"
 	<avl.h>
 	<string.h>
 	<ctype.h>
 	<stdio.h>
 
-1646515079 z:\winlibs_tools\src\sorted_unique_list.h
+1646511479 z:\winlibs_tools\src\sorted_unique_list.h
 	<stdlib.h>
 
-1619252436 source:z:\winlibs_tools\src\fstab.c
+1650269699 source:z:\winlibs_tools\src\fstab.c
 	"fstab.h"
 	"filesystem.h"
 	<stdio.h>
@@ -149,7 +149,7 @@
 1618568917 z:\winlibs_tools\src\fstab.h
 	<stdlib.h>
 
-1641756842 source:z:\winlibs_tools\src\wl-makepackage.c
+1648393673 source:z:\winlibs_tools\src\wl-makepackage.c
 	<stdlib.h>
 	<stdio.h>
 	<string.h>
@@ -172,5 +172,38 @@
 	<pedeps.h>
 	"text_list.h"
 
-1641756023 z:\winlibs_tools\src\winlibs_common.h
+1648379271 z:\winlibs_tools\src\winlibs_common.h
+
+1650273113 source:\\server\users\brecht\sources\cpp\winlibs_tools\src\filesystem.c
+	"filesystem.h"
+	<sys/types.h>
+	<sys/stat.h>
+	<unistd.h>
+	<stdlib.h>
+	<string.h>
+	<direct.h>
+	<sys/stat.h>
+	<errno.h>
+
+1650273113 \\server\users\brecht\sources\cpp\winlibs_tools\src\filesystem.h
+	<stdio.h>
+
+1637768173 source:\\server\users\brecht\sources\cpp\winlibs_tools\src\memory_buffer.c
+	"memory_buffer.h"
+	<string.h>
+	<stdio.h>
+
+1637743819 \\server\users\brecht\sources\cpp\winlibs_tools\src\memory_buffer.h
+	<stdlib.h>
+	<stdarg.h>
+
+1646515089 source:\\server\users\brecht\sources\cpp\winlibs_tools\src\sorted_unique_list.c
+	"sorted_unique_list.h"
+	<avl.h>
+	<string.h>
+	<ctype.h>
+	<stdio.h>
+
+1646515079 \\server\users\brecht\sources\cpp\winlibs_tools\src\sorted_unique_list.h
+	<stdlib.h>
 

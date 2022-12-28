@@ -125,7 +125,7 @@ struct fstab_data_struct* read_fstab_data (const char* fstabpath)
     char* mountpath;
     size_t mountpathlen;
     struct fstab_data_struct** entry = &result;
-    while ((line = readline(fstab)) != NULL) {
+    while ((line = readline_from_file(fstab)) != NULL) {
       fullpath = NULL;
       mountpath = NULL;
       mountpathlen = 0;

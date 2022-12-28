@@ -206,8 +206,10 @@ struct package_metadata_struct* read_packageinfo (const char* infopath, const ch
               sorted_unique_list_add_comma_separated_list(info->dependencies, q);
             else if (strcmp(p, "OPTIONALDEPENDENCIES") == 0 || strcmp(p, "OPTIONALDEPENDANCIES") == 0)
               sorted_unique_list_add_comma_separated_list(info->optionaldependencies, q);
-            else if (strcmp(p, "BUILDDEPENDENCIES") == 0 ||strcmp(p, "BUILDDEPENDANCIES") == 0)
+            else if (strcmp(p, "BUILDDEPENDENCIES") == 0 || strcmp(p, "BUILDDEPENDANCIES") == 0)
               sorted_unique_list_add_comma_separated_list(info->builddependencies, q);
+            else if (strcmp(p, "OPTIONALBUILDDEPENDENCIES") == 0 || strcmp(p, "OPTIONALBUILDDEPENDANCIES") == 0)
+              sorted_unique_list_add_comma_separated_list(info->optionalbuilddependencies, q);
             else if (strcmp(p, "LICENSEFILE") == 0)
               set_var(&(info->datafield[PACKAGE_METADATA_INDEX_LICENSEFILE]), q);
             else if (strcmp(p, "LICENSETYPE") == 0)
@@ -557,6 +559,7 @@ int insert_package_by_dependency (struct package_info_list_struct** packagelist,
   sorted_unique_list* remaining_dependencies = sorted_unique_list_duplicate(info->dependencies, NULL);
   sorted_unique_list* remaining_optionaldependencies = sorted_unique_list_duplicate(info->optionaldependencies, NULL);
   sorted_unique_list* remaining_builddependencies = sorted_unique_list_duplicate(info->builddependencies, NULL);
+  sorted_unique_list* remaining_optionalbuilddependencies = sorted_unique_list_duplicate(info->optionalbuilddependencies, NULL);
   //determine insert position
   while (*currentpackage) {
     //check if current package is in list of dependencies and remove if found
@@ -564,11 +567,12 @@ int insert_package_by_dependency (struct package_info_list_struct** packagelist,
     sorted_unique_list_remove(remaining_optionaldependencies, (*currentpackage)->info->datafield[PACKAGE_METADATA_INDEX_BASENAME]);
     sorted_unique_list_remove(remaining_builddependencies, (*currentpackage)->info->datafield[PACKAGE_METADATA_INDEX_BASENAME]);
     //if all dependencies are met and the minimal insert position is reached, insert in alfabetical order
-    if (sorted_unique_list_size(remaining_dependencies) == 0 && sorted_unique_list_size(remaining_optionaldependencies) == 0 && sorted_unique_list_size(remaining_builddependencies) == 0 && strcasecmp((*currentpackage)->info->datafield[PACKAGE_METADATA_INDEX_BASENAME], basename) >= 0)
+    if (sorted_unique_list_size(remaining_dependencies) == 0 && sorted_unique_list_size(remaining_optionaldependencies) == 0 && sorted_unique_list_size(remaining_builddependencies) == 0 && sorted_unique_list_size(remaining_optionalbuilddependencies) == 0 && strcasecmp((*currentpackage)->info->datafield[PACKAGE_METADATA_INDEX_BASENAME], basename) >= 0)
       break;
     //if a dependent package is reached, insert before
     if (sorted_unique_list_find((*currentpackage)->info->dependencies, basename) >= 0 ||
         //sorted_unique_list_find((*currentpackage)->info->optionaldependencies, basename) >= 0 ||  /////TO DO: shouldn't this only be done under certain conditions?
+        //sorted_unique_list_find((*currentpackage)->info->optionalbuilddependencies, basename) >= 0 ||  /////TO DO: shouldn't this only be done under certain conditions?
         sorted_unique_list_find((*currentpackage)->info->builddependencies, basename) >= 0) {
 #if 1
       if (sorted_unique_list_size(remaining_dependencies) > 0 || /*sorted_unique_list_size(remaining_optionaldependencies) > 0 ||*/ sorted_unique_list_size(remaining_builddependencies) > 0) {
@@ -577,6 +581,7 @@ int insert_package_by_dependency (struct package_info_list_struct** packagelist,
         while ((nextpackage = nextpackage->next) != NULL) {
           if (sorted_unique_list_find(remaining_dependencies, nextpackage->info->datafield[PACKAGE_METADATA_INDEX_BASENAME]) >= 0 ||
               /*sorted_unique_list_find(remaining_optionaldependencies, nextpackage->info->datafield[PACKAGE_METADATA_INDEX_BASENAME]) >= 0 ||*/
+              /*sorted_unique_list_find(remaining_optionalbuilddependencies, nextpackage->info->datafield[PACKAGE_METADATA_INDEX_BASENAME]) >= 0 ||*/
               sorted_unique_list_find(remaining_builddependencies, nextpackage->info->datafield[PACKAGE_METADATA_INDEX_BASENAME]) >= 0)
             break;
         }
@@ -610,6 +615,7 @@ int insert_package_by_dependency (struct package_info_list_struct** packagelist,
   insert_packages_by_dependency(packagelist, infopath, info->dependencies);
   insert_packages_by_dependency(packagelist, infopath, info->optionaldependencies);
   insert_packages_by_dependency(packagelist, infopath, info->builddependencies);
+  insert_packages_by_dependency(packagelist, infopath, info->optionalbuilddependencies);
 /*
   //recursively add dependencies
   int startpos;
