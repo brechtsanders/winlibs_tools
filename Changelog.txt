@@ -3,6 +3,7 @@
 2022-12-28  Brecht Sanders  https://github.com/brechtsanders/
 
   * added initial support for OPTIONALBUILDDEPENDENCIES
+  * fixed issue with miniargv
 
 1.0.10
 

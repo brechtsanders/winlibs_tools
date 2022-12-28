@@ -108,7 +108,7 @@ int main (int argc, char *argv[], char *envp[])
   //output
   portcolconhandle con = portcolcon_initialize();
   portcolcon_write_in_color(con, "-=[", PORTCOLCON_COLOR_DARK_GRAY, PORTCOLCON_COLOR_BLACK);
-  portcolcon_printf_in_color(con, PORTCOLCON_COLOR_YELLOW, PORTCOLCON_COLOR_BLACK, " %s ", message);
+  portcolcon_printf_in_color(con, PORTCOLCON_COLOR_YELLOW, PORTCOLCON_COLOR_BLACK, " %s ", (message ? message : ""));
   portcolcon_write_in_color(con, "]=-", PORTCOLCON_COLOR_DARK_GRAY, PORTCOLCON_COLOR_BLACK);
   portcolcon_write(con, "\n");
   portcolcon_set_title(con, (title ? title : ""));
