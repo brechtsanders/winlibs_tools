@@ -40,9 +40,16 @@
 #endif
 #endif
 
-//#define ARCHIVEFORMAT_ZIP
 //#define ARCHIVEFORMAT_TAR
+//#define PACKAGE_EXTENSION ".tar"
+//#define ARCHIVEFORMAT_TAR_GZ
+//#define PACKAGE_EXTENSION ".tar.gz"
+//#define ARCHIVEFORMAT_TAR_BZ2
+//#define PACKAGE_EXTENSION ".tar.bz2"
+//#define ARCHIVEFORMAT_TAR_LZ4
+//#define PACKAGE_EXTENSION ".tar.lz4"
 //#define ARCHIVEFORMAT_TAR_XZ
+//#define PACKAGE_EXTENSION ".tar.xz"
 //#define ARCHIVEFORMAT_ZIP
 //#define PACKAGE_EXTENSION ".zip"
 #define ARCHIVEFORMAT_7Z
@@ -89,6 +96,15 @@ int add_folder_to_archive (const char* relativepath, struct packager_callback_st
     return 0;
   memcpy(path, relativepath, pathlen);
   path[pathlen] = 0;
+#ifdef _WIN32
+  //use change backslashes to slashes
+  char* p = path;
+  while (*p) {
+    if (*p == '\\')
+      *p = '/';
+    p++;
+  }
+#endif
   //add directory to archive
   entry = archive_entry_new();
   archive_entry_set_pathname(entry, path);
@@ -581,10 +597,30 @@ int packager_file_callback (dirtrav_entry info)
 {
   struct packager_callback_struct* callbackdata = (struct packager_callback_struct*)info->callbackdata;
   const char* srcfile = dirtrav_prop_get_path(info);
+#ifdef _WIN32
+  const char* origpath = dirtrav_prop_get_relative_path(info);
+  size_t pathlen = (origpath ? strlen(origpath) : 0);
+#else
   const char* path = dirtrav_prop_get_relative_path(info);
-  const char* ext = dirtrav_prop_get_extension(info);
   size_t pathlen = (path ? strlen(path) : 0);
+#endif
+  const char* ext = dirtrav_prop_get_extension(info);
   int status = 0;
+#ifdef _WIN32
+  char* path;
+  if (!origpath) {
+    path = NULL;
+  } else {
+    char* p;
+    path = strdup(origpath);
+    p = path;
+    while (*p) {
+      if (*p == '\\')
+        *p = '/';
+      p++;
+    }
+  }
+#endif
   if (ext && strcasecmp(ext, ".la") == 0) {
     //replace absolute install path with relative path in .la files
     if (callbackdata->verbose) {
@@ -641,9 +677,15 @@ int packager_file_callback (dirtrav_entry info)
   }
   if (status == 0) {
     fprintf(stderr, "Error adding file: %s\n", path);
+#ifdef _WIN32
+    free(path);
+#endif
     fflush(stdout);
     return 1;
   }
+#ifdef _WIN32
+  free(path);
+#endif
   return 0;
 }
 
@@ -1157,17 +1199,28 @@ int main (int argc, char** argv, char *envp[])
   archive_write_set_format_zip(callbackdata.arch);  //zip archive
 #elif defined(ARCHIVEFORMAT_TAR)
   archive_write_set_format_pax_restricted(callbackdata.arch);  //tar archive
+#elif defined(ARCHIVEFORMAT_TAR_GZ)
+  archive_write_set_format_pax_restricted(callbackdata.arch);  //tar archive
+  archive_write_add_filter_gzip(callbackdata.arch);
+#elif defined(ARCHIVEFORMAT_TAR_BZ2)
+  archive_write_set_format_pax_restricted(callbackdata.arch);  //tar archive
+  archive_write_add_filter_bzip2(callbackdata.arch);
+#elif defined(ARCHIVEFORMAT_TAR_LZ4)
+  archive_write_set_format_pax_restricted(callbackdata.arch);  //tar archive
+  archive_write_add_filter_lz4(callbackdata.arch);  //lz4 compression
 #elif defined(ARCHIVEFORMAT_TAR_XZ)
   archive_write_set_format_pax_restricted(callbackdata.arch);  //tar archive
-/*
-#if ARCHIVE_VERSION_NUMBER < 3000000
+  archive_write_add_filter_xz(callbackdata.arch);
+ #if ARCHIVE_VERSION_NUMBER < 3000000
   archive_write_set_compression_xz(callbackdata.arch); //xz compression
-#else
+  archive_compressor_xz_options(callbackdata.arch, "compression-level", "9");
+ #else
   archive_write_add_filter_xz(callbackdata.arch); //xz compression
-#endif
-*/
+  archive_write_set_options(callbackdata.arch, "compression-level=9");
+ #endif
 #elif defined(ARCHIVEFORMAT_7Z)
   archive_write_set_format_7zip(callbackdata.arch);  //7-zip archive
+  archive_write_set_options(callbackdata.arch, "compression-level=9");
 #else
   archive_write_set_format_filter_by_ext(callbackdata.arch, packagefilename);
 #endif
