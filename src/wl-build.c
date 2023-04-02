@@ -101,23 +101,23 @@ int main (int argc, char** argv, char *envp[])
   int removelog = 0;
   //definition of command line arguments
   const miniargv_definition argdef[] = {
-    {'h', "help",         NULL,      miniargv_cb_increment_int, &showhelp,        "show command line help"},
-    {'i', "install-path", "PATH",    miniargv_cb_set_const_str, &dstdir,          "path where to install packages\noverrides environment variable MINGWPREFIX"},
-    //{'u', "source-path",  "PATH",    miniargv_cb_set_const_str, &packageinfopath, "path containing build recipes\noverrides environment variable BUILDSCRIPTS"},
-    {'s', "source-path",  "PATH",    miniargv_cb_set_const_str, &packageinfopath, "path containing build recipes\noverrides environment variable BUILDSCRIPTS\ncan be multiple paths separated by \"" WINLIBS_CHR2STR(PATHLIST_SEPARATOR) "\""},
-    {'x', "shell",        "CMD",     miniargv_cb_set_const_str, &shellcmd,        "shell command to execute, defaults to:\n\"" DEFAULT_SHELL_COMMAND "\""},
-    {'b', "build-path",   "PATH",    miniargv_cb_set_const_str, &builddir,        "path temporary build folder will be created"},
-    {'l', "logs",         "PATH",    miniargv_cb_set_const_str, &logdir,          "path where output logs will be saved"},
-    {'r', "remove-log",   NULL,      miniargv_cb_increment_int, &removelog,       "remove output log when build was successful"},
-    {0,   NULL,           "PACKAGE", miniargv_cb_error,         NULL,             "package(s) to build, or:\nall = all packages that can be built\nall-changed = all packages for which the recipe changed"},
-    {0, NULL, NULL, NULL, NULL, NULL}
+    {'h', "help",         NULL,      miniargv_cb_increment_int, &showhelp,        "show command line help", NULL},
+    {'i', "install-path", "PATH",    miniargv_cb_set_const_str, &dstdir,          "path where to install packages\noverrides environment variable MINGWPREFIX", NULL},
+    //{'u', "source-path",  "PATH",    miniargv_cb_set_const_str, &packageinfopath, "path containing build recipes\noverrides environment variable BUILDSCRIPTS", NULL},
+    {'s', "source-path",  "PATH",    miniargv_cb_set_const_str, &packageinfopath, "path containing build recipes\noverrides environment variable BUILDSCRIPTS\ncan be multiple paths separated by \"" WINLIBS_CHR2STR(PATHLIST_SEPARATOR) "\"", NULL},
+    {'x', "shell",        "CMD",     miniargv_cb_set_const_str, &shellcmd,        "shell command to execute, defaults to:\n\"" DEFAULT_SHELL_COMMAND "\"", NULL},
+    {'b', "build-path",   "PATH",    miniargv_cb_set_const_str, &builddir,        "path temporary build folder will be created", NULL},
+    {'l', "logs",         "PATH",    miniargv_cb_set_const_str, &logdir,          "path where output logs will be saved", NULL},
+    {'r', "remove-log",   NULL,      miniargv_cb_increment_int, &removelog,       "remove output log when build was successful", NULL},
+    {0,   NULL,           "PACKAGE", miniargv_cb_error,         NULL,             "package(s) to build, or:\nall = all packages that can be built\nall-changed = all packages for which the recipe changed", NULL},
+    MINIARGV_DEFINITION_END
   };
   //definition of environment variables
   const miniargv_definition envdef[] = {
-    {0,   "MINGWPREFIX",  NULL,      miniargv_cb_set_const_str, &dstdir,          "path where to install packages"},
-    {0,   "BUILDSCRIPTS", NULL,      miniargv_cb_set_const_str, &packageinfopath, "path where to look for build recipes"},
-    //{0,   "MINGWPKGINFODIR", NULL,      miniargv_cb_set_const_str, &packageinfopath, "path where to look for build recipes"},
-    {0, NULL, NULL, NULL, NULL, NULL}
+    {0,   "MINGWPREFIX",  NULL,      miniargv_cb_set_const_str, &dstdir,          "path where to install packages", NULL},
+    {0,   "BUILDSCRIPTS", NULL,      miniargv_cb_set_const_str, &packageinfopath, "path where to look for build recipes", NULL},
+    //{0,   "MINGWPKGINFODIR", NULL,      miniargv_cb_set_const_str, &packageinfopath, "path where to look for build recipes", NULL},
+    MINIARGV_DEFINITION_END
   };
   //parse environment and command line flags
   if (miniargv_process_env(envp, envdef, NULL) != 0)

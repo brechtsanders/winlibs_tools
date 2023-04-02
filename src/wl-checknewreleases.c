@@ -508,23 +508,23 @@ int main (int argc, char** argv, char *envp[])
   }
   //definition of command line arguments
   const miniargv_definition argdef[] = {
-    {'h', "help",            NULL,      miniargv_cb_increment_int, &showhelp,             "show command line help"},
-    {'s', "source-path",     "PATH",    miniargv_cb_set_const_str, &info.packageinfopath, "build recipe path\noverrides environment variable BUILDSCRIPTS\ncan be multiple paths separated by \"" WINLIBS_CHR2STR(PATHLIST_SEPARATOR) "\""},
-    {'d', "db-file",         "FILE",    miniargv_cb_set_const_str, &versiondbpath,        "version database file (default: " DEFAULT_DATABASE ")"},
-    {'c', "cache",           "FILE",    miniargv_cb_set_const_str, &cachedbfile,          "set cache database (\"-\" for none, default: temporary database)"},
-    {'x', "cache-expires",   "S",       miniargv_cb_set_long/*u*/, &cache_expiration,     "set cache expiration in seconds or zero for none (default: " STRINGIZE(DEFAULT_CACHE_LIFETIME) "s)"},
-    {'j', "threads",         "N",       miniargv_cb_set_int,       &numthreads,           "set the number of simultaneus threads to use (default: " STRINGIZE(DEFAULT_THREADS) ")"},
-    {'n', "sub-limit",       "N",       miniargv_cb_set_long/*u*/, &info.limitsuburls,    "only get this many of the latest version subdirectories, zero for no limit (default)"},
-    {'o', "report",          "FILE",    miniargv_cb_set_const_str, &reportfile,           "report file to append to (default: standard output)"},
-    {'l', "log",             "FILE",    miniargv_cb_set_const_str, &logfile,              "log file to append to (default: standard output)"},
-    {'v', "verbose",         NULL,      miniargv_cb_increment_int, &verbose,              "verbose mode, can be specified multiple times to increase verbosity"},
-    {0,   NULL,              "PACKAGE", miniargv_cb_error,         NULL,                  "package(s) to build (or \"all\" to list all packages)"},
-    {0, NULL, NULL, NULL, NULL, NULL}
+    {'h', "help",            NULL,      miniargv_cb_increment_int, &showhelp,             "show command line help", NULL},
+    {'s', "source-path",     "PATH",    miniargv_cb_set_const_str, &info.packageinfopath, "build recipe path\noverrides environment variable BUILDSCRIPTS\ncan be multiple paths separated by \"" WINLIBS_CHR2STR(PATHLIST_SEPARATOR) "\"", NULL},
+    {'d', "db-file",         "FILE",    miniargv_cb_set_const_str, &versiondbpath,        "version database file (default: " DEFAULT_DATABASE ")", NULL},
+    {'c', "cache",           "FILE",    miniargv_cb_set_const_str, &cachedbfile,          "set cache database (\"-\" for none, default: temporary database)", NULL},
+    {'x', "cache-expires",   "S",       miniargv_cb_set_long/*u*/, &cache_expiration,     "set cache expiration in seconds or zero for none (default: " STRINGIZE(DEFAULT_CACHE_LIFETIME) "s)", NULL},
+    {'j', "threads",         "N",       miniargv_cb_set_int,       &numthreads,           "set the number of simultaneus threads to use (default: " STRINGIZE(DEFAULT_THREADS) ")", NULL},
+    {'n', "sub-limit",       "N",       miniargv_cb_set_long/*u*/, &info.limitsuburls,    "only get this many of the latest version subdirectories, zero for no limit (default)", NULL},
+    {'o', "report",          "FILE",    miniargv_cb_set_const_str, &reportfile,           "report file to append to (default: standard output)", NULL},
+    {'l', "log",             "FILE",    miniargv_cb_set_const_str, &logfile,              "log file to append to (default: standard output)", NULL},
+    {'v', "verbose",         NULL,      miniargv_cb_increment_int, &verbose,              "verbose mode, can be specified multiple times to increase verbosity", NULL},
+    {0,   NULL,              "PACKAGE", miniargv_cb_error,         NULL,                  "package(s) to build (or \"all\" to list all packages)", NULL},
+    MINIARGV_DEFINITION_END
   };
   //definition of environment variables
   const miniargv_definition envdef[] = {
-    {0,   "BUILDSCRIPTS",    NULL,      miniargv_cb_set_const_str, &info.packageinfopath, "build recipe path"},
-    {0, NULL, NULL, NULL, NULL, NULL}
+    {0,   "BUILDSCRIPTS",    NULL,      miniargv_cb_set_const_str, &info.packageinfopath, "build recipe path", NULL},
+    MINIARGV_DEFINITION_END
   };
   //parse environment and command line flags
   if (miniargv_process_env(envp, envdef, NULL) != 0)

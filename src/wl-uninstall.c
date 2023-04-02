@@ -46,16 +46,16 @@ int main (int argc, char** argv, char *envp[])
   const char* basepath = NULL;
   //definition of command line arguments
   const miniargv_definition argdef[] = {
-    {'h', "help",         NULL,      miniargv_cb_increment_int, &showhelp,        "show command line help"},
-    {'i', "install-path", "PATH",    miniargv_cb_set_const_str, &basepath,        "package installation path\noverrides environment variable MINGWPREFIX"},
-    {'v', "verbose",      NULL,      miniargv_cb_increment_int, &verbose,         "verbose mode"},
-    {0,   NULL,           "PACKAGE", miniargv_cb_error,         NULL,             "package(s) to uninstall"},
-    {0, NULL, NULL, NULL, NULL, NULL}
+    {'h', "help",         NULL,      miniargv_cb_increment_int, &showhelp,        "show command line help", NULL},
+    {'i', "install-path", "PATH",    miniargv_cb_set_const_str, &basepath,        "package installation path\noverrides environment variable MINGWPREFIX", NULL},
+    {'v', "verbose",      NULL,      miniargv_cb_increment_int, &verbose,         "verbose mode", NULL},
+    {0,   NULL,           "PACKAGE", miniargv_cb_error,         NULL,             "package(s) to uninstall", NULL},
+    MINIARGV_DEFINITION_END
   };
   //definition of environment variables
   const miniargv_definition envdef[] = {
-    {0,   "MINGWPREFIX",  NULL,      miniargv_cb_set_const_str, &basepath,        "package installation path"},
-    {0, NULL, NULL, NULL, NULL, NULL}
+    {0,   "MINGWPREFIX",  NULL,      miniargv_cb_set_const_str, &basepath,        "package installation path", NULL},
+    MINIARGV_DEFINITION_END
   };
   //parse environment and command line flags
   if (miniargv_process_env(envp, envdef, NULL) != 0)

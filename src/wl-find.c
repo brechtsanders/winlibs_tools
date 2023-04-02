@@ -42,14 +42,6 @@ int process_arg_searchtype (const miniargv_definition* argdef, const char* value
   return 0;
 }
 
-int process_arg_strdup (const miniargv_definition* argdef, const char* value, void* callbackdata)
-{
-  if (*(char**)argdef->userdata)
-    free(*(char**)argdef->userdata);
-  *(char**)argdef->userdata = strdup(value);
-  return 0;
-}
-
 int process_arg_param (const miniargv_definition* argdef, const char* value, void* callbackdata)
 {
   const char** paramlist = (const char**)argdef->userdata;
@@ -77,26 +69,26 @@ int main (int argc, char** argv, char *envp[])
   paramlist[0] = NULL;
   //definition of command line arguments
   const miniargv_definition argdef[] = {
-    {'h', "help", NULL, miniargv_cb_increment_int, &showhelp, "show command line help"},
-    {'i', NULL, "PATH", process_arg_strdup, &dstdir, "installation path (defaults to $MINGWPREFIX)"},
-    {'p', NULL, NULL, process_arg_searchtype, SEARCHTYPE2VOIDPTR(package_name), "search in package name"},
-    {'P', "package", NULL, process_arg_searchtype, SEARCHTYPE2VOIDPTR(package_name_exact), "search exact package name"},
-    {'f', "filename", NULL, process_arg_searchtype, SEARCHTYPE2VOIDPTR(file_name_only), "search in file name"},
-    {0, "filepath", NULL, process_arg_searchtype, SEARCHTYPE2VOIDPTR(file_name), "search in entire file path"},
-    {'F', "foldername", NULL, process_arg_searchtype, SEARCHTYPE2VOIDPTR(folder_name_only), "search in folder name"},
-    {0, "folderpath", NULL, process_arg_searchtype, SEARCHTYPE2VOIDPTR(folder_name), "search in entire folder path"},
-    {'l', "files", NULL, process_arg_searchtype, SEARCHTYPE2VOIDPTR(package_files), "list all files in specified package(s) (implies --or)"},
-    {'d', "folders", NULL, process_arg_searchtype, SEARCHTYPE2VOIDPTR(package_folders), "list all folders in specified package(s) (implies --or)"},
-    {0, "or", NULL, miniargv_cb_increment_int, &ormultiple, "search any of the given arguments instead of all"},
-    {0, "fullpath", NULL, miniargv_cb_increment_int, &fullpath, "show absolute installation path when showing file or folder names"},
-    {'s', "short", NULL, miniargv_cb_increment_int, &shortoutput, "short output"},
-    {0, NULL, "TEXT", process_arg_param, paramlist, "text to search for"},
-    {0, NULL, NULL, NULL, NULL, NULL}
+    {'h', "help", NULL, miniargv_cb_increment_int, &showhelp, "show command line help", NULL},
+    {'i', NULL, "PATH", miniargv_cb_strdup, &dstdir, "installation path (defaults to $MINGWPREFIX)", NULL},
+    {'p', NULL, NULL, process_arg_searchtype, SEARCHTYPE2VOIDPTR(package_name), "search in package name", NULL},
+    {'P', "package", NULL, process_arg_searchtype, SEARCHTYPE2VOIDPTR(package_name_exact), "search exact package name", NULL},
+    {'f', "filename", NULL, process_arg_searchtype, SEARCHTYPE2VOIDPTR(file_name_only), "search in file name", NULL},
+    {0, "filepath", NULL, process_arg_searchtype, SEARCHTYPE2VOIDPTR(file_name), "search in entire file path", NULL},
+    {'F', "foldername", NULL, process_arg_searchtype, SEARCHTYPE2VOIDPTR(folder_name_only), "search in folder name", NULL},
+    {0, "folderpath", NULL, process_arg_searchtype, SEARCHTYPE2VOIDPTR(folder_name), "search in entire folder path", NULL},
+    {'l', "files", NULL, process_arg_searchtype, SEARCHTYPE2VOIDPTR(package_files), "list all files in specified package(s) (implies --or)", NULL},
+    {'d', "folders", NULL, process_arg_searchtype, SEARCHTYPE2VOIDPTR(package_folders), "list all folders in specified package(s) (implies --or)", NULL},
+    {0, "or", NULL, miniargv_cb_increment_int, &ormultiple, "search any of the given arguments instead of all", NULL},
+    {0, "fullpath", NULL, miniargv_cb_increment_int, &fullpath, "show absolute installation path when showing file or folder names", NULL},
+    {'s', "short", NULL, miniargv_cb_increment_int, &shortoutput, "short output", NULL},
+    {0, NULL, "TEXT", process_arg_param, paramlist, "text to search for", NULL},
+    MINIARGV_DEFINITION_END
   };
   //definition of environment variables
   const miniargv_definition envdef[] = {
-    {0, "MINGWPREFIX", "PATH", process_arg_strdup, &dstdir, "installation path"},
-    {0, NULL, NULL, NULL, NULL, NULL}
+    {0, "MINGWPREFIX", "PATH", miniargv_cb_strdup, &dstdir, "installation path", NULL},
+    MINIARGV_DEFINITION_END
   };
   //parse environment and command line flags
   if (miniargv_process(argv, envp, argdef, envdef, NULL, &searchtype) != 0)

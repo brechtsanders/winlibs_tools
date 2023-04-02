@@ -86,19 +86,19 @@ int main (int argc, char *argv[], char *envp[])
   int recursive = 0;
   //definition of command line arguments
   const miniargv_definition argdef[] = {
-    {'h', "help",         NULL,      miniargv_cb_increment_int, &showhelp,        "show command line help"},
-    //{'m', "install-path", "PATH",    miniargv_cb_set_const_str, &basepath,        "path where to look for already installed packages\noverrides environment variable MINGWPREFIX"},
-    {'i', "install-path", "PATH",    miniargv_cb_set_const_str, &basepath,        "path where packages are installed\noverrides environment variable MINGWPREFIX"},
-    {'s', "source-path",  "PATH",    miniargv_cb_set_const_str, &packageinfopath, "path containing build recipes\noverrides environment variable BUILDSCRIPTS\ncan be multiple paths separated by \"" WINLIBS_CHR2STR(PATHLIST_SEPARATOR) "\""},
-    {'r', "recursive",    NULL,      miniargv_cb_increment_int, &recursive,       "recursive (list dependencies of dependences and so on)"},
-    {0,   NULL,           "PACKAGE", miniargv_cb_error,         NULL,              "name(s) of package(s) to list dependencies for"},
-    {0, NULL, NULL, NULL, NULL, NULL}
+    {'h', "help",         NULL,      miniargv_cb_increment_int, &showhelp,        "show command line help", NULL},
+    //{'m', "install-path", "PATH",    miniargv_cb_set_const_str, &basepath,        "path where to look for already installed packages\noverrides environment variable MINGWPREFIX", NULL},
+    {'i', "install-path", "PATH",    miniargv_cb_set_const_str, &basepath,        "path where packages are installed\noverrides environment variable MINGWPREFIX", NULL},
+    {'s', "source-path",  "PATH",    miniargv_cb_set_const_str, &packageinfopath, "path containing build recipes\noverrides environment variable BUILDSCRIPTS\ncan be multiple paths separated by \"" WINLIBS_CHR2STR(PATHLIST_SEPARATOR) "\"", NULL},
+    {'r', "recursive",    NULL,      miniargv_cb_increment_int, &recursive,       "recursive (list dependencies of dependences and so on)", NULL},
+    {0,   NULL,           "PACKAGE", miniargv_cb_error,         NULL,              "name(s) of package(s) to list dependencies for", NULL},
+    MINIARGV_DEFINITION_END
   };
   //definition of environment variables
   const miniargv_definition envdef[] = {
-    {0,   "MINGWPREFIX",  NULL,      miniargv_cb_set_const_str, &basepath,        "path where packages are installed"},
-    {0,   "BUILDSCRIPTS", NULL,      miniargv_cb_set_const_str, &packageinfopath, "path where to look for build recipes"},
-    {0, NULL, NULL, NULL, NULL, NULL}
+    {0,   "MINGWPREFIX",  NULL,      miniargv_cb_set_const_str, &basepath,        "path where packages are installed", NULL},
+    {0,   "BUILDSCRIPTS", NULL,      miniargv_cb_set_const_str, &packageinfopath, "path where to look for build recipes", NULL},
+    MINIARGV_DEFINITION_END
   };
   //parse environment and command line flags
   if (miniargv_process_env(envp, envdef, NULL) != 0)

@@ -11,7 +11,7 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="-b \\SERVER\users\brecht\sources\porting_to_win32\build_scripts" />
+				<Option parameters="-s \\SERVER\Users\brecht\sources\CPP\winlibs_recipes\recipes;\\SERVER\Users\brecht\sources\CPP\winlibs_recipes\recipes_work_in_progress;\\SERVER\Users\brecht\sources\CPP\winlibs_recipes\recipes_not_portable" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -21,7 +21,7 @@
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="\\SERVER\users\brecht\sources\porting_to_win32\build_scripts" />
+				<Option parameters="-s \\SERVER\Users\brecht\sources\CPP\winlibs_recipes\recipes;\\SERVER\Users\brecht\sources\CPP\winlibs_recipes\recipes_work_in_progress;\\SERVER\Users\brecht\sources\CPP\winlibs_recipes\recipes_not_portable" />
 				<Compiler>
 					<Add option="-Os" />
 				</Compiler>
@@ -34,7 +34,7 @@
 				<Option object_output="obj/Debug32/" />
 				<Option type="1" />
 				<Option compiler="MINGW32" />
-				<Option parameters="-b \\SERVER\users\brecht\sources\porting_to_win32\build_scripts" />
+				<Option parameters="-s \\SERVER\Users\brecht\sources\CPP\winlibs_recipes\recipes;\\SERVER\Users\brecht\sources\CPP\winlibs_recipes\recipes_work_in_progress;\\SERVER\Users\brecht\sources\CPP\winlibs_recipes\recipes_not_portable" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -57,7 +57,7 @@
 				<Option object_output="obj/Debug64/" />
 				<Option type="1" />
 				<Option compiler="MINGW64" />
-				<Option parameters="-s \\SERVER\users\brecht\sources\porting_to_win32\build_scripts;\\SERVER\Users\brecht\sources\CPP\winlibs_recipes\recipes;\\SERVER\Users\brecht\sources\CPP\winlibs_recipes\recipes_work_in_progress;\\SERVER\Users\brecht\sources\CPP\winlibs_recipes\recipes_not_portable" />
+				<Option parameters="-s \\SERVER\Users\brecht\sources\CPP\winlibs_recipes\recipes;\\SERVER\Users\brecht\sources\CPP\winlibs_recipes\recipes_work_in_progress;\\SERVER\Users\brecht\sources\CPP\winlibs_recipes\recipes_not_portable;\\SERVER\Users\brecht\sources\CPP\winlibs_recipes\recipes;\\SERVER\Users\brecht\sources\CPP\winlibs_recipes\recipes_work_in_progress;\\SERVER\Users\brecht\sources\CPP\winlibs_recipes\recipes_not_portable" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -67,7 +67,7 @@
 				<Option object_output="obj/Release64/" />
 				<Option type="1" />
 				<Option compiler="MINGW64" />
-				<Option parameters="-b \\SERVER\users\brecht\sources\porting_to_win32\build_scripts" />
+				<Option parameters="-s \\SERVER\Users\brecht\sources\CPP\winlibs_recipes\recipes;\\SERVER\Users\brecht\sources\CPP\winlibs_recipes\recipes_work_in_progress;\\SERVER\Users\brecht\sources\CPP\winlibs_recipes\recipes_not_portable" />
 				<Compiler>
 					<Add option="-Os" />
 				</Compiler>

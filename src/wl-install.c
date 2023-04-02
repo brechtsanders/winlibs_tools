@@ -451,21 +451,21 @@ int main (int argc, char** argv, char *envp[])
   char* packagefilename = NULL;
   //definition of command line arguments
   const miniargv_definition argdef[] = {
-    {'h', "help",         NULL,      miniargv_cb_increment_int, &showhelp,        "show command line help"},
-    {'p', "package-path", "PATH",    miniargv_cb_set_const_str, &pkgdir,          "path where package files are stored\noverrides environment variable PACKAGEDIR"},
-    {'i', "install-path", "PATH",    miniargv_cb_set_const_str, &basepath,        "package installation path\noverrides environment variable MINGWPREFIX"},
-    {'a', "arch",         "ARCH",    miniargv_cb_strdup,        &arch,            "architecture (i686/x86_64, default based on $RUNPLATFORM)"},
-    {'d', "diff",         NULL,      miniargv_cb_increment_int, &showdiff,        "show difference with installed package (files added/removed)"},
-    {'v', "verbose",      NULL,      miniargv_cb_increment_int, &verbose,         "verbose mode"},
-    {0,   NULL,           "PACKAGE", miniargv_cb_error,         NULL,             "package to install"},
-    {0, NULL, NULL, NULL, NULL, NULL}
+    {'h', "help",         NULL,      miniargv_cb_increment_int, &showhelp,        "show command line help", NULL},
+    {'p', "package-path", "PATH",    miniargv_cb_set_const_str, &pkgdir,          "path where package files are stored\noverrides environment variable PACKAGEDIR", NULL},
+    {'i', "install-path", "PATH",    miniargv_cb_set_const_str, &basepath,        "package installation path\noverrides environment variable MINGWPREFIX", NULL},
+    {'a', "arch",         "ARCH",    miniargv_cb_strdup,        &arch,            "architecture (i686/x86_64, default based on $RUNPLATFORM)", NULL},
+    {'d', "diff",         NULL,      miniargv_cb_increment_int, &showdiff,        "show difference with installed package (files added/removed)", NULL},
+    {'v', "verbose",      NULL,      miniargv_cb_increment_int, &verbose,         "verbose mode", NULL},
+    {0,   NULL,           "PACKAGE", miniargv_cb_error,         NULL,             "package to install", NULL},
+    MINIARGV_DEFINITION_END
   };
   //definition of environment variables
   const miniargv_definition envdef[] = {
-    {0,   "PACKAGEDIR",   NULL,      miniargv_cb_set_const_str, &pkgdir,          "path where package files are stored"},
-    {0,   "MINGWPREFIX",  NULL,      miniargv_cb_set_const_str, &basepath,        "package installation path"},
-    {0,   "RUNPLATFORM",  NULL,      miniargv_cb_strdup,        &arch,            "target architecture (i686-w64-mingw32/x86_64-w64-mingw32)"},
-    {0, NULL, NULL, NULL, NULL, NULL}
+    {0,   "PACKAGEDIR",   NULL,      miniargv_cb_set_const_str, &pkgdir,          "path where package files are stored", NULL},
+    {0,   "MINGWPREFIX",  NULL,      miniargv_cb_set_const_str, &basepath,        "package installation path", NULL},
+    {0,   "RUNPLATFORM",  NULL,      miniargv_cb_strdup,        &arch,            "target architecture (i686-w64-mingw32/x86_64-w64-mingw32)", NULL},
+    MINIARGV_DEFINITION_END
   };
   //parse environment and command line flags
   if (miniargv_process_env(envp, envdef, NULL) != 0)

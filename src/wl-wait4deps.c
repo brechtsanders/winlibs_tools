@@ -155,31 +155,31 @@ int main (int argc, char *argv[], char *envp[])
   size_t countmissing = 0;
   //definition of command line arguments
   const miniargv_definition argdef[] = {
-    {'h', "help",                       NULL,      miniargv_cb_increment_int, &showhelp,                  "show command line help"},
-    {'n', "name",                       "NAME",    miniargv_cb_set_const_str, &basename,                  "name of project to check dependencies for (optional)\noverrides environment variable BASENAME"},
-    //{'m', "install-path",               "PATH",    miniargv_cb_set_const_str, &basepath,                  "path where to look for already installed packages\noverrides environment variable MINGWPREFIX"},
-    {'i', "install-path",               "PATH",    miniargv_cb_set_const_str, &basepath,                  "path where packages are installed\noverrides environment variable MINGWPREFIX"},
-    {'d', "dependencies",               "LIST",    miniargv_cb_set_const_str, &dependencies,              "comma separated list of target dependencies\noverrides environment variable DEPENDANCIES"},
-    {'o', "optional-dependencies",      "LIST",    miniargv_cb_set_const_str, &optionaldependencies,      "comma separated list of optional target dependencies\noverrides environment variable OPTIONALDEPENDANCIES"},
-    {'b', "build-dependencies",         "LIST",    miniargv_cb_set_const_str, &builddependencies,         "comma separated list of build dependencies\noverrides environment variable BUILDDEPENDANCIES"},
-    {'w', "wait",                       "SECONDS", miniargv_cb_set_int,       &waitdelay,                 "seconds to wait between checks (default: " STRINGIZE(DEFAULT_WAIT_SECONDS) "s)"},
-    {'q', NULL,                         NULL,      miniargv_cb_set_int_to_minus_one, &verbose,            "quiet mode (minimal output)"},
-    {'v', "verbose",                    NULL,      miniargv_cb_increment_int,        &verbose,            "verbose mode"},
-    {0, NULL, NULL, NULL, NULL, NULL}
+    {'h', "help",                       NULL,      miniargv_cb_increment_int, &showhelp,                  "show command line help", NULL},
+    {'n', "name",                       "NAME",    miniargv_cb_set_const_str, &basename,                  "name of project to check dependencies for (optional)\noverrides environment variable BASENAME", NULL},
+    //{'m', "install-path",               "PATH",    miniargv_cb_set_const_str, &basepath,                  "path where to look for already installed packages\noverrides environment variable MINGWPREFIX", NULL},
+    {'i', "install-path",               "PATH",    miniargv_cb_set_const_str, &basepath,                  "path where packages are installed\noverrides environment variable MINGWPREFIX", NULL},
+    {'d', "dependencies",               "LIST",    miniargv_cb_set_const_str, &dependencies,              "comma separated list of target dependencies\noverrides environment variable DEPENDANCIES", NULL},
+    {'o', "optional-dependencies",      "LIST",    miniargv_cb_set_const_str, &optionaldependencies,      "comma separated list of optional target dependencies\noverrides environment variable OPTIONALDEPENDANCIES", NULL},
+    {'b', "build-dependencies",         "LIST",    miniargv_cb_set_const_str, &builddependencies,         "comma separated list of build dependencies\noverrides environment variable BUILDDEPENDANCIES", NULL},
+    {'w', "wait",                       "SECONDS", miniargv_cb_set_int,       &waitdelay,                 "seconds to wait between checks (default: " STRINGIZE(DEFAULT_WAIT_SECONDS) "s)", NULL},
+    {'q', NULL,                         NULL,      miniargv_cb_set_int_to_minus_one, &verbose,            "quiet mode (minimal output)", NULL},
+    {'v', "verbose",                    NULL,      miniargv_cb_increment_int,        &verbose,            "verbose mode", NULL},
+    MINIARGV_DEFINITION_END
   };
   //definition of environment variables
   const miniargv_definition envdef[] = {
-    {0,   "MINGWPREFIX",               NULL,       miniargv_cb_set_const_str, &basepath,                  "path where packages are installed"},
-    {0,   "BASENAME",                  NULL,       miniargv_cb_set_const_str, &basename,                  "name of project to check dependencies for"},
-    //{0,   "DEPENDANCIES",              NULL,       miniargv_cb_set_const_str, &dependencies,              "comma separated list of target dependencies"},
-    {0,   "DEPENDENCIES",              NULL,       miniargv_cb_set_const_str, &dependencies,              "comma separated list of target dependencies"},
-    //{0,   "OPTIONALDEPENDANCIES",      NULL,       miniargv_cb_set_const_str, &optionaldependencies,      "comma separated list of optional target dependencies"},
-    {0,   "OPTIONALDEPENDENCIES",      NULL,       miniargv_cb_set_const_str, &optionaldependencies,      "comma separated list of optional target dependencies"},
-    //{0,   "BUILDDEPENDANCIES",         NULL,       miniargv_cb_set_const_str, &builddependencies,         "comma separated list of build dependencies"},
-    {0,   "BUILDDEPENDENCIES",         NULL,       miniargv_cb_set_const_str, &builddependencies,         "comma separated list of build dependencies"},
-    //{0,   "OPTIONALBUILDDEPENDANCIES", NULL,       miniargv_cb_set_const_str, &optionalbuilddependencies, "comma separated list of optional build dependencies"},
-    {0,   "OPTIONALBUILDDEPENDENCIES", NULL,       miniargv_cb_set_const_str, &optionalbuilddependencies, "comma separated list of optional build dependencies"},
-    {0, NULL, NULL, NULL, NULL, NULL}
+    {0,   "MINGWPREFIX",               NULL,       miniargv_cb_set_const_str, &basepath,                  "path where packages are installed", NULL},
+    {0,   "BASENAME",                  NULL,       miniargv_cb_set_const_str, &basename,                  "name of project to check dependencies for", NULL},
+    //{0,   "DEPENDANCIES",              NULL,       miniargv_cb_set_const_str, &dependencies,              "comma separated list of target dependencies", NULL},
+    {0,   "DEPENDENCIES",              NULL,       miniargv_cb_set_const_str, &dependencies,              "comma separated list of target dependencies", NULL},
+    //{0,   "OPTIONALDEPENDANCIES",      NULL,       miniargv_cb_set_const_str, &optionaldependencies,      "comma separated list of optional target dependencies", NULL},
+    {0,   "OPTIONALDEPENDENCIES",      NULL,       miniargv_cb_set_const_str, &optionaldependencies,      "comma separated list of optional target dependencies", NULL},
+    //{0,   "BUILDDEPENDANCIES",         NULL,       miniargv_cb_set_const_str, &builddependencies,         "comma separated list of build dependencies", NULL},
+    {0,   "BUILDDEPENDENCIES",         NULL,       miniargv_cb_set_const_str, &builddependencies,         "comma separated list of build dependencies", NULL},
+    //{0,   "OPTIONALBUILDDEPENDANCIES", NULL,       miniargv_cb_set_const_str, &optionalbuilddependencies, "comma separated list of optional build dependencies", NULL},
+    {0,   "OPTIONALBUILDDEPENDENCIES", NULL,       miniargv_cb_set_const_str, &optionalbuilddependencies, "comma separated list of optional build dependencies", NULL},
+    MINIARGV_DEFINITION_END
   };
   //parse environment and command line flags
   if (miniargv_process(argv, envp, argdef, envdef, NULL, NULL) != 0)

@@ -223,19 +223,19 @@ int main (int argc, char *argv[], char *envp[])
   int verbose = 0;
   //definition of command line arguments
   const miniargv_definition argdef[] = {
-    {'h', "help",             NULL,      miniargv_cb_increment_int, &showhelp, "show command line help"},
-    {'d', "destination",      "path",    miniargv_cb_set_const_str, &dstdir,   "path where downloads are stored"},
-    {'f', "force",            NULL,      miniargv_cb_increment_int, &force,    "force download even if destination file already exists"},
-    {'t', "connect-timeout",  "SECONDS", miniargv_cb_increment_int, &verbose,  "connection timeout in seconds (default: " STRINGIZE(DEFAULT_CONNECT_TIMEOUT) "s)"},
-    {0,   "download-timeout", "SECONDS", miniargv_cb_increment_int, &verbose,  "total download timeout in seconds (default: " STRINGIZE(DEFAULT_DOWNLOAD_TIMEOUT) "s)"},
-    {'v', "verbose",          NULL,      miniargv_cb_increment_int, &verbose,  "verbose mode"},
-    {0,   NULL,               "URL",     miniargv_cb_error,         NULL, "URL of file to download"},
-    {0, NULL, NULL, NULL, NULL, NULL}
+    {'h', "help",             NULL,      miniargv_cb_increment_int, &showhelp, "show command line help", NULL},
+    {'d', "destination",      "path",    miniargv_cb_set_const_str, &dstdir,   "path where downloads are stored", NULL},
+    {'f', "force",            NULL,      miniargv_cb_increment_int, &force,    "force download even if destination file already exists", NULL},
+    {'t', "connect-timeout",  "SECONDS", miniargv_cb_increment_int, &verbose,  "connection timeout in seconds (default: " STRINGIZE(DEFAULT_CONNECT_TIMEOUT) "s)", NULL},
+    {0,   "download-timeout", "SECONDS", miniargv_cb_increment_int, &verbose,  "total download timeout in seconds (default: " STRINGIZE(DEFAULT_DOWNLOAD_TIMEOUT) "s)", NULL},
+    {'v', "verbose",          NULL,      miniargv_cb_increment_int, &verbose,  "verbose mode", NULL},
+    {0,   NULL,               "URL",     miniargv_cb_error,         NULL, "URL of file to download", NULL},
+    MINIARGV_DEFINITION_END
   };
   //definition of environment variables
   const miniargv_definition envdef[] = {
-    {0,   "TARBALLDIR",       NULL,      miniargv_cb_set_const_str, &dstdir,   "path where downloads are stored"},
-    {0, NULL, NULL, NULL, NULL, NULL}
+    {0,   "TARBALLDIR",       NULL,      miniargv_cb_set_const_str, &dstdir,   "path where downloads are stored", NULL},
+    MINIARGV_DEFINITION_END
   };
   //parse environment and command line flags
   if (miniargv_process_env(envp, envdef, NULL) != 0)

@@ -31,16 +31,16 @@ int main (int argc, char *argv[], char *envp[])
   const char* packageinfopath = NULL;
   //definition of command line arguments
   const miniargv_definition argdef[] = {
-    {'h', "help",          NULL,   miniargv_cb_increment_int,   &showhelp,        "show command line help"},
-    {'s', "source-path",   "PATH", miniargv_cb_set_const_str,   &packageinfopath, "build recipe path\noverrides environment variable BUILDSCRIPTS\ncan be multiple paths separated by \"" WINLIBS_CHR2STR(PATHLIST_SEPARATOR) "\""},
-    //{'v', "verbose",       NULL,   miniargv_cb_increment_int,   &verbose,         "verbose mode"},
-    {'q', "quiet",         NULL,   miniargv_cb_set_int_to_zero, &verbose,         "quiet mode"},
-    {0, NULL, NULL, NULL, NULL, NULL}
+    {'h', "help",          NULL,   miniargv_cb_increment_int,   &showhelp,        "show command line help", NULL},
+    {'s', "source-path",   "PATH", miniargv_cb_set_const_str,   &packageinfopath, "build recipe path\noverrides environment variable BUILDSCRIPTS\ncan be multiple paths separated by \"" WINLIBS_CHR2STR(PATHLIST_SEPARATOR) "\"", NULL},
+    //{'v', "verbose",       NULL,   miniargv_cb_increment_int,   &verbose,         "verbose mode", NULL},
+    {'q', "quiet",         NULL,   miniargv_cb_set_int_to_zero, &verbose,         "quiet mode", NULL},
+    MINIARGV_DEFINITION_END
   };
   //definition of environment variables
   const miniargv_definition envdef[] = {
-    {0,   "BUILDSCRIPTS",  NULL,   miniargv_cb_set_const_str,   &packageinfopath, "build recipe path"},
-    {0, NULL, NULL, NULL, NULL, NULL}
+    {0,   "BUILDSCRIPTS",  NULL,   miniargv_cb_set_const_str,   &packageinfopath, "build recipe path", NULL},
+    MINIARGV_DEFINITION_END
   };
   //parse environment and command line flags
   if (miniargv_process(argv, envp, argdef, envdef, NULL, NULL) != 0)

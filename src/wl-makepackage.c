@@ -38,6 +38,7 @@
 #define strcasecmp stricmp
 #define strncasecmp strnicmp
 #endif
+#define LIBARCHIVE_7ZIP_AVOID_BACKSLASHES 1     //see bug reported here: https://github.com/libarchive/libarchive/issues/1833
 #endif
 
 //#define ARCHIVEFORMAT_TAR
@@ -96,7 +97,7 @@ int add_folder_to_archive (const char* relativepath, struct packager_callback_st
     return 0;
   memcpy(path, relativepath, pathlen);
   path[pathlen] = 0;
-#ifdef _WIN32
+#if defined(_WIN32) && defined(LIBARCHIVE_7ZIP_AVOID_BACKSLASHES)
   //use change backslashes to slashes
   char* p = path;
   while (*p) {
@@ -597,7 +598,7 @@ int packager_file_callback (dirtrav_entry info)
 {
   struct packager_callback_struct* callbackdata = (struct packager_callback_struct*)info->callbackdata;
   const char* srcfile = dirtrav_prop_get_path(info);
-#ifdef _WIN32
+#if defined(_WIN32) && defined(LIBARCHIVE_7ZIP_AVOID_BACKSLASHES)
   const char* origpath = dirtrav_prop_get_relative_path(info);
   size_t pathlen = (origpath ? strlen(origpath) : 0);
 #else
@@ -606,7 +607,7 @@ int packager_file_callback (dirtrav_entry info)
 #endif
   const char* ext = dirtrav_prop_get_extension(info);
   int status = 0;
-#ifdef _WIN32
+#if defined(_WIN32) && defined(LIBARCHIVE_7ZIP_AVOID_BACKSLASHES)
   char* path;
   if (!origpath) {
     path = NULL;
@@ -677,13 +678,13 @@ int packager_file_callback (dirtrav_entry info)
   }
   if (status == 0) {
     fprintf(stderr, "Error adding file: %s\n", path);
-#ifdef _WIN32
+#if defined(_WIN32) && defined(LIBARCHIVE_7ZIP_AVOID_BACKSLASHES)
     free(path);
 #endif
     fflush(stdout);
     return 1;
   }
-#ifdef _WIN32
+#if defined(_WIN32) && defined(LIBARCHIVE_7ZIP_AVOID_BACKSLASHES)
   free(path);
 #endif
   return 0;
@@ -1024,32 +1025,32 @@ int main (int argc, char** argv, char *envp[])
   char* packagefilename = NULL;
   //definition of command line arguments
   const miniargv_definition argdef[] = {
-    {'h', "help",            NULL,      miniargv_cb_increment_int, &showhelp,        "show command line help"},
-    {'s', "source",          "PATH",    miniargv_cb_strdup,        &srcdir,          "path containing installed package contents\noverrides environment variable INSTALLPREFIX"},
-    {'p', "package-path",    "PATH",    miniargv_cb_strdup,        &pkgdir,          "path where package files are stored\noverrides environment variable PACKAGEDIR"},
-    {'i', "install-path",    "PATH",    miniargv_cb_strdup,        &dstdir,          "package installation path\noverrides environment variable MINGWPREFIX"},
-    {'f', "fstab",           "PATH",    miniargv_cb_strdup,        &fstabpath,       "full path of specific fstab file (used for resolving MSYS paths)"},
-    {'n', "package-version", "VERSION", miniargv_cb_set_const_str, &packageversion,  "package version number (defaults to $VERSION)"},
-    {'a', "arch",            "ARCH",    miniargv_cb_strdup,        &arch,            "target architecture (i686 / x86_64)\noverrides environment variable RUNPLATFORM"},
-    {'l', "license",         "FILE",    miniargv_cb_set_const_str, &licfile,         "relative path of license file\noverrides environment variable LICENSEFILE"},
+    {'h', "help",            NULL,      miniargv_cb_increment_int, &showhelp,        "show command line help", NULL},
+    {'s', "source",          "PATH",    miniargv_cb_strdup,        &srcdir,          "path containing installed package contents\noverrides environment variable INSTALLPREFIX", NULL},
+    {'p', "package-path",    "PATH",    miniargv_cb_strdup,        &pkgdir,          "path where package files are stored\noverrides environment variable PACKAGEDIR", NULL},
+    {'i', "install-path",    "PATH",    miniargv_cb_strdup,        &dstdir,          "package installation path\noverrides environment variable MINGWPREFIX", NULL},
+    {'f', "fstab",           "PATH",    miniargv_cb_strdup,        &fstabpath,       "full path of specific fstab file (used for resolving MSYS paths)", NULL},
+    {'n', "package-version", "VERSION", miniargv_cb_set_const_str, &packageversion,  "package version number (defaults to $VERSION)", NULL},
+    {'a', "arch",            "ARCH",    miniargv_cb_strdup,        &arch,            "target architecture (i686 / x86_64)\noverrides environment variable RUNPLATFORM", NULL},
+    {'l', "license",         "FILE",    miniargv_cb_set_const_str, &licfile,         "relative path of license file\noverrides environment variable LICENSEFILE", NULL},
 #ifndef NO_PEDEPS
-    {'c', "dependencies",    NULL,      miniargv_cb_increment_int, &checkdeps,       "check for DLL dependencies and list them"},
+    {'c', "dependencies",    NULL,      miniargv_cb_increment_int, &checkdeps,       "check for DLL dependencies and list them", NULL},
 #endif
-    {'d', "delete",          NULL,      miniargv_cb_increment_int, &deleteafter,     "delete original package content files after creating package"},
-    {'v', "verbose",         NULL,      miniargv_cb_increment_int, &verbose,         "verbose mode"},
-    {0,   NULL,              "PACKAGE", miniargv_cb_set_const_str, &packagename,     "package name\noverrides environment variable BASENAME"},
-    {0, NULL, NULL, NULL, NULL, NULL}
+    {'d', "delete",          NULL,      miniargv_cb_increment_int, &deleteafter,     "delete original package content files after creating package", NULL},
+    {'v', "verbose",         NULL,      miniargv_cb_increment_int, &verbose,         "verbose mode", NULL},
+    {0,   NULL,              "PACKAGE", miniargv_cb_set_const_str, &packagename,     "package name\noverrides environment variable BASENAME", NULL},
+    MINIARGV_DEFINITION_END
   };
   //definition of environment variables
   const miniargv_definition envdef[] = {
-    {0,   "INSTALLPREFIX",   NULL,      miniargv_cb_strdup,        &srcdir,          "path containing installed package contents"},
-    {0,   "BASENAME",        NULL,      miniargv_cb_set_const_str, &packagename,     "package name"},
-    {0,   "VERSION",         NULL,      miniargv_cb_set_const_str, &packageversion,  "package version number"},
-    {0,   "PACKAGEDIR",      NULL,      miniargv_cb_strdup,        &pkgdir,          "path where package files are stored"},
-    {0,   "MINGWPREFIX",     NULL,      miniargv_cb_strdup,        &dstdir,          "package installation path"},
-    {0,   "RUNPLATFORM",     NULL,      miniargv_cb_strdup,        &arch,            "target architecture (i686-w64-mingw32 / x86_64-w64-mingw32)\nonly the part up to the first \"-\" is used"},
-    {0,   "LICENSEFILE",     NULL,      miniargv_cb_set_const_str, &licfile,         "relative path of license file"},
-    {0, NULL, NULL, NULL, NULL, NULL}
+    {0,   "INSTALLPREFIX",   NULL,      miniargv_cb_strdup,        &srcdir,          "path containing installed package contents", NULL},
+    {0,   "BASENAME",        NULL,      miniargv_cb_set_const_str, &packagename,     "package name", NULL},
+    {0,   "VERSION",         NULL,      miniargv_cb_set_const_str, &packageversion,  "package version number", NULL},
+    {0,   "PACKAGEDIR",      NULL,      miniargv_cb_strdup,        &pkgdir,          "path where package files are stored", NULL},
+    {0,   "MINGWPREFIX",     NULL,      miniargv_cb_strdup,        &dstdir,          "package installation path", NULL},
+    {0,   "RUNPLATFORM",     NULL,      miniargv_cb_strdup,        &arch,            "target architecture (i686-w64-mingw32 / x86_64-w64-mingw32)\nonly the part up to the first \"-\" is used", NULL},
+    {0,   "LICENSEFILE",     NULL,      miniargv_cb_set_const_str, &licfile,         "relative path of license file", NULL},
+    MINIARGV_DEFINITION_END
   };
   //parse environment and command line flags
   if (miniargv_process(argv, envp, argdef, envdef, NULL, NULL) != 0)

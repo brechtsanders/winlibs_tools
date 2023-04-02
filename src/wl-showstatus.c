@@ -47,16 +47,16 @@ int main (int argc, char *argv[], char *envp[])
   char* message = NULL;
   //definition of command line arguments
   const miniargv_definition argdef[] = {
-    {'h', "help",            NULL,   miniargv_cb_increment_int, &showhelp,           "show command line help"},
-    {'v', "package-version", NULL,   miniargv_cb_increment_int, &showpackageversion, "show package name and version (from environment variables)"},
-    {0,   NULL,              "TEXT", process_arg_append_str,    &message,            "text to display"},
-    {0, NULL, NULL, NULL, NULL, NULL}
+    {'h', "help",            NULL,   miniargv_cb_increment_int, &showhelp,           "show command line help", NULL},
+    {'v', "package-version", NULL,   miniargv_cb_increment_int, &showpackageversion, "show package name and version (from environment variables)", NULL},
+    {0,   NULL,              "TEXT", process_arg_append_str,    &message,            "text to display", NULL},
+    MINIARGV_DEFINITION_END
   };
   //definition of environment variables
   const miniargv_definition envdef[] = {
-    {0,   "BASENAME",        NULL,   miniargv_cb_set_const_str, &basename,           "package name\nif present will be displayed as part of the window title"},
-    {0,   "VERSION",         NULL,   miniargv_cb_set_const_str, &version,            "package version\nif present will be displayed as part of the window title"},
-    {0, NULL, NULL, NULL, NULL, NULL}
+    {0,   "BASENAME",        NULL,   miniargv_cb_set_const_str, &basename,           "package name\nif present will be displayed as part of the window title", NULL},
+    {0,   "VERSION",         NULL,   miniargv_cb_set_const_str, &version,            "package version\nif present will be displayed as part of the window title", NULL},
+    MINIARGV_DEFINITION_END
   };
   //parse environment and command line flags
   if (miniargv_process(argv, envp, argdef, envdef, NULL, NULL) != 0)
