@@ -1,3 +1,4 @@
+#include "winlibs_common.h"
 #include <stdlib.h>
 #include <fcntl.h>
 #include <sys/types.h>
@@ -24,7 +25,6 @@
 #include <miniargv.h>
 #include "exclusive_lock_file.h"
 #include "handle_interrupts.h"
-#include "winlibs_common.h"
 
 #define PROGRAM_NAME            "wl-download"
 #define PROGRAM_DESC            "Command line utility to download files"

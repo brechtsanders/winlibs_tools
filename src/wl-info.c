@@ -1,3 +1,4 @@
+#include "winlibs_common.h"
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -6,7 +7,6 @@
 #include <sys/stat.h>
 #include <miniargv.h>
 #include <versioncmp.h>
-#include "winlibs_common.h"
 #include "pkgfile.h"
 #include "sorted_unique_list.h"
 #include "filesystem.h"

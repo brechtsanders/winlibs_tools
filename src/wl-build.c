@@ -1,3 +1,4 @@
+#include "winlibs_common.h"
 #include <string.h>
 #include <unistd.h>
 #ifdef _WIN32
@@ -15,7 +16,6 @@
 #include "handle_interrupts.h"
 #include "build-order.h"
 #include "build-package.h"
-#include "winlibs_common.h"
 /*
 #include <string.h>
 #ifdef _WIN32

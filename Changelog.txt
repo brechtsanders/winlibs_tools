@@ -1,3 +1,9 @@
+1.0.14
+
+2023-06-23  Brecht Sanders  https://github.com/brechtsanders/
+
+  * define __USE_MINGW_ANSI_STDIO=0 for faster output
+
 1.0.13
 
 2023-04-02  Brecht Sanders  https://github.com/brechtsanders/

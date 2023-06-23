@@ -14,7 +14,7 @@
 /*! \brief minor version number */
 #define WINLIBS_VERSION_MINOR 0
 /*! \brief micro version number */
-#define WINLIBS_VERSION_MICRO 13
+#define WINLIBS_VERSION_MICRO 14
 /*! @} */
 
 /*! \brief packed version number */
@@ -118,5 +118,11 @@
 #else
 #define SLEEP_SECONDS(s) sleep(s);
 #endif
+
+///*! \cond PRIVATE */
+//#if defined(__MINGW32__) && !defined(__USE_MINGW_ANSI_STDIO)
+//#define __USE_MINGW_ANSI_STDIO 0  /* use Windows' printf functions as they are faster */
+//#endif
+///*! \endcond */
 
 #endif //INCLUDED_WINLIBS_COMMON_H

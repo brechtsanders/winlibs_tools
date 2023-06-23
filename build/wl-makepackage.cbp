@@ -85,7 +85,7 @@
 		<Linker>
 			<Add option="-static-libgcc" />
 			<Add option="-static" />
-			<Add option="`pkg-config --static --libs libarchive`" />
+			<Add option="`pkg-config.exe --static --libs libarchive`" />
 			<Add library="miniargv" />
 			<Add library="dirtrav" />
 			<Add library="pedeps" />

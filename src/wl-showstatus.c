@@ -1,3 +1,4 @@
+#include "winlibs_common.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,7 +10,6 @@
 #endif
 #include <miniargv.h>
 #include <portcolcon.h>
-#include "winlibs_common.h"
 
 #define PROGRAM_NAME    "wl-showstatus"
 #define PROGRAM_DESC    "Command line utility to show status of the winlibs package build process"

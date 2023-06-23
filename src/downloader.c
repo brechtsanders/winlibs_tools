@@ -1,6 +1,6 @@
+#include "winlibs_common.h"
 #include "downloader.h"
 #include "memory_buffer.h"
-#include "winlibs_common.h"
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>

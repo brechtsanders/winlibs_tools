@@ -1,7 +1,7 @@
+#include "winlibs_common.h"
 #include "pkgdb.h"
 #include "filesystem.h"
 #include "memory_buffer.h"
-#include "winlibs_common.h"
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>

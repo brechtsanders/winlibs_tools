@@ -84,6 +84,7 @@
 		<Linker>
 			<Add option="-static-libgcc" />
 			<Add option="-static" />
+			<Add option="-pthread" />
 			<Add library="miniargv" />
 			<Add library="avl" />
 			<Add library="versioncmp" />

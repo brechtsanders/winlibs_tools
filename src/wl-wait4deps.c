@@ -1,3 +1,4 @@
+#include "winlibs_common.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -12,7 +13,6 @@
 #include <portcolcon.h>
 #include "filesystem.h"
 #include "handle_interrupts.h"
-#include "winlibs_common.h"
 
 #define PROGRAM_NAME    "wl-wait4deps"
 #define PROGRAM_DESC    "Command line utility to wait for package dependencies to be installed"

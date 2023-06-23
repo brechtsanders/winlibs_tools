@@ -51,7 +51,7 @@ ifdef DEBUG
 CFLAGS += -g
 STRIPFLAG = 
 else
-CFLAGS += -O3
+CFLAGS += -O2
 endif
 
 MINIARGV_LDFLAGS = -lminiargv
@@ -88,8 +88,9 @@ ifdef STATIC
 PCRE2_FINDER_LDFLAGS += -lpcre2-8
 endif
 PTHREADS_LDFLAGS = -lpthread
-ifdef STATIC
 ifeq ($(OS),Windows_NT)
+CFLAGS += -D__USE_MINGW_ANSI_STDIO=0
+ifdef STATIC
 LDFLAGS += -Wl,--allow-multiple-definition
 endif
 endif

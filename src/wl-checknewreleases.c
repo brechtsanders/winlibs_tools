@@ -1,3 +1,4 @@
+#include "winlibs_common.h"
 #define _GNU_SOURCE     //needed for asprintf
 #include <stdlib.h>
 #include <string.h>
@@ -16,7 +17,6 @@
 #include <pcre2.h>
 #include <miniargv.h>
 #include <versioncmp.h>
-#include "winlibs_common.h"
 #include "sorted_unique_list.h"
 #include "sorted_item_queue.h"
 #include "pkgfile.h"

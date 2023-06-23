@@ -1,3 +1,4 @@
+#include "winlibs_common.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -20,7 +21,6 @@
 #ifndef NO_PEDEPS
 #include <pedeps.h>
 #endif
-#include "winlibs_common.h"
 #include "fstab.h"
 #include "memory_buffer.h"
 #ifndef NO_PEDEPS

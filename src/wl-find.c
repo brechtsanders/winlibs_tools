@@ -1,3 +1,4 @@
+#include "winlibs_common.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -5,7 +6,6 @@
 #include <miniargv.h>
 #include <portcolcon.h>
 #include "pkgdb.h"
-#include "winlibs_common.h"
 #include "memory_buffer.h"
 
 #define PROGRAM_NAME    "wl-find"

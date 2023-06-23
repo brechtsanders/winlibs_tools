@@ -1,8 +1,8 @@
+#include "winlibs_common.h"
 #include "build-package.h"
 #include "memory_buffer.h"
 #include "filesystem.h"
 #include "pkgfile.h"
-#include "winlibs_common.h"
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>

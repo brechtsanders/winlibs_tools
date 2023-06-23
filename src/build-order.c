@@ -1,10 +1,10 @@
+#include "winlibs_common.h"
 #include "build-order.h"
-#include <stdio.h>
-#include <string.h>
 #include "pkgfile.h"
 #include "pkgdb.h"
 #include "memory_buffer.h"
-#include "winlibs_common.h"
+#include <stdio.h>
+#include <string.h>
 
 int packageinfo_cmp_basename (const char* data1, const char* data2)
 {

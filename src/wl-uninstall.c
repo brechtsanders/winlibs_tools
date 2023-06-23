@@ -1,3 +1,4 @@
+#include "winlibs_common.h"
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -7,7 +8,6 @@
 #include <dirent.h>
 #include <sys/stat.h>
 #include <miniargv.h>
-#include "winlibs_common.h"
 #include "memory_buffer.h"
 #include "filesystem.h"
 #include "pkgdb.h"

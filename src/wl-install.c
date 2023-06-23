@@ -1,3 +1,4 @@
+#include "winlibs_common.h"
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -9,7 +10,6 @@
 #include <archive_entry.h>
 #include <expat.h>
 #include <miniargv.h>
-#include "winlibs_common.h"
 #include "filesystem.h"
 #include "memory_buffer.h"
 #include "sorted_unique_list.h"
