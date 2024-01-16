@@ -59,6 +59,7 @@ PORTCOLCON_LDFLAGS = -lportcolcon
 VERSIONCMP_LDFLAGS = -lversioncmp
 CROSSRUN_LDFLAGS = -lcrossrun
 PEDEPS_LDFLAGS = -lpedeps
+SCALEDNUM_LDFLAGS = -lscalednum
 AVL_LDFLAGS = -lavl
 ifdef STATIC
 #CURL_LDFLAGS = $(shell $(PKG_CONFIG) --libs libcurl librtmp libbrotlidec libgcrypt shishi gnutls libidn)
@@ -121,7 +122,7 @@ $(BINDIR)/wl-showstatus$(BINEXT): $(OBJDIR)/wl-showstatus.o
 	$(CC) $(STRIPFLAG) $(LDFLAGS) -o $@ $^ $(MINIARGV_LDFLAGS) $(PORTCOLCON_LDFLAGS)
 
 $(BINDIR)/wl-download$(BINEXT): $(OBJDIR)/wl-download.o $(OBJDIR)/exclusive_lock_file.o
-	$(CC) $(STRIPFLAG) $(LDFLAGS) -o $@ $^ $(MINIARGV_LDFLAGS) $(CURL_LDFLAGS)
+	$(CC) $(STRIPFLAG) $(LDFLAGS) -o $@ $^ $(MINIARGV_LDFLAGS) $(SCALEDNUM_LDFLAGS) $(CURL_LDFLAGS)
 
 $(BINDIR)/wl-wait4deps$(BINEXT): $(OBJDIR)/wl-wait4deps.o $(OBJDIR)/filesystem.o
 	$(CC) $(STRIPFLAG) $(LDFLAGS) -o $@ $^ $(MINIARGV_LDFLAGS) $(PORTCOLCON_LDFLAGS)

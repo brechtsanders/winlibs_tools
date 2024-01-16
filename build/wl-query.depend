@@ -1,0 +1,227 @@
+# depslib dependency file v1.0
+1619372395 source:z:\winlibs\src\filesystem.c
+	"filesystem.h"
+	<sys/types.h>
+	<sys/stat.h>
+	<unistd.h>
+	<stdlib.h>
+	<string.h>
+	<direct.h>
+	<sys/stat.h>
+	<errno.h>
+
+1619372395 z:\winlibs\src\filesystem.h
+	<stdio.h>
+
+1637764573 source:z:\winlibs\src\memory_buffer.c
+	"memory_buffer.h"
+	<string.h>
+	<stdio.h>
+
+1637740219 z:\winlibs\src\memory_buffer.h
+	<stdlib.h>
+	<stdarg.h>
+
+1637763547 source:z:\winlibs\src\pkgdb.c
+	"pkgdb.h"
+	"filesystem.h"
+	"memory_buffer.h"
+	"winlibs_common.h"
+	<stdint.h>
+	<stdlib.h>
+	<string.h>
+	<unistd.h>
+	<windows.h>
+
+1637763504 z:\winlibs\src\pkgdb.h
+	"sorted_unique_list.h"
+	<stdint.h>
+	<stdlib.h>
+	<sqlite3.h>
+
+1618569018 z:\winlibs\src\sorted_unique_list.h
+	<stdlib.h>
+
+1638781790 z:\winlibs\src\winlibs_common.h
+
+1616684639 source:z:\winlibs\src\sorted_unique_list.c
+	"sorted_unique_list.h"
+	<avl.h>
+	<string.h>
+	<ctype.h>
+	<stdio.h>
+
+1638571434 source:z:\winlibs\src\wl-find.c
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<limits.h>
+	<miniargv.h>
+	<portcolcon.h>
+	"pkgdb.h"
+	"winlibs_common.h"
+	"memory_buffer.h"
+
+1637570739 source:z:\miniargv\lib\miniargv.c
+	"miniargv.h"
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<ctype.h>
+
+1650273113 source:z:\winlibs_tools\src\filesystem.c
+	"filesystem.h"
+	<sys/types.h>
+	<sys/stat.h>
+	<unistd.h>
+	<stdlib.h>
+	<string.h>
+	<direct.h>
+	<sys/stat.h>
+	<errno.h>
+
+1650273113 z:\winlibs_tools\src\filesystem.h
+	<stdio.h>
+
+1637768173 source:z:\winlibs_tools\src\memory_buffer.c
+	"memory_buffer.h"
+	<string.h>
+	<stdio.h>
+
+1637743819 z:\winlibs_tools\src\memory_buffer.h
+	<stdlib.h>
+	<stdarg.h>
+
+1687513288 source:z:\winlibs_tools\src\pkgdb.c
+	"winlibs_common.h"
+	"pkgdb.h"
+	"filesystem.h"
+	"memory_buffer.h"
+	<stdint.h>
+	<stdlib.h>
+	<string.h>
+	<unistd.h>
+	<windows.h>
+
+1647011562 z:\winlibs_tools\src\pkgdb.h
+	"pkg.h"
+	<stdint.h>
+	<stdlib.h>
+	<sqlite3.h>
+
+1646515079 z:\winlibs_tools\src\sorted_unique_list.h
+	<stdlib.h>
+
+1688463735 z:\winlibs_tools\src\winlibs_common.h
+
+1646515089 source:z:\winlibs_tools\src\sorted_unique_list.c
+	"sorted_unique_list.h"
+	<avl.h>
+	<string.h>
+	<ctype.h>
+	<stdio.h>
+
+1639082782 source:z:\winlibs_tools\src\wl-find.c
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<limits.h>
+	<miniargv.h>
+	<portcolcon.h>
+	"pkgdb.h"
+	"winlibs_common.h"
+	"memory_buffer.h"
+
+1672237794 source:z:\winlibs_tools\src\pkg.c
+	"pkg.h"
+	<stdlib.h>
+	<string.h>
+
+1672237797 z:\winlibs_tools\src\pkg.h
+	"sorted_unique_list.h"
+	<stdint.h>
+	<stdlib.h>
+	<time.h>
+
+1650273113 source:\\server\users\brecht\sources\cpp\winlibs_tools\src\filesystem.c
+	"filesystem.h"
+	<sys/types.h>
+	<sys/stat.h>
+	<unistd.h>
+	<stdlib.h>
+	<string.h>
+	<direct.h>
+	<sys/stat.h>
+	<errno.h>
+
+1650273113 \\server\users\brecht\sources\cpp\winlibs_tools\src\filesystem.h
+	<stdio.h>
+
+1637768173 source:\\server\users\brecht\sources\cpp\winlibs_tools\src\memory_buffer.c
+	"memory_buffer.h"
+	<string.h>
+	<stdio.h>
+
+1637743819 \\server\users\brecht\sources\cpp\winlibs_tools\src\memory_buffer.h
+	<stdlib.h>
+	<stdarg.h>
+
+1646513039 source:\\server\users\brecht\sources\cpp\winlibs_tools\src\pkg.c
+	"pkg.h"
+	<stdlib.h>
+	<string.h>
+
+1646513039 \\server\users\brecht\sources\cpp\winlibs_tools\src\pkg.h
+	"sorted_unique_list.h"
+	<stdint.h>
+	<stdlib.h>
+	<time.h>
+
+1646515079 \\server\users\brecht\sources\cpp\winlibs_tools\src\sorted_unique_list.h
+	<stdlib.h>
+
+1647011594 source:\\server\users\brecht\sources\cpp\winlibs_tools\src\pkgdb.c
+	"pkgdb.h"
+	"filesystem.h"
+	"memory_buffer.h"
+	"winlibs_common.h"
+	<stdint.h>
+	<stdlib.h>
+	<string.h>
+	<unistd.h>
+	<windows.h>
+
+1647011562 \\server\users\brecht\sources\cpp\winlibs_tools\src\pkgdb.h
+	"pkg.h"
+	<stdint.h>
+	<stdlib.h>
+	<sqlite3.h>
+
+1648382871 \\server\users\brecht\sources\cpp\winlibs_tools\src\winlibs_common.h
+
+1646515089 source:\\server\users\brecht\sources\cpp\winlibs_tools\src\sorted_unique_list.c
+	"sorted_unique_list.h"
+	<avl.h>
+	<string.h>
+	<ctype.h>
+	<stdio.h>
+
+1688470554 source:z:\winlibs_tools\src\wl-query.c
+	"winlibs_common.h"
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<limits.h>
+	<io.h>
+	<fcntl.h>
+	<miniargv.h>
+	<portcolcon.h>
+	"pkgdb.h"
+	"memory_buffer.h"
+	<sys/types.h>
+	<sys/stat.h>
+
+1646515089 z:\winlibs_tools\src\pkgfile.h
+	"pkg.h"
+	<stddef.h>
+

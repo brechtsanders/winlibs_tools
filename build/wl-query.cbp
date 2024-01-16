@@ -2,12 +2,12 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="wl-build" />
+		<Option title="wl-query" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="bin/Debug/wl-build" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Debug/wl-query" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -16,11 +16,10 @@
 				</Compiler>
 			</Target>
 			<Target title="Release">
-				<Option output="bin/Release/wl-build" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Release/wl-query" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="-s \\SERVER\users\brecht\sources\porting_to_win32\build_scripts pango cairo" />
 				<Compiler>
 					<Add option="-Os" />
 				</Compiler>
@@ -29,21 +28,21 @@
 				</Linker>
 			</Target>
 			<Target title="Debug32">
-				<Option output="bin/Debug32/wl-build" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Debug32/wl-query" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Debug32/" />
 				<Option type="1" />
 				<Option compiler="MINGW32" />
-				<Option parameters='-s \\SERVER\users\brecht\sources\porting_to_win32\build_scripts -i D:\Prog\winlibs32_stage\custombuilt -x &quot;D:\Prog\msys64\usr\bin\bash.exe --noprofile --rcfile D:\Prog\winlibs32_stage\profile_settings.sh -i&quot; zlib libbz2' />
+				<Option parameters="-c wl-query.cfg" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
 			</Target>
 			<Target title="Release32">
-				<Option output="bin/Release32/wl-build" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Release32/wl-query" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Release32/" />
 				<Option type="1" />
 				<Option compiler="MINGW32" />
-				<Option parameters="-s \\SERVER\users\brecht\sources\porting_to_win32\build_scripts gdb" />
+				<Option parameters="-c _wl-query.cfg" />
 				<Compiler>
 					<Add option="-Os" />
 				</Compiler>
@@ -52,26 +51,29 @@
 				</Linker>
 			</Target>
 			<Target title="Debug64">
-				<Option output="bin/Debug64/wl-build" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Debug64/wl-query" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Debug64/" />
 				<Option type="1" />
 				<Option compiler="MINGW64" />
-				<Option parameters='-s \\SERVER\users\brecht\sources\porting_to_win32\build_scripts;\\SERVER\Users\brecht\sources\CPP\winlibs_recipes\recipes;\\SERVER\Users\brecht\sources\CPP\winlibs_recipes\recipes_work_in_progress;\\SERVER\Users\brecht\sources\CPP\winlibs_recipes\recipes_not_portable -x &quot;D:\Prog\msys64\usr\bin\bash.exe --noprofile --rcfile E:\Prog\winlibs-11.2.0\64\profile_settings.sh -i&quot; -l logs -i E:\Prog\winlibs-11.2.0\64\custombuilt zlib libxml2 gettext' />
+				<Option parameters="-i _inst jwasm" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
 			</Target>
 			<Target title="Release64">
-				<Option output="bin/Release64/wl-build" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Release64/wl-query" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Release64/" />
 				<Option type="1" />
 				<Option compiler="MINGW64" />
-				<Option parameters='-s \\SERVER\users\brecht\sources\porting_to_win32\build_scripts -i D:\Prog\winlibs64-11.2.0ucrt\custombuilt -x &quot;D:\Prog\msys64\usr\bin\bash.exe --noprofile --rcfile D:\Prog\winlibs64-11.2.0ucrt\profile_settings.sh -i&quot; -l logs -r portmidi' />
+				<Option parameters="-i D:\Prog\winlibs64-11.2.0ucrt\custombuilt --foldername --fullpath Australia" />
 				<Compiler>
 					<Add option="-Os" />
+					<Add option="-DSTATIC" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+					<Add option="-static-libgcc" />
+					<Add option="-static" />
 				</Linker>
 			</Target>
 		</Build>
@@ -79,33 +81,20 @@
 			<Add option="-Os" />
 			<Add option="-Wall" />
 			<Add option="-DSTATIC" />
-			<Add option="-D__USE_MINGW_ANSI_STDIO=0" />
 			<Add directory="../src" />
 		</Compiler>
 		<Linker>
 			<Add option="-static-libgcc" />
 			<Add option="-static" />
-			<Add option="-pthread" />
-			<Add library="miniargv" />
+			<Add option="`pkg-config.exe --static --libs sqlite3`" />
 			<Add library="avl" />
-			<Add library="versioncmp" />
-			<Add library="crossrun" />
-			<Add library="dirtrav" />
-			<Add library="sqlite3" />
+			<Add library="miniargv" />
+			<Add library="portcolcon" />
 		</Linker>
-		<Unit filename="../src/build-order.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../src/build-order.h" />
-		<Unit filename="../src/build-package.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../src/build-package.h" />
 		<Unit filename="../src/filesystem.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../src/filesystem.h" />
-		<Unit filename="../src/handle_interrupts.h" />
 		<Unit filename="../src/memory_buffer.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -118,16 +107,12 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../src/pkgdb.h" />
-		<Unit filename="../src/pkgfile.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../src/pkgfile.h" />
 		<Unit filename="../src/sorted_unique_list.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../src/sorted_unique_list.h" />
 		<Unit filename="../src/winlibs_common.h" />
-		<Unit filename="../src/wl-build.c">
+		<Unit filename="../src/wl-query.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Extensions>

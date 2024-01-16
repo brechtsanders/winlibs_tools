@@ -80,6 +80,7 @@
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-DSTATIC" />
+			<Add option="-D__USE_MINGW_ANSI_STDIO=0" />
 		</Compiler>
 		<Linker>
 			<Add option="-static-libgcc" />

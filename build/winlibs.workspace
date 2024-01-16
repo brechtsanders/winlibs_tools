@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_workspace_file>
+	<Workspace title="winlibs tools">
+		<Project filename="wl-showstatus.cbp" />
+		<Project filename="wl-download.cbp" />
+		<Project filename="wl-wait4deps.cbp" />
+		<Project filename="wl-listall.cbp" />
+		<Project filename="wl-info.cbp" />
+		<Project filename="wl-showdeps.cbp" />
+		<Project filename="wl-checknewreleases.cbp" />
+		<Project filename="wl-makepackage.cbp" />
+		<Project filename="wl-install.cbp" />
+		<Project filename="wl-uninstall.cbp" />
+		<Project filename="wl-build.cbp" />
+		<Project filename="wl-find.cbp" />
+	</Workspace>
+</CodeBlocks_workspace_file>

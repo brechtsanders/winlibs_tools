@@ -33,6 +33,11 @@
 #define DEFAULT_CONNECT_TIMEOUT 240             //abort connection if not connected in 4 minutes
 #define DEFAULT_DOWNLOAD_TIMEOUT 10800          //abort download if total download time exceeds 3 hours
 #define PROGRESS_UPDATE_INTERVAL 1 / 3          //how many seconds to wait in between download status updates (undefined for no limit)
+//#define NO_SCALEDNUM                            //don't use scalednum library to show download size in human readable format
+
+#ifndef NO_SCALEDNUM
+#include <scalednum.h>
+#endif
 
 #define STRINGIZE_(value) #value
 #define STRINGIZE(value) STRINGIZE_(value)
@@ -52,12 +57,16 @@ int dsthandle = -1;
 typedef int (*download_progress_callback_fn)(long long pos, long long len, void* callbackdata);
 
 struct process_download_data_struct {
+  void* showprogress_callbackdata;
   CURL* curl_handle;
   curl_off_t len;
   curl_off_t pos;
   curl_off_t lastpos;
   int dst;
   download_progress_callback_fn showprogress;
+#ifndef NO_SCALEDNUM
+  scalednum scale;
+#endif
 #ifdef PROGRESS_UPDATE_INTERVAL
   clock_t nextstatusupdate;
 #endif
@@ -65,11 +74,25 @@ struct process_download_data_struct {
 
 int show_progress (long long pos, long long len, void* callbackdata)
 {
-  if (len > 0)
+#ifndef NO_SCALEDNUM
+  char scalednumbuf[16];
+#endif
+  if (len > 0) {
+#ifndef NO_SCALEDNUM
+    scalednum_to_buffer(((struct process_download_data_struct*)callbackdata)->scale, (double)pos, scalednumbuf, sizeof(scalednumbuf));
+    printf("\r%s (%u%%)", scalednumbuf, (unsigned)(100L * pos / len));
+#else
     printf("\r%lu bytes (%u%%)", (unsigned long)pos, (unsigned)(100L * pos / len));
     //printf("\r%lu/%lu bytes (%u%%)", (unsigned long)pos, (unsigned long)len, (unsigned)(100L * pos / len));
-  else
+#endif
+  } else {
+#ifndef NO_SCALEDNUM
+    scalednum_to_buffer(((struct process_download_data_struct*)callbackdata)->scale, (double)pos, scalednumbuf, sizeof(scalednumbuf));
+    printf("\r%s", scalednumbuf);
+#else
     printf("\r%lu bytes", (unsigned long)pos);
+#endif
+  }
   if (pos == len)
     printf("\n");
   fflush(stdout);
@@ -122,14 +145,18 @@ static size_t process_download_data_silent (void* data, size_t size, size_t nite
 
 long download_to_file (CURL* curl_handle, const char* url, const char* dstpath, int force, download_progress_callback_fn progresscallback, void* callbackdata)
 {
-  struct process_download_data_struct dldata;
   CURLcode curlstatus;
   long responsecode;
+  struct process_download_data_struct dldata;
+  dldata.showprogress_callbackdata = callbackdata;
   dldata.curl_handle = curl_handle;
   dldata.len = -2;
   dldata.pos = 0;
   dldata.lastpos = -1;
   dldata.showprogress = progresscallback;
+#ifndef NO_SCALEDNUM
+  dldata.scale = scalednum_create(3, SCALEDNUM_KILO1024 | SCALEDNUM_SHORTPREFIX, "B", NULL);
+#endif
 #ifdef PROGRESS_UPDATE_INTERVAL
   dldata.nextstatusupdate = 0;
 #endif
@@ -149,6 +176,9 @@ long download_to_file (CURL* curl_handle, const char* url, const char* dstpath, 
   curlstatus = curl_easy_perform(curl_handle);
   if (progresscallback && dldata.lastpos < dldata.len)
     (*progresscallback)(dldata.pos, (dldata.len >= 0 ? dldata.len : dldata.pos), &dldata);
+#ifndef NO_SCALEDNUM
+  scalednum_free(dldata.scale);
+#endif
   //close destination file
   close(dsthandle);
   dsthandle = -1;

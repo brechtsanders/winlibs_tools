@@ -14,7 +14,7 @@
 /*! \brief minor version number */
 #define WINLIBS_VERSION_MINOR 0
 /*! \brief micro version number */
-#define WINLIBS_VERSION_MICRO 14
+#define WINLIBS_VERSION_MICRO 15
 /*! @} */
 
 /*! \brief packed version number */
@@ -32,7 +32,7 @@
 #define WINLIBS_LICENSE "GPL"
 
 /*! \brief project credits \hideinitializer */
-#define WINLIBS_CREDITS "Brecht Sanders (2020-2022)"
+#define WINLIBS_CREDITS "Brecht Sanders (2020-2023)"
 
 /*! \cond PRIVATE */
 #if defined(_WIN32) && !defined(NOWINDOWSCONSOLE)

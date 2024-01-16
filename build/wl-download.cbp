@@ -55,7 +55,7 @@
 				<Option object_output="obj/Debug64/" />
 				<Option type="1" />
 				<Option compiler="MINGW64" />
-				<Option parameters="-f -v -d C:\TEMP\sources http://www.zlib.net/zlib-1.2.11.tar.gz https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz" />
+				<Option parameters="-f -v -d C:\TEMP\sources http://www.zlib.net/zlib-1.2.11.tar.gz https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz https://download.gnome.org/sources/gtk/4.13/gtk-4.13.5.tar.xz" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -80,6 +80,7 @@
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-DSTATIC" />
+			<Add option="-D__USE_MINGW_ANSI_STDIO=0" />
 			<Add directory="../src" />
 		</Compiler>
 		<Linker>
@@ -89,6 +90,7 @@
 			<Add option="`pkg-config.exe --static --libs libcurl librtmp libbrotlidec libgcrypt shishi gnutls libidn libntlm`" />
 			<Add option="-Wl,--allow-multiple-definition" />
 			<Add library="miniargv" />
+			<Add library="scalednum" />
 			<Add library="dl" />
 		</Linker>
 		<Unit filename="../src/exclusive_lock_file.c">

@@ -39,9 +39,9 @@
 	<windows.h>
 	<signal.h>
 
-1636661460 source:z:\winlibs_tools\src\exclusive_lock_file.c
-	"exclusive_lock_file.h"
+1687509705 source:z:\winlibs_tools\src\exclusive_lock_file.c
 	"winlibs_common.h"
+	"exclusive_lock_file.h"
 	<stdlib.h>
 	<string.h>
 	<sys/stat.h>
@@ -51,11 +51,12 @@
 	<windows.h>
 	<stdio.h>
 
-1636661198 z:\winlibs_tools\src\exclusive_lock_file.h
+1636657598 z:\winlibs_tools\src\exclusive_lock_file.h
 
-1672423454 z:\winlibs_tools\src\winlibs_common.h
+1705430585 z:\winlibs_tools\src\winlibs_common.h
 
-1643033000 source:z:\winlibs_tools\src\wl-download.c
+1705432683 source:z:\winlibs_tools\src\wl-download.c
+	"winlibs_common.h"
 	<stdlib.h>
 	<fcntl.h>
 	<sys/types.h>
@@ -73,9 +74,9 @@
 	<miniargv.h>
 	"exclusive_lock_file.h"
 	"handle_interrupts.h"
-	"winlibs_common.h"
+	<scalednum.h>
 
-1667933935 z:\winlibs_tools\src\handle_interrupts.h
+1667930335 z:\winlibs_tools\src\handle_interrupts.h
 	<windows.h>
 	<signal.h>
 
