@@ -20,3 +20,10 @@ version
 *.7z
 *.zip
 *.xz
+build/test_fstab.cbp
+build/test_install_db.cbp
+build/test_package_info.cbp
+build/winlibs-setup-GUI.cbp
+build/winlibs-setup-GUI.depend
+build/winlibs-setup.cbp
+build/winlibs-setup.depend
