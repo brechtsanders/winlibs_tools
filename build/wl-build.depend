@@ -200,7 +200,7 @@
 	<windows.h>
 	<signal.h>
 
-1705430585 z:\winlibs_tools\src\winlibs_common.h
+1705518485 z:\winlibs_tools\src\winlibs_common.h
 
 1687509688 source:z:\winlibs_tools\src\pkgdb.c
 	"winlibs_common.h"
@@ -247,26 +247,26 @@
 	"pkg.h"
 	<stddef.h>
 
-1648397273 source:z:\winlibs_tools\src\build-order.c
+1687509716 source:z:\winlibs_tools\src\build-order.c
+	"winlibs_common.h"
 	"build-order.h"
-	<stdio.h>
-	<string.h>
 	"pkgfile.h"
 	"pkgdb.h"
 	"memory_buffer.h"
-	"winlibs_common.h"
+	<stdio.h>
+	<string.h>
 
-1648397273 z:\winlibs_tools\src\build-order.h
+1648393673 z:\winlibs_tools\src\build-order.h
 	"pkgfile.h"
 
-1647007418 z:\winlibs_tools\src\build-package.h
+1647003818 z:\winlibs_tools\src\build-package.h
 
-1647008837 source:z:\winlibs_tools\src\build-package.c
+1687509722 source:z:\winlibs_tools\src\build-package.c
+	"winlibs_common.h"
 	"build-package.h"
 	"memory_buffer.h"
 	"filesystem.h"
 	"pkgfile.h"
-	"winlibs_common.h"
 	<stdio.h>
 	<string.h>
 	<ctype.h>

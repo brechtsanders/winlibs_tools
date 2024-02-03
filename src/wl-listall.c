@@ -26,12 +26,14 @@ int main (int argc, char *argv[], char *envp[])
   const char* basename;
   size_t totalbuilding = 0;
   size_t totalproblems = 0;
+  int showversion = 0;
   int showhelp = 0;
   int verbose = 1;
   const char* packageinfopath = NULL;
   //definition of command line arguments
   const miniargv_definition argdef[] = {
     {'h', "help",          NULL,   miniargv_cb_increment_int,   &showhelp,        "show command line help", NULL},
+    {0,   "version",         NULL,   miniargv_cb_increment_int, &showversion,     "show version information", NULL},
     {'s', "source-path",   "PATH", miniargv_cb_set_const_str,   &packageinfopath, "build recipe path\noverrides environment variable BUILDSCRIPTS\ncan be multiple paths separated by \"" WINLIBS_CHR2STR(PATHLIST_SEPARATOR) "\"", NULL},
     //{'v', "verbose",       NULL,   miniargv_cb_increment_int,   &verbose,         "verbose mode", NULL},
     {'q', "quiet",         NULL,   miniargv_cb_set_int_to_zero, &verbose,         "quiet mode", NULL},
@@ -48,7 +50,7 @@ int main (int argc, char *argv[], char *envp[])
   //show help if requested
   if (showhelp) {
     printf(
-      PROGRAM_NAME " - Version " WINLIBS_VERSION_STRING " - " WINLIBS_LICENSE " - " WINLIBS_CREDITS "\n"
+      PROGRAM_NAME " - version " WINLIBS_VERSION_STRING " - " WINLIBS_LICENSE " - " WINLIBS_CREDITS "\n"
       PROGRAM_DESC "\n"
       "Usage: " PROGRAM_NAME " "
     );
@@ -58,6 +60,11 @@ int main (int argc, char *argv[], char *envp[])
 #ifdef PORTCOLCON_VERSION
     printf(WINLIBS_HELP_COLOR);
 #endif
+    return 0;
+  }
+  //show version information if requested
+  if (showversion) {
+    printf(PROGRAM_NAME " - version " WINLIBS_VERSION_STRING " - " WINLIBS_LICENSE " - " WINLIBS_CREDITS "\n");
     return 0;
   }
   //check parameters

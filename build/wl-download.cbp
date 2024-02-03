@@ -87,7 +87,7 @@
 			<Add option="-static-libgcc" />
 			<Add option="-static" />
 			<Add option="-Wl,--as-needed" />
-			<Add option="`pkg-config.exe --static --libs libcurl librtmp libbrotlidec libgcrypt shishi gnutls libidn libntlm`" />
+			<Add option="`pkg-config --static --libs libcurl librtmp libbrotlidec libgcrypt shishi gnutls libidn libntlm`" />
 			<Add option="-Wl,--allow-multiple-definition" />
 			<Add library="miniargv" />
 			<Add library="scalednum" />

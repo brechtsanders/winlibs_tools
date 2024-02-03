@@ -58,6 +58,7 @@ int main (int argc, char** argv, char *envp[])
   portcolconhandle con;
   pkgdb_handle db;
   const char** paramlist;
+  int showversion = 0;
   int showhelp = 0;
   enum search_type searchtype = package_info;
   int fullpath = 0;
@@ -69,20 +70,21 @@ int main (int argc, char** argv, char *envp[])
   paramlist[0] = NULL;
   //definition of command line arguments
   const miniargv_definition argdef[] = {
-    {'h', "help", NULL, miniargv_cb_increment_int, &showhelp, "show command line help", NULL},
-    {'i', NULL, "PATH", miniargv_cb_strdup, &dstdir, "installation path (defaults to $MINGWPREFIX)", NULL},
-    {'p', NULL, NULL, process_arg_searchtype, SEARCHTYPE2VOIDPTR(package_name), "search in package name", NULL},
-    {'P', "package", NULL, process_arg_searchtype, SEARCHTYPE2VOIDPTR(package_name_exact), "search exact package name", NULL},
-    {'f', "filename", NULL, process_arg_searchtype, SEARCHTYPE2VOIDPTR(file_name_only), "search in file name", NULL},
-    {0, "filepath", NULL, process_arg_searchtype, SEARCHTYPE2VOIDPTR(file_name), "search in entire file path", NULL},
-    {'F', "foldername", NULL, process_arg_searchtype, SEARCHTYPE2VOIDPTR(folder_name_only), "search in folder name", NULL},
-    {0, "folderpath", NULL, process_arg_searchtype, SEARCHTYPE2VOIDPTR(folder_name), "search in entire folder path", NULL},
-    {'l', "files", NULL, process_arg_searchtype, SEARCHTYPE2VOIDPTR(package_files), "list all files in specified package(s) (implies --or)", NULL},
-    {'d', "folders", NULL, process_arg_searchtype, SEARCHTYPE2VOIDPTR(package_folders), "list all folders in specified package(s) (implies --or)", NULL},
-    {0, "or", NULL, miniargv_cb_increment_int, &ormultiple, "search any of the given arguments instead of all", NULL},
-    {0, "fullpath", NULL, miniargv_cb_increment_int, &fullpath, "show absolute installation path when showing file or folder names", NULL},
-    {'s', "short", NULL, miniargv_cb_increment_int, &shortoutput, "short output", NULL},
-    {0, NULL, "TEXT", process_arg_param, paramlist, "text to search for", NULL},
+    {'h', "help",       NULL,   miniargv_cb_increment_int, &showhelp, "show command line help", NULL},
+    {0,   "version",    NULL,   miniargv_cb_increment_int, &showversion,     "show version information", NULL},
+    {'i', NULL,         "PATH", miniargv_cb_strdup, &dstdir, "installation path (defaults to $MINGWPREFIX)", NULL},
+    {'p', NULL,         NULL,   process_arg_searchtype, SEARCHTYPE2VOIDPTR(package_name), "search in package name", NULL},
+    {'P', "package",    NULL,   process_arg_searchtype, SEARCHTYPE2VOIDPTR(package_name_exact), "search exact package name", NULL},
+    {'f', "filename",   NULL,   process_arg_searchtype, SEARCHTYPE2VOIDPTR(file_name_only), "search in file name", NULL},
+    {0,   "filepath",   NULL,   process_arg_searchtype, SEARCHTYPE2VOIDPTR(file_name), "search in entire file path", NULL},
+    {'F', "foldername", NULL,   process_arg_searchtype, SEARCHTYPE2VOIDPTR(folder_name_only), "search in folder name", NULL},
+    {0,   "folderpath", NULL,   process_arg_searchtype, SEARCHTYPE2VOIDPTR(folder_name), "search in entire folder path", NULL},
+    {'l', "files",      NULL,   process_arg_searchtype, SEARCHTYPE2VOIDPTR(package_files), "list all files in specified package(s) (implies --or)", NULL},
+    {'d', "folders",    NULL,   process_arg_searchtype, SEARCHTYPE2VOIDPTR(package_folders), "list all folders in specified package(s) (implies --or)", NULL},
+    {0,   "or",         NULL,   miniargv_cb_increment_int, &ormultiple, "search any of the given arguments instead of all", NULL},
+    {0,   "fullpath",   NULL,   miniargv_cb_increment_int, &fullpath, "show absolute installation path when showing file or folder names", NULL},
+    {'s', "short",      NULL,   miniargv_cb_increment_int, &shortoutput, "short output", NULL},
+    {0,   NULL,         "TEXT", process_arg_param, paramlist, "text to search for", NULL},
     MINIARGV_DEFINITION_END
   };
   //definition of environment variables
@@ -96,7 +98,7 @@ int main (int argc, char** argv, char *envp[])
   //show help if requested or if no command line arguments were given
   if (showhelp || argc <= 1) {
     printf(
-      PROGRAM_NAME " - Version " WINLIBS_VERSION_STRING " - " WINLIBS_LICENSE " - " WINLIBS_CREDITS "\n"
+      PROGRAM_NAME " - version " WINLIBS_VERSION_STRING " - " WINLIBS_LICENSE " - " WINLIBS_CREDITS "\n"
       PROGRAM_DESC "\n"
       "Usage: " PROGRAM_NAME " "
     );
@@ -106,6 +108,11 @@ int main (int argc, char** argv, char *envp[])
 #ifdef PORTCOLCON_VERSION
     printf(WINLIBS_HELP_COLOR);
 #endif
+    return 0;
+  }
+  //show version information if requested
+  if (showversion) {
+    printf(PROGRAM_NAME " - version " WINLIBS_VERSION_STRING " - " WINLIBS_LICENSE " - " WINLIBS_CREDITS "\n");
     return 0;
   }
   //check parameters

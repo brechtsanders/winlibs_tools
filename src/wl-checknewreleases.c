@@ -491,6 +491,7 @@ int main (int argc, char** argv, char *envp[])
   time_t starttime;
   struct sorted_item_queue_struct* packagelist;
   struct check_package_versions_struct info;
+  int showversion = 0;
   int showhelp = 0;
   int verbose = 0;
   int numthreads = DEFAULT_THREADS;
@@ -509,6 +510,7 @@ int main (int argc, char** argv, char *envp[])
   //definition of command line arguments
   const miniargv_definition argdef[] = {
     {'h', "help",            NULL,      miniargv_cb_increment_int, &showhelp,             "show command line help", NULL},
+    {0,   "version",         NULL,      miniargv_cb_increment_int, &showversion,          "show version information", NULL},
     {'s', "source-path",     "PATH",    miniargv_cb_set_const_str, &info.packageinfopath, "build recipe path\noverrides environment variable BUILDSCRIPTS\ncan be multiple paths separated by \"" WINLIBS_CHR2STR(PATHLIST_SEPARATOR) "\"", NULL},
     {'d', "db-file",         "FILE",    miniargv_cb_set_const_str, &versiondbpath,        "version database file (default: " DEFAULT_DATABASE ")", NULL},
     {'c', "cache",           "FILE",    miniargv_cb_set_const_str, &cachedbfile,          "set cache database (\"-\" for none, default: temporary database)", NULL},
@@ -527,14 +529,14 @@ int main (int argc, char** argv, char *envp[])
     MINIARGV_DEFINITION_END
   };
   //parse environment and command line flags
-  if (miniargv_process_env(envp, envdef, NULL) != 0)
+  if (miniargv_process_env(envp, envdef, NULL, NULL) != 0)
     return 1;
   if (miniargv_process_arg_flags(argv, argdef, NULL, NULL) != 0)
     return 1;
   //show help if requested or if no command line arguments were given
   if (showhelp || argc <= 1) {
     printf(
-      PROGRAM_NAME " - Version " WINLIBS_VERSION_STRING " - " WINLIBS_LICENSE " - " WINLIBS_CREDITS "\n"
+      PROGRAM_NAME " - version " WINLIBS_VERSION_STRING " - " WINLIBS_LICENSE " - " WINLIBS_CREDITS "\n"
       PROGRAM_DESC "\n"
       "Usage: " PROGRAM_NAME " "
     );
@@ -548,6 +550,11 @@ int main (int argc, char** argv, char *envp[])
 #ifdef PORTCOLCON_VERSION
     printf(WINLIBS_HELP_COLOR);
 #endif
+    return 0;
+  }
+  //show version information if requested
+  if (showversion) {
+    printf(PROGRAM_NAME " - version " WINLIBS_VERSION_STRING " - " WINLIBS_LICENSE " - " WINLIBS_CREDITS "\n");
     return 0;
   }
   //process command line argument values

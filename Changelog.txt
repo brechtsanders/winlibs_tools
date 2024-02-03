@@ -1,7 +1,14 @@
+1.0.16
+
+2024-02-03  Brecht Sanders  https://github.com/brechtsanders/
+
+  * changes needed for miniargv 1.2.0
+
 1.0.15
 
-2024-01-16  Brecht Sanders  https://github.com/brechtsanders/
+2024-01-17  Brecht Sanders  https://github.com/brechtsanders/
 
+  * add --version command option to display version information
   * use scalednum library to represent human readable download sizes in wl-download
 
 1.0.14

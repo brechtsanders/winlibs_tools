@@ -39,6 +39,7 @@ int process_arg_append_str (const miniargv_definition* argdef, const char* value
 int main (int argc, char *argv[], char *envp[])
 {
   char* s;
+  int showversion = 0;
   int showhelp = 0;
   int showpackageversion = 0;
   const char* basename = NULL;
@@ -48,6 +49,7 @@ int main (int argc, char *argv[], char *envp[])
   //definition of command line arguments
   const miniargv_definition argdef[] = {
     {'h', "help",            NULL,   miniargv_cb_increment_int, &showhelp,           "show command line help", NULL},
+    {0,   "version",         NULL,   miniargv_cb_increment_int, &showversion,        "show version information", NULL},
     {'v', "package-version", NULL,   miniargv_cb_increment_int, &showpackageversion, "show package name and version (from environment variables)", NULL},
     {0,   NULL,              "TEXT", process_arg_append_str,    &message,            "text to display", NULL},
     MINIARGV_DEFINITION_END
@@ -64,7 +66,7 @@ int main (int argc, char *argv[], char *envp[])
   //show help if requested or if no command line arguments were given
   if (showhelp || argc <= 1) {
     printf(
-      PROGRAM_NAME " - Version " WINLIBS_VERSION_STRING " - " WINLIBS_LICENSE " - " WINLIBS_CREDITS "\n"
+      PROGRAM_NAME " - version " WINLIBS_VERSION_STRING " - " WINLIBS_LICENSE " - " WINLIBS_CREDITS "\n"
       PROGRAM_DESC "\n"
       "Usage: " PROGRAM_NAME " "
     );
@@ -74,6 +76,11 @@ int main (int argc, char *argv[], char *envp[])
 #ifdef PORTCOLCON_VERSION
     printf(WINLIBS_HELP_COLOR);
 #endif
+    return 0;
+  }
+  //show version information if requested
+  if (showversion) {
+    printf(PROGRAM_NAME " - version " WINLIBS_VERSION_STRING " - " WINLIBS_LICENSE " - " WINLIBS_CREDITS "\n");
     return 0;
   }
   //determine which text to show

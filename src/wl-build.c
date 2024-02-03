@@ -53,45 +53,10 @@ int pkgdb_is_package_installed_callback (const char* basename, void* callbackdat
   return 0;
 }
 
-////////////////////////////////////////////////////////////////////////
-
-void show_help ()
-{
-  printf(PROGRAM_NAME " - Version " WINLIBS_VERSION_STRING " - " WINLIBS_LICENSE " - " WINLIBS_CREDITS "\n"
-    "Command line utility to build a package from source\n"
-    "Usage:  " PROGRAM_NAME " [-s path] [-x command] package[...]\n"
-    "        " PROGRAM_NAME " -h\n"
-    "Parameters:\n"
-/*
-    "  -u path       path where to look for build recipes,\n"
-*/
-    "  -s path       path where to look for build recipes,\n"
-    "                overrides environment variable BUILDSCRIPTS\n"
-    "  -x command    shell command to execute, defaults to:\n"
-    "                  \"" DEFAULT_SHELL_COMMAND "\"\n"
-    "  -b path       path temporary build folder will be created\n"
-    "  -l path       path where output logs will be saved\n"
-    "  -i path       installation path (defaults to $MINGWPREFIX)\n"
-    "  -r            remove output log when build was successful\n"
-    "  package       package(s) to build, or:\n"
-    "                  all         = all packages that can be built\n"
-    "                  all-changed = all packages for which the recipe changed\n"
-    "  -h            show command line help and exit\n"
-    "Environment variables:\n"
-    "  BUILDSCRIPTS  path where to look for build recipes\n"
-    //"  MINGWPKGINFODIR  path where to look for build recipes\n"
-    "  MINGWPREFIX   path where to install package\n"
-    "Remarks:\n"
-/*
-    "  - Either -u or environment variable BUILDSCRIPTS must be set.\n"
-*/
-    "  - Either -s or environment variable BUILDSCRIPTS must be set.\n"
-  );
-}
-
 int main (int argc, char** argv, char *envp[])
 {
   pkgdb_handle db;
+  int showversion = 0;
   int showhelp = 0;
   const char* dstdir = NULL;
   const char* packageinfopath = NULL;
@@ -102,6 +67,7 @@ int main (int argc, char** argv, char *envp[])
   //definition of command line arguments
   const miniargv_definition argdef[] = {
     {'h', "help",         NULL,      miniargv_cb_increment_int, &showhelp,        "show command line help", NULL},
+    {0,   "version",      NULL,      miniargv_cb_increment_int, &showversion,     "show version information", NULL},
     {'i', "install-path", "PATH",    miniargv_cb_set_const_str, &dstdir,          "path where to install packages\noverrides environment variable MINGWPREFIX", NULL},
     //{'u', "source-path",  "PATH",    miniargv_cb_set_const_str, &packageinfopath, "path containing build recipes\noverrides environment variable BUILDSCRIPTS", NULL},
     {'s', "source-path",  "PATH",    miniargv_cb_set_const_str, &packageinfopath, "path containing build recipes\noverrides environment variable BUILDSCRIPTS\ncan be multiple paths separated by \"" WINLIBS_CHR2STR(PATHLIST_SEPARATOR) "\"", NULL},
@@ -120,14 +86,14 @@ int main (int argc, char** argv, char *envp[])
     MINIARGV_DEFINITION_END
   };
   //parse environment and command line flags
-  if (miniargv_process_env(envp, envdef, NULL) != 0)
+  if (miniargv_process_env(envp, envdef, NULL, NULL) != 0)
     return 1;
   if (miniargv_process_arg_flags(argv, argdef, NULL, NULL) != 0)
     return 1;
   //show help if requested or if no command line arguments were given
   if (showhelp) {
     printf(
-      PROGRAM_NAME " - Version " WINLIBS_VERSION_STRING " - " WINLIBS_LICENSE " - " WINLIBS_CREDITS "\n"
+      PROGRAM_NAME " - version " WINLIBS_VERSION_STRING " - " WINLIBS_LICENSE " - " WINLIBS_CREDITS "\n"
       "Command line utility to build packages from source\n"
       "Usage: " PROGRAM_NAME " "
     );
@@ -137,6 +103,11 @@ int main (int argc, char** argv, char *envp[])
 #ifdef PORTCOLCON_VERSION
     printf(WINLIBS_HELP_COLOR);
 #endif
+    return 0;
+  }
+  //show version information if requested
+  if (showversion) {
+    printf(PROGRAM_NAME " - version " WINLIBS_VERSION_STRING " - " WINLIBS_LICENSE " - " WINLIBS_CREDITS "\n");
     return 0;
   }
   //check parameters

@@ -63,7 +63,7 @@ SCALEDNUM_LDFLAGS = -lscalednum
 AVL_LDFLAGS = -lavl
 ifdef STATIC
 #CURL_LDFLAGS = $(shell $(PKG_CONFIG) --libs libcurl librtmp libbrotlidec libgcrypt shishi gnutls libidn)
-CURL_LDFLAGS = $(shell $(PKG_CONFIG) --static --libs libcurl librtmp libbrotlidec libgcrypt shishi gnutls libidn libntlm)
+CURL_LDFLAGS = $(shell $(PKG_CONFIG) --static --libs libcurl librtmp libbrotlidec libgcrypt shishi gnutls libidn libntlm) -ldl
 else
 CURL_LDFLAGS = $(shell $(PKG_CONFIG) --libs libcurl)
 endif

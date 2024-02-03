@@ -1006,6 +1006,7 @@ int main (int argc, char** argv, char *envp[])
   //process command line parameters
   int i;
   char* p;
+  int showversion = 0;
   int showhelp = 0;
   const char* packagename = NULL;
   const char* packageversion = NULL;
@@ -1026,6 +1027,7 @@ int main (int argc, char** argv, char *envp[])
   //definition of command line arguments
   const miniargv_definition argdef[] = {
     {'h', "help",            NULL,      miniargv_cb_increment_int, &showhelp,        "show command line help", NULL},
+    {0,   "version",         NULL,      miniargv_cb_increment_int, &showversion,     "show version information", NULL},
     {'s', "source",          "PATH",    miniargv_cb_strdup,        &srcdir,          "path containing installed package contents\noverrides environment variable INSTALLPREFIX", NULL},
     {'p', "package-path",    "PATH",    miniargv_cb_strdup,        &pkgdir,          "path where package files are stored\noverrides environment variable PACKAGEDIR", NULL},
     {'i', "install-path",    "PATH",    miniargv_cb_strdup,        &dstdir,          "package installation path\noverrides environment variable MINGWPREFIX", NULL},
@@ -1058,7 +1060,7 @@ int main (int argc, char** argv, char *envp[])
   //show help if requested
   if (showhelp) {
     printf(
-      PROGRAM_NAME " - Version " WINLIBS_VERSION_STRING " - " WINLIBS_LICENSE " - " WINLIBS_CREDITS "\n"
+      PROGRAM_NAME " - version " WINLIBS_VERSION_STRING " - " WINLIBS_LICENSE " - " WINLIBS_CREDITS "\n"
       PROGRAM_DESC "\n"
       "Usage: " PROGRAM_NAME " "
     );
@@ -1068,6 +1070,11 @@ int main (int argc, char** argv, char *envp[])
 #ifdef PORTCOLCON_VERSION
     printf(WINLIBS_HELP_COLOR);
 #endif
+    return 0;
+  }
+  //show version information if requested
+  if (showversion) {
+    printf(PROGRAM_NAME " - version " WINLIBS_VERSION_STRING " - " WINLIBS_LICENSE " - " WINLIBS_CREDITS "\n");
     return 0;
   }
   //check parameters

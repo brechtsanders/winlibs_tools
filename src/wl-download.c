@@ -80,7 +80,7 @@ int show_progress (long long pos, long long len, void* callbackdata)
   if (len > 0) {
 #ifndef NO_SCALEDNUM
     scalednum_to_buffer(((struct process_download_data_struct*)callbackdata)->scale, (double)pos, scalednumbuf, sizeof(scalednumbuf));
-    printf("\r%s (%u%%)", scalednumbuf, (unsigned)(100L * pos / len));
+    printf("\r%s (%u%%) ", scalednumbuf, (unsigned)(100L * pos / len));
 #else
     printf("\r%lu bytes (%u%%)", (unsigned long)pos, (unsigned)(100L * pos / len));
     //printf("\r%lu/%lu bytes (%u%%)", (unsigned long)pos, (unsigned long)len, (unsigned)(100L * pos / len));
@@ -88,7 +88,7 @@ int show_progress (long long pos, long long len, void* callbackdata)
   } else {
 #ifndef NO_SCALEDNUM
     scalednum_to_buffer(((struct process_download_data_struct*)callbackdata)->scale, (double)pos, scalednumbuf, sizeof(scalednumbuf));
-    printf("\r%s", scalednumbuf);
+    printf("\r%s ", scalednumbuf);
 #else
     printf("\r%lu bytes", (unsigned long)pos);
 #endif
@@ -245,6 +245,7 @@ int main (int argc, char *argv[], char *envp[])
   const char* errmsg;
   size_t dstdirlen;
   CURL* curl_handle;
+  int showversion = 0;
   int showhelp = 0;
   const char* dstdir = NULL;
   int force = 0;
@@ -253,13 +254,14 @@ int main (int argc, char *argv[], char *envp[])
   int verbose = 0;
   //definition of command line arguments
   const miniargv_definition argdef[] = {
-    {'h', "help",             NULL,      miniargv_cb_increment_int, &showhelp, "show command line help", NULL},
-    {'d', "destination",      "path",    miniargv_cb_set_const_str, &dstdir,   "path where downloads are stored", NULL},
-    {'f', "force",            NULL,      miniargv_cb_increment_int, &force,    "force download even if destination file already exists", NULL},
-    {'t', "connect-timeout",  "SECONDS", miniargv_cb_increment_int, &verbose,  "connection timeout in seconds (default: " STRINGIZE(DEFAULT_CONNECT_TIMEOUT) "s)", NULL},
-    {0,   "download-timeout", "SECONDS", miniargv_cb_increment_int, &verbose,  "total download timeout in seconds (default: " STRINGIZE(DEFAULT_DOWNLOAD_TIMEOUT) "s)", NULL},
-    {'v', "verbose",          NULL,      miniargv_cb_increment_int, &verbose,  "verbose mode", NULL},
-    {0,   NULL,               "URL",     miniargv_cb_error,         NULL, "URL of file to download", NULL},
+    {'h', "help",             NULL,      miniargv_cb_increment_int, &showhelp,    "show command line help", NULL},
+    {0,   "version",          NULL,      miniargv_cb_increment_int, &showversion, "show version information", NULL},
+    {'d', "destination",      "path",    miniargv_cb_set_const_str, &dstdir,      "path where downloads are stored", NULL},
+    {'f', "force",            NULL,      miniargv_cb_increment_int, &force,       "force download even if destination file already exists", NULL},
+    {'t', "connect-timeout",  "SECONDS", miniargv_cb_increment_int, &verbose,     "connection timeout in seconds (default: " STRINGIZE(DEFAULT_CONNECT_TIMEOUT) "s)", NULL},
+    {0,   "download-timeout", "SECONDS", miniargv_cb_increment_int, &verbose,     "total download timeout in seconds (default: " STRINGIZE(DEFAULT_DOWNLOAD_TIMEOUT) "s)", NULL},
+    {'v', "verbose",          NULL,      miniargv_cb_increment_int, &verbose,     "verbose mode", NULL},
+    {0,   NULL,               "URL",     miniargv_cb_error,         NULL,         "URL of file to download", NULL},
     MINIARGV_DEFINITION_END
   };
   //definition of environment variables
@@ -268,14 +270,14 @@ int main (int argc, char *argv[], char *envp[])
     MINIARGV_DEFINITION_END
   };
   //parse environment and command line flags
-  if (miniargv_process_env(envp, envdef, NULL) != 0)
+  if (miniargv_process_env(envp, envdef, NULL, NULL) != 0)
     return 1;
   if (miniargv_process_arg_flags(argv, argdef, NULL, NULL) != 0)
     return 1;
   //show help if requested or if no command line arguments were given
   if (showhelp || argc <= 1) {
     printf(
-      PROGRAM_NAME " - Version " WINLIBS_VERSION_STRING " - " WINLIBS_LICENSE " - " WINLIBS_CREDITS "\n"
+      PROGRAM_NAME " - version " WINLIBS_VERSION_STRING " - " WINLIBS_LICENSE " - " WINLIBS_CREDITS "\n"
       PROGRAM_DESC "\n"
       "Usage: " PROGRAM_NAME " "
     );
@@ -285,6 +287,11 @@ int main (int argc, char *argv[], char *envp[])
 #ifdef PORTCOLCON_VERSION
     printf(WINLIBS_HELP_COLOR);
 #endif
+    return 0;
+  }
+  //show version information if requested
+  if (showversion) {
+    printf(PROGRAM_NAME " - version " WINLIBS_VERSION_STRING " - " WINLIBS_LICENSE " - " WINLIBS_CREDITS "\n");
     return 0;
   }
   //check parameters

@@ -86,7 +86,7 @@
 		<Linker>
 			<Add option="-static-libgcc" />
 			<Add option="-static" />
-			<Add option="`pkg-config.exe --static --libs sqlite3`" />
+			<Add option="`pkg-config --static --libs sqlite3`" />
 			<Add library="avl" />
 			<Add library="miniargv" />
 			<Add library="portcolcon" />
