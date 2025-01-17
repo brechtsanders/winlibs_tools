@@ -704,9 +704,16 @@ int main (int argc, char** argv, char *envp[])
               printf("\r%3i%%", (int)(currentsize * 100 / metadata->totalsize));
             //write file contents
             if ((dst = fopen(fullpath, "wb")) == NULL) {
-              fprintf(stderr, "Error creating file: %s\n", fullpath);
-              abort = 1;
-            } else {
+              //try to delete first and then open again for write
+              if (unlink(fullpath) != 0) {
+                //fprintf(stderr, "Error deleting file: %s\n", fullpath);
+              }
+              if ((dst = fopen(fullpath, "wb")) == NULL) {
+                fprintf(stderr, "Error creating file: %s\n", fullpath);
+                abort = 1;
+              }
+            }
+            if (!abort) {
               char buf[256];
               ssize_t len;
               while ((len = archive_read_data(pkg, buf, sizeof(buf))) > 0) {

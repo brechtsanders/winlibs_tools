@@ -38,7 +38,7 @@ char* memory_buffer_free_to_allocated_string (struct memory_buffer* membuf)
   char* result;
   if (!membuf)
     return NULL;
-  if (membuf->datalen > 0 && membuf->data[membuf->datalen - 1] != 0) {
+  if (membuf->datalen == 0 || (membuf->datalen > 0 && membuf->data[membuf->datalen - 1] != 0)) {
     char nullterminator = 0;
     memory_buffer_append_buf(membuf, &nullterminator, 1);
   }
@@ -98,7 +98,7 @@ struct memory_buffer* memory_buffer_set_allocated (struct memory_buffer* membuf,
 
 size_t memory_buffer_grow (struct memory_buffer* membuf, size_t newsize)
 {
-  if (membuf->datalen < newsize) {
+  if (newsize > membuf->datalen) {
     if ((membuf->data = (char*)realloc(membuf->data, (membuf->datalen = newsize))) == NULL) {
       membuf->datalen = 0;
       return 0;

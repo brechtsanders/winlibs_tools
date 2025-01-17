@@ -81,6 +81,14 @@ struct memory_buffer* memory_buffer_set (struct memory_buffer* membuf, const cha
 */
 struct memory_buffer* memory_buffer_set_allocated (struct memory_buffer* membuf, char* data);
 
+//!grow memory buffer (contents of the additional data will be undefined, this will not shrink if the buffer if newsize is smaller than the current size)
+/*!
+  \param  membuf                memory buffer
+  \param  newsize               string to add to memory buffer
+  \return new size of memory buffer (or 0 on error)
+*/
+size_t memory_buffer_grow (struct memory_buffer* membuf, size_t newsize);
+
 //!append string to memory buffer
 /*!
   \param  membuf                memory buffer
