@@ -30,8 +30,13 @@
 #define PROGRAM_NAME    "wl-build"
 #define PROGRAM_DESC    ""
 
-//#define DEFAULT_SHELL_COMMAND "sh.exe --login -i"
-#define DEFAULT_SHELL_COMMAND "sh.exe --noprofile --norc --noediting -i -v"
+#ifdef _WIN32
+#define EXEEXT ".exe"
+#else
+#define EXEEXT ""
+#endif
+//#define DEFAULT_SHELL_COMMAND "sh" EXEEXT " --login -i"
+#define DEFAULT_SHELL_COMMAND "sh" EXEEXT " --noprofile --norc --noediting -i -v"
 #define LOG_FILE_EXTENSION ".log"
 #define LOG_FILE_EXTENSION_LEN (sizeof(LOG_FILE_EXTENSION) - 1)
 #define ABORT_WAIT_SECONDS 3
