@@ -2,7 +2,8 @@
 
 2025-02-08  Brecht Sanders  https://github.com/brechtsanders/
 
-  * change wl-checknewreleases to detect recipe line starting with "wl-showstatus --package-version" as position to insert next version
+  * changed wl-checknewreleases to detect recipe line starting with "wl-showstatus --package-version" as position to insert next version
+  * changed GitHub Actions to use actions/upload-artifact@v4 (instead of actions/upload-artifact@v1)
 
 1.0.16
 

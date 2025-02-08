@@ -209,7 +209,7 @@ jobs:
         mv winlibs-tools-*.zip winlibs-tools-${{ matrix.config.arch }}.zip
     - if: matrix.config.os == 'windows-latest'
       name: Upload package
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v4
       with:
         path: ./release
         name: winlibs-tools-${{ matrix.config.arch }}.zip
