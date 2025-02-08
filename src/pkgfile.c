@@ -219,7 +219,9 @@ struct package_metadata_struct* read_packageinfo (const char* infopath, const ch
             else if (strcmp(p, "DOWNLOADSOURCEURL") == 0)
               set_var(&(info->datafield[PACKAGE_METADATA_INDEX_DOWNLOADSOURCEURL]), q);
           }
-        } else if (memcmp(p, "~/makeDevPak.sh", 15) == 0 || memcmp(p, "wl-makepackage", 14) == 0) {
+        } else if (memcmp(p, "wl-showstatus --package-version", 31) == 0) {
+          info->nextversion_linenumber = linenumber;
+        } else if (memcmp(p, "wl-makepackage", 14) == 0 /*|| memcmp(p, "~/makeDevPak.sh", 15) == 0*/) {
           info->buildok++;
           free(line);
           break;

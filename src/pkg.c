@@ -37,6 +37,7 @@ struct package_metadata_struct* package_metadata_create ()
   pkginfo->optionalbuilddependencies = sorted_unique_list_create(strcmp, free);
   pkginfo->totalsize = 0;
   pkginfo->version_linenumber = 0;
+  pkginfo->nextversion_linenumber = 0;
   pkginfo->buildok = 0;
   pkginfo->lastchanged = 0;
   pkginfo->extradata = NULL;

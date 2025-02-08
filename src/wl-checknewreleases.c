@@ -366,7 +366,7 @@ int new_version_callback (const char* version, struct new_version_callback_struc
   if (callbackdata->counter++ == 0) {
     char buf[20] = "(missing timestamp)";
     strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", localtime(&callbackdata->starttime));
-    memory_buffer_append_printf(callbackdata->outputbuffer, "%s - %s - line %lu - lastest version: %s%s\n", buf, callbackdata->pkginfo->datafield[PACKAGE_METADATA_INDEX_BASENAME], (unsigned long)callbackdata->pkginfo->version_linenumber, callbackdata->pkginfo->datafield[PACKAGE_METADATA_INDEX_VERSION], (callbackdata->pkginfo->buildok ? "" : " (not building)"));
+    memory_buffer_append_printf(callbackdata->outputbuffer, "%s - %s - line %lu - lastest version: %s%s\n", buf, callbackdata->pkginfo->datafield[PACKAGE_METADATA_INDEX_BASENAME], (unsigned long)(callbackdata->pkginfo->nextversion_linenumber ? callbackdata->pkginfo->nextversion_linenumber : callbackdata->pkginfo->version_linenumber), callbackdata->pkginfo->datafield[PACKAGE_METADATA_INDEX_VERSION], (callbackdata->pkginfo->buildok ? "" : " (not building)"));
   }
   //display version
   memory_buffer_append_printf(callbackdata->outputbuffer, "  %s\n", (version ? version : "NULL"));
