@@ -807,7 +807,7 @@ int main (int argc, char** argv, char *envp[])
     unlink(memory_buffer_get(memory_buffer_set_printf(path, "%s%c%s", memory_buffer_get(pkginfopath), PATH_SEPARATOR, PACKAGE_INFO_OPTIONALDEPENDENCIES_FILE)));
     unlink(memory_buffer_get(memory_buffer_set_printf(path, "%s%c%s", memory_buffer_get(pkginfopath), PATH_SEPARATOR, PACKAGE_INFO_BUILDDEPENDENCIES_FILE)));
     rmdir(memory_buffer_get(pkginfopath));
-    memory_buffer_create(pkginfopath);
+    memory_buffer_free(pkginfopath);
     //remove files
     int i;
     int n;
@@ -819,7 +819,7 @@ int main (int argc, char** argv, char *envp[])
       unlink(memory_buffer_get(memory_buffer_set_printf(path, "%s%c%s", basepath, PATH_SEPARATOR, s)));
     }
     /////TO DO: remove (empty an no longer used) folders
-    memory_buffer_create(path);
+    memory_buffer_free(path);
   }
 
   //clean up
