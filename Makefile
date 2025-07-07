@@ -154,6 +154,9 @@ $(BINDIR)/wl-build$(BINEXT): $(OBJDIR)/wl-build.o $(OBJDIR)/pkg.o $(OBJDIR)/pkgf
 $(BINDIR)/wl-find$(BINEXT): $(OBJDIR)/wl-find.o $(OBJDIR)/pkg.o $(OBJDIR)/pkgfile.o $(OBJDIR)/pkgdb.o $(OBJDIR)/memory_buffer.o $(OBJDIR)/sorted_unique_list.o $(OBJDIR)/filesystem.o
 	$(CC) $(STRIPFLAG) $(LDFLAGS) -o $@ $^ $(MINIARGV_LDFLAGS) $(PORTCOLCON_LDFLAGS) $(AVL_LDFLAGS) $(SQLITE3_LDFLAGS)
 
+$(BINDIR)/wl-edit$(BINEXT): $(OBJDIR)/wl-edit.o $(OBJDIR)/filesystem.o
+	$(CC) $(STRIPFLAG) $(LDFLAGS) -o $@ $^ $(MINIARGV_LDFLAGS) $(PORTCOLCON_LDFLAGS) $(AVL_LDFLAGS) $(SQLITE3_LDFLAGS)
+
 .PHONY: install
 install: all
 	$(MKDIR) $(PREFIX)/bin

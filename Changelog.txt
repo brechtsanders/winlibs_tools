@@ -1,5 +1,9 @@
 1.0.17
 
+2025-07-07  Brecht Sanders  https://github.com/brechtsanders/
+
+  * added wl-edit
+
 2025-02-08  Brecht Sanders  https://github.com/brechtsanders/
 
   * changed wl-checknewreleases to detect recipe line starting with "wl-showstatus --package-version" as position to insert next version

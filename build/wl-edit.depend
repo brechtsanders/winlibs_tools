@@ -1,0 +1,28 @@
+# depslib dependency file v1.0
+1751915604 source:z:\winlibs_tools\src\wl-edit.c
+	"winlibs_common.h"
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<unistd.h>
+	<windows.h>
+	<limits.h>
+	<miniargv.h>
+	"filesystem.h"
+
+1751913682 z:\winlibs_tools\src\winlibs_common.h
+
+1650273113 source:z:\winlibs_tools\src\filesystem.c
+	"filesystem.h"
+	<sys/types.h>
+	<sys/stat.h>
+	<unistd.h>
+	<stdlib.h>
+	<string.h>
+	<direct.h>
+	<sys/stat.h>
+	<errno.h>
+
+1650273113 z:\winlibs_tools\src\filesystem.h
+	<stdio.h>
+

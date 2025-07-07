@@ -13,5 +13,6 @@
 		<Project filename="wl-uninstall.cbp" />
 		<Project filename="wl-build.cbp" />
 		<Project filename="wl-find.cbp" />
+		<Project filename="wl-edit.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>
