@@ -173,6 +173,7 @@ jobs:
          -DBUILD_STATIC:BOOL=ON \
          -DCMAKE_C_COMPILER=${{ matrix.config.cc }} \
          -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }} \
+         -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
          -S. -Bbuild_win
         ninja -Cbuild_win install/strip
     - name: Prerequisite scalednum
