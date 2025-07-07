@@ -498,7 +498,7 @@ int add_modified_file_to_archive (const char* fullpath, const char* relativepath
       } else {
         struct find_replace_callback_struct pathcallbackdata;
         //initialize find/replace
-        pathcallbackdata.finder = pcre2_finder_initialize(package_file_match_found, &pathcallbackdata);
+        pathcallbackdata.finder = pcre2_finder_initialize();
         pathcallbackdata.folderinfo = callbackdata;
         pathcallbackdata.nextflags = 0;
         pathcallbackdata.nextid = 0;
