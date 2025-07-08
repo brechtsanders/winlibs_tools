@@ -81,6 +81,7 @@ jobs:
           mingw-w64-${{ matrix.config.arch }}-sqlite3
           mingw-w64-${{ matrix.config.arch }}-expat
           mingw-w64-${{ matrix.config.arch }}-libarchive
+          mingw-w64-${{ matrix.config.arch }}-dlfcn
     - if: matrix.config.os == 'ubuntu-latest'
       name: Install build dependencies (Linux)
       run: |
