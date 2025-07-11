@@ -55,7 +55,7 @@
 				<Option object_output="obj/Debug64/" />
 				<Option type="1" />
 				<Option compiler="MINGW64" />
-				<Option parameters='-e nano -i BAD_FILE.txt &quot;C:\Program Files\Notepad++\readme.txt&quot; &quot;\\SERVER\Users\brecht\sources\CPP\winlibs_recipes\recipes\winlibs-tools.winlib&quot;' />
+				<Option parameters='-i BAD_FILE.txt &quot;C:\Program Files\Notepad++\readme.txt&quot;:7 &quot;C:\Program Files\Notepad++\shortcuts.xml:2&quot; &quot;\\SERVER\Users\brecht\sources\CPP\winlibs_recipes\recipes\winlibs-tools.winlib&quot;' />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -65,7 +65,7 @@
 				<Option object_output="obj/Release64/" />
 				<Option type="1" />
 				<Option compiler="MINGW64" />
-				<Option parameters='-e nano &quot;\\SERVER\Users\brecht\sources\CPP\winlibs_recipes\recipes\winlibs-tools.winlib&quot;' />
+				<Option parameters='-e nano -i BAD_FILE.txt &quot;\\SERVER\Users\brecht\sources\CPP\winlibs_recipes\recipes\winlibs-tools.winlib&quot;' />
 				<Compiler>
 					<Add option="-Os" />
 				</Compiler>
