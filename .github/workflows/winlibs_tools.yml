@@ -196,6 +196,7 @@ jobs:
       run: |
         PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:/usr/local/opt/libarchive/lib/pkgconfig:$PKG_CONFIG_PATH \
          make install \
+         STATIC=1 \
          PREFIX=$PWD/release \
          BINDIR=bin \
          OBJDIR=obj \
