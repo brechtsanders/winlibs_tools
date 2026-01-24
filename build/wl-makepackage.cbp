@@ -94,6 +94,8 @@
 			<Add library="pcre2-8" />
 			<Add library="iconv" />
 			<Add library="avl" />
+			<Add library="shlwapi" />
+			<Add library="mpr" />
 		</Linker>
 		<Unit filename="../src/filesystem.c">
 			<Option compilerVar="CC" />

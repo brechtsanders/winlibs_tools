@@ -92,6 +92,8 @@
 			<Add library="crossrun" />
 			<Add library="dirtrav" />
 			<Add library="sqlite3" />
+			<Add library="shlwapi" />
+			<Add library="mpr" />
 		</Linker>
 		<Unit filename="../src/build-order.c">
 			<Option compilerVar="CC" />
