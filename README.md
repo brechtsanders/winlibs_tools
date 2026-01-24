@@ -31,6 +31,7 @@ These tools are intended to run on Windows, but the development of these tools w
  * `wl-uninstall`: uninstall package(s)
  * `wl-build`: build package from source
  * `wl-find`: search in installed winlibs packages
+ * `wl-edit`: open file(s) in external editor
 
 ## Recipe Format
 

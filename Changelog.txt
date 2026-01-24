@@ -1,5 +1,9 @@
 1.0.17
 
+2025-11-01  Brecht Sanders  https://github.com/brechtsanders/
+
+  * fixed wl-wait4deps to also list optional build dependencies
+
 2025-07-07  Brecht Sanders  https://github.com/brechtsanders/
 
   * added wl-edit

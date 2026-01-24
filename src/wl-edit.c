@@ -19,6 +19,8 @@
 #else
 #define DEFAULT_EDITOR  "nano"
 #endif
+#define DEFAULT_BACKUP_EXTENSION ".bak"
+#define FILE_COPY_BUFFER_SIZE 4096
 
 #ifdef _WIN32
 const char* strcasestr (const char* s1, const char* s2)
@@ -160,6 +162,14 @@ int filearglist_add (struct filearglist_struct* fileargs, const char* fileinfo)
   return 0;
 }
 
+int filearglist_removelast (struct filearglist_struct* fileargs)
+{
+  if (fileargs->listlen <= 0)
+    return -1;
+  fileargs->listlen--;
+  return 0;
+}
+
 void filearglist_cleanup (struct filearglist_struct* fileargs)
 {
   int i;
@@ -170,12 +180,72 @@ void filearglist_cleanup (struct filearglist_struct* fileargs)
   fileargs->listlen = 0;
 }
 
+int backup_file (const char* path, const char* ext)
+{
+  char* backuppath;
+  FILE* src;
+  FILE* dst;
+  char* buf;
+  size_t len;
+  if (!ext || !*ext)
+    return -1;
+  //determine path of backup file
+  if ((backuppath = (char*)malloc((len = strlen(path)) + strlen(ext) + 1)) == NULL) {
+    fprintf(stderr, "Memory allocation error\n");
+    return 1;
+  }
+  memcpy(backuppath, path, len);
+  strcpy(backuppath + len, ext);
+  //allocate buffer
+  if ((buf = (char*)malloc(FILE_COPY_BUFFER_SIZE)) == NULL) {
+    fprintf(stderr, "Memory allocation error\n");
+    free(backuppath);
+    return 2;
+  }
+  //open destination file
+  if ((dst = fopen(backuppath,"wb")) == NULL) {
+    fprintf(stderr, "Error opening backup destination file: %s\n", backuppath);
+    free(buf);
+    free(backuppath);
+    return 3;
+  }
+  //open source file
+  if ((src = fopen(path,"rb")) == NULL) {
+    fprintf(stderr, "Error opening backup source file: %s\n", path);
+    fclose(dst);
+    free(buf);
+    free(backuppath);
+    return 4;
+  }
+  //copy contents
+  while ((len = fread(buf, 1, FILE_COPY_BUFFER_SIZE, src)) > 0) {
+    if (fwrite(buf, 1, len, dst) != len) {
+      fprintf(stderr, "Error writing to backup destination file: %s\n", backuppath);
+      fclose(src);
+      fclose(dst);
+      unlink(backuppath);
+      free(buf);
+      free(backuppath);
+      return 5;
+    }
+  }
+  //close file handles
+  fclose(src);
+  fclose(dst);
+  //clean up
+  free(buf);
+  free(backuppath);
+  return 0;
+}
+
 int main (int argc, char *argv[], char *envp[])
 {
   int showversion = 0;
   int showhelp = 0;
   char* editor = NULL;
   const char* linearg = NULL;
+  int createbackup = 0;
+  const char* backupext = DEFAULT_BACKUP_EXTENSION;
   int ignoremissing = 0;
   int multiplecalls = 0;
 #ifdef _WIN32
@@ -191,8 +261,10 @@ int main (int argc, char *argv[], char *envp[])
 #ifdef _WIN32
                                                                                  "\"-n\" when editor contains \"notepad++\" or else to "
 #endif
-                                                                                 "\"+\" (supported by nano)"
+                                                                                 "\"+\" (supported by nano and vim)"
                                                                                  , NULL},
+    {'b', "backup",          NULL,   miniargv_cb_set_boolean,   &createbackup,   "create a backup file (if it doesn't already exist)", NULL},
+    {'x', "backupextension", "EXT",  miniargv_cb_set_const_str, &backupext,      "extension to use for backup files (defaults to \"" DEFAULT_BACKUP_EXTENSION "\")", NULL},
     {'i', "ignoremissing",   NULL,   miniargv_cb_set_boolean,   &ignoremissing,  "don't abort when any of the specified files are not found", NULL},
     {'s', "separate",        NULL,   miniargv_cb_set_boolean,   &multiplecalls,  "spawn a separate editor for each file specified"
 #ifdef _WIN32
@@ -274,6 +346,10 @@ int main (int argc, char *argv[], char *envp[])
       linearg = "+";
     }
   }
+  if (createbackup && (!backupext || !*backupext)) {
+    fprintf(stderr, "The extension for backup files must not be empty\n");
+    return 3;
+  }
   //process specified file information
   int i;
   i = 0;
@@ -291,7 +367,7 @@ int main (int argc, char *argv[], char *envp[])
       if (!ignoremissing)
         return 4;
       //skip non-existent file
-      fileargs.listlen--;
+      filearglist_removelast(&fileargs);
       continue;
     }
   }
@@ -333,6 +409,13 @@ int main (int argc, char *argv[], char *envp[])
       *p++ = strdup(fileargs.list[i].filepath);
 #endif
       *p = NULL;
+      //create backup file if requested
+      if (createbackup) {
+        if (backup_file(fileargs.list[i].filepath, backupext) != 0) {
+          fprintf(stderr, "Error creating backup (with extension \"%s\") of file: %s\n", backupext, fileargs.list[i].filepath);
+          return 7;
+        }
+      }
       //execute editor
 #ifdef _WIN32
       if (_spawnvp(_P_WAIT, editor, (const char *const *)editorargv) == -1) {
@@ -340,7 +423,7 @@ int main (int argc, char *argv[], char *envp[])
       if (spawnvp(_P_WAIT, editor, editorargv) == -1) {
 #endif
         fprintf(stderr, "Error launching editor: %s\n", editor);
-        return 6;
+        return 8;
       }
       //clean up arguments used for this call
       p = q;
@@ -387,11 +470,18 @@ int main (int argc, char *argv[], char *envp[])
 #endif
     }
     *p = NULL;
+    //create backup file if requested
+    if (createbackup) {
+      if (backup_file(fileargs.list[i].filepath, backupext) != 0) {
+        fprintf(stderr, "Error creating backup (with extension \"%s\") of file: %s\n", backupext, fileargs.list[i].filepath);
+        return 7;
+      }
+    }
     //execute editor
     //if (spawnvp(_P_WAIT, editor, editorargv) == -1) {
     if (execvp(editor, editorargv) != 0) {
       fprintf(stderr, "Error launching editor: %s\n", editor);
-      return 7;
+      return 9;
     }
     //clean up arguments
     p = editorargv;

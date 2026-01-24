@@ -164,6 +164,7 @@ int main (int argc, char *argv[], char *envp[])
     {'d', "dependencies",               "LIST",    miniargv_cb_set_const_str, &dependencies,              "comma separated list of target dependencies\noverrides environment variable DEPENDANCIES", NULL},
     {'o', "optional-dependencies",      "LIST",    miniargv_cb_set_const_str, &optionaldependencies,      "comma separated list of optional target dependencies\noverrides environment variable OPTIONALDEPENDANCIES", NULL},
     {'b', "build-dependencies",         "LIST",    miniargv_cb_set_const_str, &builddependencies,         "comma separated list of build dependencies\noverrides environment variable BUILDDEPENDANCIES", NULL},
+    {'p', "optional-build-dependencies","LIST",    miniargv_cb_set_const_str, &optionalbuilddependencies, "comma separated list of optional build dependencies\noverrides environment variable OPTIONALBUILDDEPENDENCIES", NULL},
     {'w', "wait",                       "SECONDS", miniargv_cb_set_int,       &waitdelay,                 "seconds to wait between checks (default: " STRINGIZE(DEFAULT_WAIT_SECONDS) "s)", NULL},
     {'q', NULL,                         NULL,      miniargv_cb_set_int_to_minus_one, &verbose,            "quiet mode (minimal output)", NULL},
     {'v', "verbose",                    NULL,      miniargv_cb_increment_int,        &verbose,            "verbose mode", NULL},
@@ -253,6 +254,9 @@ int main (int argc, char *argv[], char *envp[])
   list_dependency_data.itemfoundbullet = '*';
   list_dependency_data.isoptional = 0;
   iterate_list(builddependencies, (verbose >= 0 ? list_dependency : count_missing_dependency), &list_dependency_data);
+  list_dependency_data.isoptional = 1;
+  iterate_list(optionalbuilddependencies, (verbose >= 0 ? list_dependency : count_missing_dependency), &list_dependency_data);
+  list_dependency_data.isoptional = 0;
   portcolcon_reset_color(con);
   //keep checking for dependencies until there are no more missing dependencies
   while (!interrupted && list_dependency_data.countmissing) {

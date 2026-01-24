@@ -93,6 +93,7 @@ ifeq ($(OS),Windows_NT)
 CFLAGS += -D__USE_MINGW_ANSI_STDIO=0
 ifdef STATIC
 LDFLAGS += -Wl,--allow-multiple-definition
+LIBDIRTRAV_LDFLAGS += -lshlwapi -lmpr
 endif
 endif
 
@@ -108,7 +109,7 @@ CFLAGS += -I/usr/local/include
 $(OBJDIR)/%.o: src/%.c objdir
 	$(CC) -c -o $@ $< $(CFLAGS) 
 
-UTILS_BIN = $(BINDIR)/wl-showstatus$(BINEXT) $(BINDIR)/wl-download$(BINEXT) $(BINDIR)/wl-wait4deps$(BINEXT) $(BINDIR)/wl-listall$(BINEXT) $(BINDIR)/wl-info$(BINEXT) $(BINDIR)/wl-showdeps$(BINEXT) $(BINDIR)/wl-checknewreleases$(BINEXT) $(BINDIR)/wl-makepackage$(BINEXT) $(BINDIR)/wl-install$(BINEXT) $(BINDIR)/wl-uninstall$(BINEXT) $(BINDIR)/wl-build$(BINEXT) $(BINDIR)/wl-find$(BINEXT)
+UTILS_BIN = $(BINDIR)/wl-showstatus$(BINEXT) $(BINDIR)/wl-download$(BINEXT) $(BINDIR)/wl-wait4deps$(BINEXT) $(BINDIR)/wl-listall$(BINEXT) $(BINDIR)/wl-info$(BINEXT) $(BINDIR)/wl-showdeps$(BINEXT) $(BINDIR)/wl-checknewreleases$(BINEXT) $(BINDIR)/wl-makepackage$(BINEXT) $(BINDIR)/wl-install$(BINEXT) $(BINDIR)/wl-uninstall$(BINEXT) $(BINDIR)/wl-build$(BINEXT) $(BINDIR)/wl-find$(BINEXT) $(BINDIR)/wl-edit$(BINEXT)
 
 .PHONY: all
 all: $(UTILS_BIN)
