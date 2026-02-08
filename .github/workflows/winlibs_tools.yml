@@ -137,7 +137,7 @@ jobs:
       run: |
         curl -# http://www.xmailserver.org/libxdiff-0.23.tar.gz --output libxdiff.tar.gz
         tar xfz libxdiff.tar.gz
-        cd libxdiff-0.3.5
+        cd libxdiff-0.23
         mkdir -p build
         cmake -GNinja -DCMAKE_INSTALL_PREFIX:PATH=$PWD/../deps \
          -DCMAKE_BUILD_TYPE:STRING=Release \
