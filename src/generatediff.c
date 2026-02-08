@@ -30,11 +30,32 @@ void *wrap_realloc (void* priv, void* ptr, unsigned int size)
   return realloc(ptr, size);
 }
 
+/*
 int xdiff_file_output (void* context, mmbuffer_t* data, int n)
 {
   int i;
   for (i = 0; i < n; i++) {
     fwrite(data[i].ptr, data[i].size, 1, (FILE*)context);
+  }
+  return 0;
+}
+*/
+
+#define CHARS_TO_ESCAPE "\\$`"
+
+int xdiff_file_output_escaped (void* context, mmbuffer_t* data, int n)
+{
+  int i;
+  int j;
+  char* p;
+  for (i = 0; i < n; i++) {
+    p = data[i].ptr;
+    for (j = 0; j < data[i].size; j++) {
+      if (*p == '\\' || *p == '$' || *p == '`')
+        putc('\\', (FILE*)context);
+      putc(*p, (FILE*)context);
+      p++;
+    }
   }
   return 0;
 }
@@ -186,7 +207,7 @@ int diff_generate (diff_handle handle, int context, FILE* dst)
   xdiff_param.flags = 0; //alternative (slower): XDF_NEED_MINIMAL
   xdiff_cfg.ctxlen = context;
   xdiff_output.priv = dst;
-  xdiff_output.outf = &xdiff_file_output;
+  xdiff_output.outf = &xdiff_file_output_escaped;
   return xdl_diff(&handle->file1->xdiff_memfile, &handle->file2->xdiff_memfile, &xdiff_param, &xdiff_cfg, &xdiff_output);
 }
 
