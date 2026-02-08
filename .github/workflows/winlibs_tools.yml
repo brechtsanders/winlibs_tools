@@ -133,6 +133,22 @@ jobs:
         mkdir -p ../deps/lib
         sed -e "s/\(avl_node_t \*new\)/\1node/g" avl.h > ../deps/include/avl.h
         cp libavl.a ../deps/lib/
+    - name: Prerequisite libxdiff
+      run: |
+        curl -# http://www.xmailserver.org/libxdiff-0.23.tar.gz --output libxdiff.tar.gz
+        tar xfz libxdiff.tar.gz
+        cd libxdiff-0.3.5
+        mkdir -p build
+        cmake -GNinja -DCMAKE_INSTALL_PREFIX:PATH=$PWD/../deps \
+         -DCMAKE_BUILD_TYPE:STRING=Release \
+         -DBUILD_SHARED:BOOL=OFF \
+         -DENABLE_TOOLS:BOOL=OFF \
+         -DENABLE_TESTS:BOOL=OFF \
+         -DCMAKE_C_COMPILER=${{ matrix.config.cc }} \
+         -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }} \
+         -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+         -S. -Bbuild_win
+        ninja -Cbuild_win install/strip
     - name: Prerequisite miniargv
       run: |
         git clone https://github.com/brechtsanders/miniargv
@@ -170,7 +186,7 @@ jobs:
         mkdir -p build
         cmake -GNinja -DCMAKE_INSTALL_PREFIX:PATH=$PWD/../deps \
          -DCMAKE_BUILD_TYPE:STRING=Release \
-         -DBUILD_SHARED:BOOL=ON \
+         -DBUILD_SHARED:BOOL=OFF \
          -DBUILD_STATIC:BOOL=ON \
          -DCMAKE_C_COMPILER=${{ matrix.config.cc }} \
          -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }} \
@@ -184,7 +200,7 @@ jobs:
         mkdir -p build
         cmake -GNinja -DCMAKE_INSTALL_PREFIX:PATH=$PWD/../deps \
          -DCMAKE_BUILD_TYPE:STRING=Release \
-         -DBUILD_SHARED:BOOL=ON \
+         -DBUILD_SHARED:BOOL=OFF \
          -DBUILD_STATIC:BOOL=ON \
          -DBUILD_DEMO:BOOL=OFF \
          -DCMAKE_C_COMPILER=${{ matrix.config.cc }} \
@@ -196,7 +212,6 @@ jobs:
       run: |
         PKG_CONFIG_PATH=$PWD/deps/lib/pkgconfig:/usr/local/opt/libarchive/lib/pkgconfig:$PKG_CONFIG_PATH \
          make install \
-         STATIC=1 \
          PREFIX=$PWD/release \
          BINDIR=bin \
          OBJDIR=obj \
