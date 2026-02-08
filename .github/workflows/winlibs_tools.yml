@@ -138,7 +138,7 @@ jobs:
         echo  curl -# https://github.com/opencor/libxdiff/archive/refs/tags/v0.23.tar.gz --output libxdiff.tar.gz
         echo  tar xfz libxdiff.tar.gz
         echo  cd libxdiff-0.23
-        git clone https://github.com/opencor/libxdiff
+        git clone -b v0.23 https://github.com/opencor/libxdiff
         cd libxdiff
         mkdir -p build
         cmake -GNinja -DCMAKE_INSTALL_PREFIX:PATH=$PWD/../deps \
