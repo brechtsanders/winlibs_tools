@@ -133,7 +133,7 @@ jobs:
         mkdir -p ../deps/lib
         sed -e "s/\(avl_node_t \*new\)/\1node/g" avl.h > ../deps/include/avl.h
         cp libavl.a ../deps/lib/
-    - if: matrix.config.os =: 'windows-latest'
+    - if: matrix.config.os == 'windows-latest'
       name: Prerequisite mman-win32
       run: |
         git clone https://github.com/boldowa/mman-win32
