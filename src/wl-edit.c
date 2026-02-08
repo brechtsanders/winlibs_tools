@@ -461,7 +461,8 @@ int main (int argc, char *argv[], char *envp[])
 #ifdef _WIN32
       if (_spawnvp(_P_WAIT, editor, (const char *const *)editorargv) == -1) {
 #else
-      if (spawnvp(_P_WAIT, editor, editorargv) == -1) {
+      //if (spawnvp(P_WAIT, editor, editorargv) == -1) {
+      if (execvp(editor, editorargv) == -1) {
 #endif
         fprintf(stderr, "Error launching editor: %s\n", editor);
         return 9;
