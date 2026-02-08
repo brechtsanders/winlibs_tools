@@ -135,7 +135,7 @@ jobs:
         cp libavl.a ../deps/lib/
     - name: Prerequisite libxdiff
       run: |
-        curl -# http://www.xmailserver.org/libxdiff-0.23.tar.gz --output libxdiff.tar.gz
+        curl -# https://github.com/opencor/libxdiff/archive/refs/tags/v0.23.tar.gz --output libxdiff.tar.gz
         tar xfz libxdiff.tar.gz
         cd libxdiff-0.23
         mkdir -p build
