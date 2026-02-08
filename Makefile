@@ -61,6 +61,7 @@ CROSSRUN_LDFLAGS = -lcrossrun
 PEDEPS_LDFLAGS = -lpedeps
 SCALEDNUM_LDFLAGS = -lscalednum
 AVL_LDFLAGS = -lavl
+XDIFF_LDFLAGS = -lxdiff
 ifdef STATIC
 #CURL_LDFLAGS = $(shell $(PKG_CONFIG) --libs libcurl librtmp libbrotlidec libgcrypt shishi gnutls libidn)
 CURL_LDFLAGS = $(shell $(PKG_CONFIG) --static --libs libcurl librtmp libbrotlidec libgcrypt shishi gnutls libidn libntlm) -ldl
@@ -156,7 +157,7 @@ $(BINDIR)/wl-find$(BINEXT): $(OBJDIR)/wl-find.o $(OBJDIR)/pkg.o $(OBJDIR)/pkgfil
 	$(CC) $(STRIPFLAG) $(LDFLAGS) -o $@ $^ $(MINIARGV_LDFLAGS) $(PORTCOLCON_LDFLAGS) $(AVL_LDFLAGS) $(SQLITE3_LDFLAGS)
 
 $(BINDIR)/wl-edit$(BINEXT): $(OBJDIR)/wl-edit.o $(OBJDIR)/filesystem.o
-	$(CC) $(STRIPFLAG) $(LDFLAGS) -o $@ $^ $(MINIARGV_LDFLAGS) $(PORTCOLCON_LDFLAGS) $(AVL_LDFLAGS) $(SQLITE3_LDFLAGS)
+	$(CC) $(STRIPFLAG) $(LDFLAGS) -o $@ $^ $(MINIARGV_LDFLAGS) $(XDIFF_LDFLAGS)
 
 .PHONY: install
 install: all
