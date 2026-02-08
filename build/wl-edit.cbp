@@ -77,6 +77,7 @@
 		<Compiler>
 			<Add option="-Os" />
 			<Add option="-Wall" />
+			<Add option="-DWITH_LIBXDIFF" />
 			<Add option="-DSTATIC" />
 			<Add option="-D__USE_MINGW_ANSI_STDIO=0" />
 			<Add directory="../src" />
@@ -85,10 +86,16 @@
 			<Add option="-static-libgcc" />
 			<Add option="-static" />
 			<Add library="miniargv" />
+			<Add library="xdiff" />
 		</Linker>
 		<Unit filename="../src/filesystem.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="../src/filesystem.h" />
+		<Unit filename="../src/generatediff.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/generatediff.h" />
 		<Unit filename="../src/winlibs_common.h" />
 		<Unit filename="../src/wl-edit.c">
 			<Option compilerVar="CC" />

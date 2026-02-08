@@ -133,21 +133,21 @@ jobs:
         mkdir -p ../deps/lib
         sed -e "s/\(avl_node_t \*new\)/\1node/g" avl.h > ../deps/include/avl.h
         cp libavl.a ../deps/lib/
-    - if: matrix.config.os == 'windows-latest'
-      name: Prerequisite mman-win32
-      run: |
-        git clone https://github.com/boldowa/mman-win32
-        cd mman-win32
-        mkdir -p build
-        cmake -GNinja -DCMAKE_INSTALL_PREFIX:PATH=$PWD/../deps \
-         -DCMAKE_BUILD_TYPE:STRING=Release \
-         -DBUILD_SHARED:BOOL=OFF \
-         -DENABLE_TESTS:BOOL=OFF \
-         -DCMAKE_C_COMPILER=${{ matrix.config.cc }} \
-         -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }} \
-         -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
-         -S. -Bbuild_win
-        ninja -Cbuild_win install/strip
+#    - if: matrix.config.os == 'windows-latest'
+#      name: Prerequisite mman-win32
+#      run: |
+#        git clone https://github.com/boldowa/mman-win32
+#        cd mman-win32
+#        mkdir -p build
+#        cmake -GNinja -DCMAKE_INSTALL_PREFIX:PATH=$PWD/../deps \
+#         -DCMAKE_BUILD_TYPE:STRING=Release \
+#         -DBUILD_SHARED:BOOL=OFF \
+#         -DENABLE_TESTS:BOOL=OFF \
+#         -DCMAKE_C_COMPILER=${{ matrix.config.cc }} \
+#         -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }} \
+#         -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+#         -S. -Bbuild_win
+#        ninja -Cbuild_win install/strip
     - name: Prerequisite libxdiff
       run: |
         git clone -b v0.23 https://github.com/opencor/libxdiff

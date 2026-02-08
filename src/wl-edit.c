@@ -11,7 +11,7 @@
 #endif
 #include <miniargv.h>
 #ifdef WITH_LIBXDIFF
-#include <xdiff.h>
+#include "generatediff.h"
 #endif
 #include "filesystem.h"
 
@@ -23,7 +23,11 @@
 #define DEFAULT_EDITOR  "nano"
 #endif
 #define DEFAULT_BACKUP_EXTENSION ".bak"
+#define DEFAULT_DIFF_CONTEXT 1
 #define FILE_COPY_BUFFER_SIZE 4096
+
+#define STRINGIZE_(n) #n
+#define STRINGIZE(n) STRINGIZE_(n)
 
 #ifdef _WIN32
 const char* strcasestr (const char* s1, const char* s2)
@@ -183,12 +187,11 @@ void filearglist_cleanup (struct filearglist_struct* fileargs)
   fileargs->listlen = 0;
 }
 
-int backup_file (const char* path, const char* ext)
+int backup_file (const char* path, const char* ext, int showdiff, const char* packageversion)
 {
   char* backuppath;
   FILE* src;
   FILE* dst;
-  char* buf;
   size_t len;
   if (!ext || !*ext)
     return -1;
@@ -199,44 +202,62 @@ int backup_file (const char* path, const char* ext)
   }
   memcpy(backuppath, path, len);
   strcpy(backuppath + len, ext);
-  //allocate buffer
-  if ((buf = (char*)malloc(FILE_COPY_BUFFER_SIZE)) == NULL) {
-    fprintf(stderr, "Memory allocation error\n");
-    free(backuppath);
-    return 2;
-  }
-  //open destination file
-  if ((dst = fopen(backuppath,"wb")) == NULL) {
-    fprintf(stderr, "Error opening backup destination file: %s\n", backuppath);
-    free(buf);
-    free(backuppath);
-    return 3;
-  }
-  //open source file
-  if ((src = fopen(path,"rb")) == NULL) {
-    fprintf(stderr, "Error opening backup source file: %s\n", path);
+  //create backup file if it doesn't already exist
+  if (!file_exists(backuppath)) {
+    char* buf;
+    //open destination file
+    if ((dst = fopen(backuppath,"wb")) == NULL) {
+      fprintf(stderr, "Error opening backup destination file: %s\n", backuppath);
+      free(backuppath);
+      return 2;
+    }
+    //open source file
+    if ((src = fopen(path,"rb")) == NULL) {
+      fprintf(stderr, "Error opening backup source file: %s\n", path);
+      fclose(dst);
+      free(backuppath);
+      return 3;
+    }
+    //allocate buffer
+    if ((buf = (char*)malloc(FILE_COPY_BUFFER_SIZE)) == NULL) {
+      fprintf(stderr, "Memory allocation error\n");
+      fclose(dst);
+      fclose(dst);
+      free(backuppath);
+      return 4;
+    }
+    //copy contents
+    while ((len = fread(buf, 1, FILE_COPY_BUFFER_SIZE, src)) > 0) {
+      if (fwrite(buf, 1, len, dst) != len) {
+        fprintf(stderr, "Error writing to backup destination file: %s\n", backuppath);
+        fclose(src);
+        fclose(dst);
+        unlink(backuppath);
+        free(buf);
+        free(backuppath);
+        return 5;
+      }
+    }
+    //close file handles
+    fclose(src);
     fclose(dst);
     free(buf);
-    free(backuppath);
-    return 4;
-  }
-  //copy contents
-  while ((len = fread(buf, 1, FILE_COPY_BUFFER_SIZE, src)) > 0) {
-    if (fwrite(buf, 1, len, dst) != len) {
-      fprintf(stderr, "Error writing to backup destination file: %s\n", backuppath);
-      fclose(src);
-      fclose(dst);
-      unlink(backuppath);
-      free(buf);
-      free(backuppath);
-      return 5;
+#ifdef WITH_LIBXDIFF
+  } else if (showdiff) {
+    //compare contents with existing backup file
+    diff_handle diff;
+    if ((diff = diff_create(backuppath, path)) != NULL) {
+      printf("patch -ulbf %s", path);
+      if (packageversion)
+        printf(" (version >= %s)", packageversion);
+      printf("\n");
+      diff_generate(diff, 1, stdout);
+      printf("EOF\n");
+      diff_free(diff);
     }
+#endif
   }
-  //close file handles
-  fclose(src);
-  fclose(dst);
   //clean up
-  free(buf);
   free(backuppath);
   return 0;
 }
@@ -249,9 +270,9 @@ int main (int argc, char *argv[], char *envp[])
   const char* linearg = NULL;
   int createbackup = 0;
   const char* backupext = DEFAULT_BACKUP_EXTENSION;
-#ifdef WITH_LIBXDIFF
   int showdiff = 0;
-#endif
+  int diffcontext = DEFAULT_DIFF_CONTEXT;
+  const char* packageversion = NULL;
   int ignoremissing = 0;
   int multiplecalls = 0;
 #ifdef _WIN32
@@ -260,32 +281,37 @@ int main (int argc, char *argv[], char *envp[])
   struct filearglist_struct fileargs = {NULL, 0};
   //definition of command line arguments
   const miniargv_definition argdef[] = {
-    {'h', "help",            NULL,   miniargv_cb_increment_int, &showhelp,       "show command line help", NULL},
-    {0,   "version",         NULL,   miniargv_cb_increment_int, &showversion,    "show version information", NULL},
-    {'e', "editor",          "PROG", miniargv_cb_strdup,        &editor,         "editor program to launch\noverrides EDITOR environment variable\ndefaults to " DEFAULT_EDITOR, NULL},
-    {'l', "linearg",         "ARG",  miniargv_cb_set_const_str, &linearg,        "line number argument to pass to editor program\ndefaults to"
+    {'h', "help",            NULL,      miniargv_cb_increment_int, &showhelp,       "show command line help", NULL},
+    {0,   "version",         NULL,      miniargv_cb_increment_int, &showversion,    "show version information", NULL},
+    {'e', "editor",          "PROG",    miniargv_cb_strdup,        &editor,         "editor program to launch\noverrides EDITOR environment variable\ndefaults to " DEFAULT_EDITOR, NULL},
+    {'l', "linearg",         "ARG",     miniargv_cb_set_const_str, &linearg,        "line number argument to pass to editor program\ndefaults to"
 #ifdef _WIN32
-                                                                                 "\"-n\" when editor contains \"notepad++\" or else to "
+                                                                                    "\"-n\" when editor contains \"notepad++\" or else to "
 #endif
-                                                                                 "\"+\" (supported by nano and vim)"
-                                                                                 , NULL},
-    {'b', "backup",          NULL,   miniargv_cb_set_boolean,   &createbackup,   "create a backup file (if it doesn't already exist)", NULL},
-    {'x', "backupextension", "EXT",  miniargv_cb_set_const_str, &backupext,      "extension to use for backup files (defaults to \"" DEFAULT_BACKUP_EXTENSION "\")", NULL},
+                                                                                    "\"+\" (supported by nano and vim)"
+                                                                                    , NULL},
+    {'b', "backup",          NULL,      miniargv_cb_set_boolean,   &createbackup,   "create a backup file (if it doesn't already exist)", NULL},
+    {'x', "backupextension", "EXT",     miniargv_cb_set_const_str, &backupext,      "extension to use for backup files (defaults to \"" DEFAULT_BACKUP_EXTENSION "\")", NULL},
 #ifdef WITH_LIBXDIFF
-    {'d', "diff",            NULL,   miniargv_cb_set_boolean,   &showdiff,       "calculate unified diff and show patch command", NULL},
+    {'d', "diff",            NULL,      miniargv_cb_set_boolean,   &showdiff,       "calculate unified diff and show patch command", NULL},
+    {'c', "context",         NULL,      miniargv_cb_set_int,       &diffcontext,    "unified diff context size (defaults to " STRINGIZE(DEFAULT_DIFF_CONTEXT) ")", NULL},
+    {'n', "package-version", "VERSION", miniargv_cb_set_const_str, &packageversion, "package version number (defaults to $VERSION)", NULL},
 #endif
-    {'i', "ignoremissing",   NULL,   miniargv_cb_set_boolean,   &ignoremissing,  "don't abort when any of the specified files are not found", NULL},
-    {'s', "separate",        NULL,   miniargv_cb_set_boolean,   &multiplecalls,  "spawn a separate editor for each file specified"
+    {'i', "ignoremissing",   NULL,      miniargv_cb_set_boolean,   &ignoremissing,  "don't abort when any of the specified files are not found", NULL},
+    {'s', "separate",        NULL,      miniargv_cb_set_boolean,   &multiplecalls,  "spawn a separate editor for each file specified"
 #ifdef _WIN32
                                                                                  "\nautomatically set when editor contains \"notepad++\""
 #endif
                                                                                  , NULL},
-    {0,   NULL,              "FILE[:N] ...", miniargv_cb_error, NULL,            "file to open, optionally followed by a colon (\":\") and the line number where to place the cursor\nmultiple files may be specified", NULL},
+    {0,   NULL,              "FILE[:N] ...", miniargv_cb_error,    NULL,            "file to open, optionally followed by a colon (\":\") and the line number where to place the cursor\nmultiple files may be specified", NULL},
     MINIARGV_DEFINITION_END
   };
   //definition of environment variables
   const miniargv_definition envdef[] = {
-    {0,   "EDITOR",          NULL,   miniargv_cb_strdup,        &editor,         "editor program to launch\ndefaults to " DEFAULT_EDITOR, NULL},
+    {0,   "EDITOR",          NULL,      miniargv_cb_strdup,        &editor,         "editor program to launch\ndefaults to " DEFAULT_EDITOR, NULL},
+#ifdef WITH_LIBXDIFF
+    {0,   "VERSION",         NULL,      miniargv_cb_set_const_str, &packageversion, "package version number (used in comments when showing patch command)", NULL},
+#endif
     MINIARGV_DEFINITION_END
   };
   //parse environment and command line flags
@@ -380,6 +406,12 @@ int main (int argc, char *argv[], char *envp[])
       continue;
     }
   }
+#ifdef WITH_LIBXDIFF
+  if (diff_initialize() != 0) {
+    fprintf(stderr, "Error initializing libxdiff\n");
+    return 5;
+  }
+#endif
   //call editor
   if (multiplecalls) {
     //spawn separate editor for each file specified
@@ -390,7 +422,7 @@ int main (int argc, char *argv[], char *envp[])
     //prepare arguments
     if ((editorargv = (char**)malloc((1 * 2 + 2) * sizeof(char*))) == NULL) {
       fprintf(stderr, "Memory allocation error\n");
-      return 5;
+      return 6;
     }
     p = editorargv;
 #ifdef _WIN32
@@ -406,7 +438,7 @@ int main (int argc, char *argv[], char *envp[])
       if (linearg && fileargs.list[i].linenumber && fileargs.list[i].linenumber[0]) {
         if ((*p = (char*)malloc(strlen(linearg) + strlen(fileargs.list[i].linenumber) + 1)) == NULL) {
           fprintf(stderr, "Memory allocation error\n");
-          return 6;
+          return 7;
         }
         strcpy(*p, linearg);
         strcat(*p++, fileargs.list[i].linenumber);
@@ -420,9 +452,9 @@ int main (int argc, char *argv[], char *envp[])
       *p = NULL;
       //create backup file if requested
       if (createbackup) {
-        if (backup_file(fileargs.list[i].filepath, backupext) != 0) {
+        if (backup_file(fileargs.list[i].filepath, backupext, showdiff, packageversion) != 0) {
           fprintf(stderr, "Error creating backup (with extension \"%s\") of file: %s\n", backupext, fileargs.list[i].filepath);
-          return 7;
+          return 8;
         }
       }
       //execute editor
@@ -432,7 +464,7 @@ int main (int argc, char *argv[], char *envp[])
       if (spawnvp(_P_WAIT, editor, editorargv) == -1) {
 #endif
         fprintf(stderr, "Error launching editor: %s\n", editor);
-        return 8;
+        return 9;
       }
       //clean up arguments used for this call
       p = q;
@@ -452,7 +484,7 @@ int main (int argc, char *argv[], char *envp[])
     //prepare arguments
     if ((editorargv = (char**)malloc((fileargs.listlen * 2 + 2) * sizeof(char*))) == NULL) {
       fprintf(stderr, "Memory allocation error\n");
-      return 5;
+      return 6;
     }
     p = editorargv;
 #ifdef _WIN32
@@ -466,7 +498,7 @@ int main (int argc, char *argv[], char *envp[])
       if (linearg && fileargs.list[i].linenumber && fileargs.list[i].linenumber[0]) {
         if ((*p = (char*)malloc(strlen(linearg) + strlen(fileargs.list[i].linenumber) + 1)) == NULL) {
           fprintf(stderr, "Memory allocation error\n");
-          return 6;
+          return 7;
         }
         strcpy(*p, linearg);
         strcat(*p++, fileargs.list[i].linenumber);
@@ -481,16 +513,16 @@ int main (int argc, char *argv[], char *envp[])
     *p = NULL;
     //create backup file if requested
     if (createbackup) {
-      if (backup_file(fileargs.list[i].filepath, backupext) != 0) {
+      if (backup_file(fileargs.list[i].filepath, backupext, showdiff, packageversion) != 0) {
         fprintf(stderr, "Error creating backup (with extension \"%s\") of file: %s\n", backupext, fileargs.list[i].filepath);
-        return 7;
+        return 8;
       }
     }
     //execute editor
     //if (spawnvp(_P_WAIT, editor, editorargv) == -1) {
     if (execvp(editor, editorargv) != 0) {
       fprintf(stderr, "Error launching editor: %s\n", editor);
-      return 9;
+      return 10;
     }
     //clean up arguments
     p = editorargv;

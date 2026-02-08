@@ -1,5 +1,9 @@
 1.0.18
 
+2026-02-08  Brecht Sanders  https://github.com/brechtsanders/
+
+  * add libxdiff support in wl-edit to compare opened file with backup file
+
 1.0.17
 
 2025-11-01  Brecht Sanders  https://github.com/brechtsanders/
