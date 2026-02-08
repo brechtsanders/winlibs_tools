@@ -10,6 +10,9 @@
 #include <limits.h>
 #endif
 #include <miniargv.h>
+#ifdef WITH_LIBXDIFF
+#include <xdiff.h>
+#endif
 #include "filesystem.h"
 
 #define PROGRAM_NAME    "wl-edit"
@@ -246,6 +249,9 @@ int main (int argc, char *argv[], char *envp[])
   const char* linearg = NULL;
   int createbackup = 0;
   const char* backupext = DEFAULT_BACKUP_EXTENSION;
+#ifdef WITH_LIBXDIFF
+  int showdiff = 0;
+#endif
   int ignoremissing = 0;
   int multiplecalls = 0;
 #ifdef _WIN32
@@ -265,6 +271,9 @@ int main (int argc, char *argv[], char *envp[])
                                                                                  , NULL},
     {'b', "backup",          NULL,   miniargv_cb_set_boolean,   &createbackup,   "create a backup file (if it doesn't already exist)", NULL},
     {'x', "backupextension", "EXT",  miniargv_cb_set_const_str, &backupext,      "extension to use for backup files (defaults to \"" DEFAULT_BACKUP_EXTENSION "\")", NULL},
+#ifdef WITH_LIBXDIFF
+    {'d', "diff",            NULL,   miniargv_cb_set_boolean,   &showdiff,       "calculate unified diff and show patch command", NULL},
+#endif
     {'i', "ignoremissing",   NULL,   miniargv_cb_set_boolean,   &ignoremissing,  "don't abort when any of the specified files are not found", NULL},
     {'s', "separate",        NULL,   miniargv_cb_set_boolean,   &multiplecalls,  "spawn a separate editor for each file specified"
 #ifdef _WIN32

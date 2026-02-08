@@ -61,7 +61,12 @@ CROSSRUN_LDFLAGS = -lcrossrun
 PEDEPS_LDFLAGS = -lpedeps
 SCALEDNUM_LDFLAGS = -lscalednum
 AVL_LDFLAGS = -lavl
-XDIFF_LDFLAGS = -lxdiff
+ifdef NO_LIBXDIFF
+XDIFF_LDFLAGS =
+else
+CFLAGS += -DWITH_LIBXDIFF
+XDIFF_LDFLAGS = -lxdiff -lmman
+endif
 ifdef STATIC
 #CURL_LDFLAGS = $(shell $(PKG_CONFIG) --libs libcurl librtmp libbrotlidec libgcrypt shishi gnutls libidn)
 CURL_LDFLAGS = $(shell $(PKG_CONFIG) --static --libs libcurl librtmp libbrotlidec libgcrypt shishi gnutls libidn libntlm) -ldl
