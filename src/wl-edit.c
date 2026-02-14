@@ -247,13 +247,15 @@ int backup_file (const char* path, const char* ext, int showdiff, const char* pa
     //compare contents with existing backup file
     diff_handle diff;
     if ((diff = diff_create(backuppath, path)) != NULL) {
-      printf("# fix %s", path);
-      if (packageversion)
-        printf(" (version >= %s)", packageversion);
-      printf("\n");
-      printf("patch -ulbf %s << EOF\n", path);
-      diff_generate(diff, 1, stdout);
-      printf("EOF\n");
+      if (diff_cmp(diff) != 0) {
+        printf("# fix %s", path);
+        if (packageversion)
+          printf(" (version >= %s)", packageversion);
+        printf("\n");
+        printf("patch -ulbf %s << EOF\n", path);
+        diff_generate(diff, 1, stdout);
+        printf("EOF\n");
+      }
       diff_free(diff);
     }
 #endif

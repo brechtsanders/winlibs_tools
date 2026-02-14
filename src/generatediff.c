@@ -199,6 +199,11 @@ void diff_free (diff_handle handle)
   free(handle);
 }
 
+int diff_cmp (diff_handle handle)
+{
+  return xdl_mmfile_cmp(&handle->file1->xdiff_memfile, &handle->file2->xdiff_memfile);
+}
+
 int diff_generate (diff_handle handle, int context, FILE* dst)
 {
   xpparam_t xdiff_param;

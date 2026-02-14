@@ -34,6 +34,13 @@ diff_handle diff_create (const char* filename1, const char* filename2);
 */
 void diff_free (diff_handle handle);
 
+//!check if files are different
+/*!
+  \param  handle                unified diff handle
+  \return 0 if identical, non-zero if different
+*/
+int diff_cmp (diff_handle handle);
+
 //!write unified diff to specified output
 /*!
   \param  handle                unified diff handle

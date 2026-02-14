@@ -49,7 +49,7 @@
 				<Option object_output="obj/Release32/" />
 				<Option type="1" />
 				<Option compiler="MINGW32" />
-				<Option parameters="-h" />
+				<Option parameters="-b -d _TEST_.1  _TEST_.1" />
 				<Compiler>
 					<Add option="-Os" />
 				</Compiler>
