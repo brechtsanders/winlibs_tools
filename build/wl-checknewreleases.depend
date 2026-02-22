@@ -1,1 +1,55 @@
 # depslib dependency file v1.0
+1650273113 source:\\server\users\brecht\sources\cpp\winlibs_tools\src\filesystem.c
+	"filesystem.h"
+	<sys/types.h>
+	<sys/stat.h>
+	<unistd.h>
+	<stdlib.h>
+	<string.h>
+	<direct.h>
+	<sys/stat.h>
+	<errno.h>
+
+1650273113 \\server\users\brecht\sources\cpp\winlibs_tools\src\filesystem.h
+	<stdio.h>
+
+1739035669 source:\\server\users\brecht\sources\cpp\winlibs_tools\src\pkg.c
+	"pkg.h"
+	<stdlib.h>
+	<string.h>
+
+1739035669 \\server\users\brecht\sources\cpp\winlibs_tools\src\pkg.h
+	"sorted_unique_list.h"
+	<stdint.h>
+	<stdlib.h>
+	<time.h>
+
+1646511479 \\server\users\brecht\sources\cpp\winlibs_tools\src\sorted_unique_list.h
+	<stdlib.h>
+
+1739035789 source:\\server\users\brecht\sources\cpp\winlibs_tools\src\pkgfile.c
+	"winlibs_common.h"
+	"pkgfile.h"
+	"filesystem.h"
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	<dirent.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<unistd.h>
+
+1771768162 \\server\users\brecht\sources\cpp\winlibs_tools\src\winlibs_common.h
+
+1646511489 \\server\users\brecht\sources\cpp\winlibs_tools\src\pkgfile.h
+	"pkg.h"
+	<stddef.h>
+
+1646511489 source:\\server\users\brecht\sources\cpp\winlibs_tools\src\sorted_unique_list.c
+	"sorted_unique_list.h"
+	<avl.h>
+	<string.h>
+	<ctype.h>
+	<stdio.h>
+

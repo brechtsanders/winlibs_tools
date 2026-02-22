@@ -1273,7 +1273,7 @@ int main (int argc, char** argv, char *envp[])
       const char* s;
       if ((s = getenv(metadata_envvar_info[i].envvar)) != NULL && *s) {
         if (callbackdata.verbose) {
-          printf("Attribute[%s]: %s\n", metadata_envvar_info[i].xmlattr, s);/////
+          printf("Attribute[%s]: %s\n", metadata_envvar_info[i].xmlattr, s);
         }
         memory_buffer_append_printf(metadata, " %s=\"%s\"", metadata_envvar_info[i].xmlattr, memory_buffer_get(memory_buffer_xml_special_chars(memory_buffer_set(t, s))));
       }

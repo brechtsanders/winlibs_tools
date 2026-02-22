@@ -71,6 +71,7 @@ MMAN_LDFLAGS =
 ifdef STATIC
 #CURL_LDFLAGS = $(shell $(PKG_CONFIG) --libs libcurl librtmp libbrotlidec libgcrypt shishi gnutls libidn)
 CURL_LDFLAGS = $(shell $(PKG_CONFIG) --static --libs libcurl librtmp libbrotlidec libgcrypt shishi gnutls libidn libntlm) -ldl
+#CURL_LDFLAGS = $(shell $(PKG_CONFIG) --static --libs libcurl librtmp libbrotlidec libgcrypt shishi tss2-esys gnutls libidn libntlm) -ldl 
 else
 CURL_LDFLAGS = $(shell $(PKG_CONFIG) --libs libcurl)
 endif
