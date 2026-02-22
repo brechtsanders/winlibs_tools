@@ -34,7 +34,7 @@
 				<Option object_output="obj/Debug32/" />
 				<Option type="1" />
 				<Option compiler="MINGW32" />
-				<Option parameters="-f D:\x86_64-8.1.0-release-posix-seh-rt_v6-rev0\msys64\etc\fstab -i D:\x86_64-8.1.0-release-posix-seh-rt_v6-rev0/custombuilt -s \\SERVER\users\brecht\sources\CPP\mingwbuilder\inst_pcre2-10.31 -p \\SERVER\users\brecht\sources\CPP\mingwbuilder\_packages pcre2 -n 10.31 -v" />
+				<Option parameters="-a x86_64 -f C:\Prog\msys64\etc\fstab -i C:\Prog\winlibs_staging_ucrt/custombuilt -s Z:\winlibs_tools\_TEST_\inst_winlibs-tools-1.0.17 -p \\SERVER\Users\brecht\sources\CPP\winlibs_tools\build\_packages winlibs-tools -n 1.0.17 -v -v -c" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -57,7 +57,7 @@
 				<Option object_output="obj/Debug64/" />
 				<Option type="1" />
 				<Option compiler="MINGW64" />
-				<Option parameters="-a x86_64 -f D:\Prog\msys64\etc\fstab -i D:\Prog\winlibs64-11.2.0ucrt/custombuilt -s \\SERVER\Users\brecht\sources\CPP\winlibs_tools\build\inst_pcre2-10.37 -p \\SERVER\Users\brecht\sources\CPP\winlibs_tools\build\_packages pcre2 -n 10.37 -v -v -c" />
+				<Option parameters="-a x86_64 -f C:\Prog\msys64\etc\fstab -i C:\Prog\winlibs_staging_ucrt/custombuilt -s R:\winlibs_staging_ucrt64\inst_winlibs-tools-1.0.17 -p \\SERVER\Users\brecht\sources\CPP\winlibs_tools\build\_packages winlibs-tools -n 1.0.17 -v -v -c" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>

@@ -1,3 +1,9 @@
+1.0.19
+
+2026-02-22  Brecht Sanders  https://github.com/brechtsanders/
+
+  * check if strlen() is called on NULL
+
 1.0.18
 
 2026-02-08  Brecht Sanders  https://github.com/brechtsanders/

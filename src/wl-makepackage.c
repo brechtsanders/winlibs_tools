@@ -594,34 +594,35 @@ int check_pe_dependencies_callback (dirtrav_entry info)
 }
 #endif
 
-int packager_file_callback (dirtrav_entry info)
+#if defined(_WIN32) && defined(LIBARCHIVE_7ZIP_AVOID_BACKSLASHES)
+char* strdup_backslash2slash(const char* path)
 {
-  struct packager_callback_struct* callbackdata = (struct packager_callback_struct*)info->callbackdata;
-  const char* srcfile = dirtrav_prop_get_path(info);
-#if defined(_WIN32) && defined(LIBARCHIVE_7ZIP_AVOID_BACKSLASHES)
-  const char* origpath = dirtrav_prop_get_relative_path(info);
-  size_t pathlen = (origpath ? strlen(origpath) : 0);
-#else
-  const char* path = dirtrav_prop_get_relative_path(info);
-  size_t pathlen = (path ? strlen(path) : 0);
-#endif
-  const char* ext = dirtrav_prop_get_extension(info);
-  int status = 0;
-#if defined(_WIN32) && defined(LIBARCHIVE_7ZIP_AVOID_BACKSLASHES)
-  char* path;
-  if (!origpath) {
-    path = NULL;
-  } else {
-    char* p;
-    path = strdup(origpath);
-    p = path;
+  char* result;
+  char* p;
+  if ((result = strdup(path)) != NULL) {
+    p = result;
     while (*p) {
       if (*p == '\\')
         *p = '/';
       p++;
     }
   }
+  return result;
+}
 #endif
+
+int packager_file_callback (dirtrav_entry info)
+{
+  struct packager_callback_struct* callbackdata = (struct packager_callback_struct*)info->callbackdata;
+  const char* srcfile = dirtrav_prop_get_path(info);
+#if defined(_WIN32) && defined(LIBARCHIVE_7ZIP_AVOID_BACKSLASHES)
+  char* path = strdup_backslash2slash(dirtrav_prop_get_relative_path(info));
+#else
+  const char* path = dirtrav_prop_get_relative_path(info);
+#endif
+  size_t pathlen = (path ? strlen(path) : 0);
+  const char* ext = dirtrav_prop_get_extension(info);
+  int status = 0;
   if (ext && strcasecmp(ext, ".la") == 0) {
     //replace absolute install path with relative path in .la files
     if (callbackdata->verbose) {

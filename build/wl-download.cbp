@@ -87,7 +87,7 @@
 			<Add option="-static-libgcc" />
 			<Add option="-static" />
 			<Add option="-Wl,--as-needed" />
-			<Add option="`pkg-config --static --libs libcurl librtmp libbrotlidec libbrotlienc libgcrypt shishi gnutls libidn libntlm`" />
+			<Add option="`pkg-config --static --libs libcurl tss2-esys librtmp libbrotlidec libbrotlienc libgcrypt shishi gnutls libidn libntlm`" />
 			<Add option="-lncrypt" />
 			<Add option="-Wl,--allow-multiple-definition" />
 			<Add library="miniargv" />
