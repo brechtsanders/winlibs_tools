@@ -32,7 +32,7 @@
 #define WINLIBS_LICENSE "GPL"
 
 /*! \brief project credits \hideinitializer */
-#define WINLIBS_CREDITS "Brecht Sanders (2020-2025)"
+#define WINLIBS_CREDITS "Brecht Sanders (2020-2026)"
 
 /*! \cond PRIVATE */
 #if defined(_WIN32) && !defined(NOWINDOWSCONSOLE)
