@@ -1,3 +1,9 @@
+1.0.23
+
+2026-05-13  Brecht Sanders  https://github.com/brechtsanders/
+
+  * build with version information included in resource file on Windows
+
 1.0.22
 
 2026-05-13  Brecht Sanders  https://github.com/brechtsanders/
