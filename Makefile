@@ -11,6 +11,7 @@ ifeq ($(OS),Windows_NT)
 BINEXT = .exe
 SOLIBPREFIX =
 SOEXT = .dll
+WINDRES=windres
 else ifeq ($(OS),Darwin)
 BINEXT =
 SOLIBPREFIX = lib
@@ -127,43 +128,52 @@ objdir:
 	$(MKDIR) $(OBJDIR)
 	$(MKDIR) $(BINDIR)
 
-$(BINDIR)/wl-showstatus$(BINEXT): $(OBJDIR)/wl-showstatus.o
+ifneq ($(OS),Windows_NT)
+RESFILE=
+else
+RESFILE=$(OBJDIR)/winlibs_tools.res
+$(OBJDIR)/%.res: src/%.rc
+	$(WINDRES) --input $< --output $@ --output-format=coff
+endif
+
+
+$(BINDIR)/wl-showstatus$(BINEXT): $(OBJDIR)/wl-showstatus.o $(RESFILE)
 	$(CC) $(STRIPFLAG) $(LDFLAGS) -o $@ $^ $(MINIARGV_LDFLAGS) $(PORTCOLCON_LDFLAGS)
 
-$(BINDIR)/wl-download$(BINEXT): $(OBJDIR)/wl-download.o $(OBJDIR)/exclusive_lock_file.o
+$(BINDIR)/wl-download$(BINEXT): $(OBJDIR)/wl-download.o $(OBJDIR)/exclusive_lock_file.o $(RESFILE)
 	$(CC) $(STRIPFLAG) $(LDFLAGS) -o $@ $^ $(MINIARGV_LDFLAGS) $(SCALEDNUM_LDFLAGS) $(CURL_LDFLAGS)
 
-$(BINDIR)/wl-wait4deps$(BINEXT): $(OBJDIR)/wl-wait4deps.o $(OBJDIR)/filesystem.o
+$(BINDIR)/wl-wait4deps$(BINEXT): $(OBJDIR)/wl-wait4deps.o $(OBJDIR)/filesystem.o $(RESFILE)
 	$(CC) $(STRIPFLAG) $(LDFLAGS) -o $@ $^ $(MINIARGV_LDFLAGS) $(PORTCOLCON_LDFLAGS)
 
-$(BINDIR)/wl-listall$(BINEXT): $(OBJDIR)/wl-listall.o $(OBJDIR)/pkg.o $(OBJDIR)/pkgfile.o $(OBJDIR)/sorted_unique_list.o $(OBJDIR)/filesystem.o
+$(BINDIR)/wl-listall$(BINEXT): $(OBJDIR)/wl-listall.o $(OBJDIR)/pkg.o $(OBJDIR)/pkgfile.o $(OBJDIR)/sorted_unique_list.o $(OBJDIR)/filesystem.o $(RESFILE)
 	$(CC) $(STRIPFLAG) $(LDFLAGS) -o $@ $^ $(MINIARGV_LDFLAGS) $(VERSIONCMP_LDFLAGS) $(AVL_LDFLAGS)
 
-$(BINDIR)/wl-info$(BINEXT): $(OBJDIR)/wl-info.o $(OBJDIR)/pkg.o $(OBJDIR)/pkgfile.o $(OBJDIR)/sorted_unique_list.o $(OBJDIR)/filesystem.o
+$(BINDIR)/wl-info$(BINEXT): $(OBJDIR)/wl-info.o $(OBJDIR)/pkg.o $(OBJDIR)/pkgfile.o $(OBJDIR)/sorted_unique_list.o $(OBJDIR)/filesystem.o $(RESFILE)
 	$(CC) $(STRIPFLAG) $(LDFLAGS) -o $@ $^ $(MINIARGV_LDFLAGS) $(VERSIONCMP_LDFLAGS) $(AVL_LDFLAGS)
 
-$(BINDIR)/wl-showdeps$(BINEXT): $(OBJDIR)/wl-showdeps.o $(OBJDIR)/filesystem.o $(OBJDIR)/pkg.o $(OBJDIR)/pkgfile.o $(OBJDIR)/sorted_unique_list.o $(OBJDIR)/filesystem.o
+$(BINDIR)/wl-showdeps$(BINEXT): $(OBJDIR)/wl-showdeps.o $(OBJDIR)/filesystem.o $(OBJDIR)/pkg.o $(OBJDIR)/pkgfile.o $(OBJDIR)/sorted_unique_list.o $(OBJDIR)/filesystem.o $(RESFILE)
 	$(CC) $(STRIPFLAG) $(LDFLAGS) -o $@ $^ $(MINIARGV_LDFLAGS) $(VERSIONCMP_LDFLAGS) $(AVL_LDFLAGS)
 
-$(BINDIR)/wl-checknewreleases$(BINEXT): $(OBJDIR)/wl-checknewreleases.o $(OBJDIR)/pkg.o $(OBJDIR)/pkgfile.o $(OBJDIR)/version_check_db.o $(OBJDIR)/common_output.o $(OBJDIR)/download_cache.o $(OBJDIR)/downloader.o $(OBJDIR)/memory_buffer.o $(OBJDIR)/sorted_unique_list.o $(OBJDIR)/sorted_item_queue.o $(OBJDIR)/filesystem.o
+$(BINDIR)/wl-checknewreleases$(BINEXT): $(OBJDIR)/wl-checknewreleases.o $(OBJDIR)/pkg.o $(OBJDIR)/pkgfile.o $(OBJDIR)/version_check_db.o $(OBJDIR)/common_output.o $(OBJDIR)/download_cache.o $(OBJDIR)/downloader.o $(OBJDIR)/memory_buffer.o $(OBJDIR)/sorted_unique_list.o $(OBJDIR)/sorted_item_queue.o $(OBJDIR)/filesystem.o $(RESFILE)
 	$(CC) $(STRIPFLAG) $(LDFLAGS) -o $@ $^ $(MINIARGV_LDFLAGS) $(VERSIONCMP_LDFLAGS) $(AVL_LDFLAGS) $(CURL_LDFLAGS) $(GUMBO_LDFLAGS) $(PCRE2_LDFLAGS) $(SQLITE3_LDFLAGS) -pthread
 
-$(BINDIR)/wl-makepackage$(BINEXT): $(OBJDIR)/wl-makepackage.o $(OBJDIR)/memory_buffer.o $(OBJDIR)/fstab.o $(OBJDIR)/filesystem.o $(OBJDIR)/sorted_unique_list.o
+$(BINDIR)/wl-makepackage$(BINEXT): $(OBJDIR)/wl-makepackage.o $(OBJDIR)/memory_buffer.o $(OBJDIR)/fstab.o $(OBJDIR)/filesystem.o $(OBJDIR)/sorted_unique_list.o $(RESFILE)
 	$(CC) $(STRIPFLAG) $(LDFLAGS) -o $@ $^ $(MINIARGV_LDFLAGS) $(LIBDIRTRAV_LDFLAGS) $(LIBARCHIVE_LDFLAGS) $(PCRE2_FINDER_LDFLAGS) $(PEDEPS_LDFLAGS) $(AVL_LDFLAGS)
 
-$(BINDIR)/wl-install$(BINEXT): $(OBJDIR)/wl-install.o $(OBJDIR)/filesystem.o $(OBJDIR)/memory_buffer.o $(OBJDIR)/sorted_unique_list.o $(OBJDIR)/pkg.o $(OBJDIR)/pkgdb.o
+$(BINDIR)/wl-install$(BINEXT): $(OBJDIR)/wl-install.o $(OBJDIR)/filesystem.o $(OBJDIR)/memory_buffer.o $(OBJDIR)/sorted_unique_list.o $(OBJDIR)/pkg.o $(OBJDIR)/pkgdb.o $(RESFILE)
 	$(CC) $(STRIPFLAG) $(LDFLAGS) -o $@ $^ $(MINIARGV_LDFLAGS) $(AVL_LDFLAGS) $(EXPAT_LDFLAGS) $(LIBARCHIVE_LDFLAGS) $(SQLITE3_LDFLAGS)
 
-$(BINDIR)/wl-uninstall$(BINEXT): $(OBJDIR)/wl-uninstall.o $(OBJDIR)/filesystem.o $(OBJDIR)/memory_buffer.o $(OBJDIR)/sorted_unique_list.o $(OBJDIR)/pkg.o $(OBJDIR)/pkgdb.o
+$(BINDIR)/wl-uninstall$(BINEXT): $(OBJDIR)/wl-uninstall.o $(OBJDIR)/filesystem.o $(OBJDIR)/memory_buffer.o $(OBJDIR)/sorted_unique_list.o $(OBJDIR)/pkg.o $(OBJDIR)/pkgdb.o $(RESFILE)
 	$(CC) $(STRIPFLAG) $(LDFLAGS) -o $@ $^ $(MINIARGV_LDFLAGS) $(LIBDIRTRAV_LDFLAGS) $(AVL_LDFLAGS) $(LIBARCHIVE_LDFLAGS) $(SQLITE3_LDFLAGS)
 
-$(BINDIR)/wl-build$(BINEXT): $(OBJDIR)/wl-build.o $(OBJDIR)/pkg.o $(OBJDIR)/pkgfile.o $(OBJDIR)/pkgdb.o $(OBJDIR)/memory_buffer.o $(OBJDIR)/sorted_unique_list.o $(OBJDIR)/filesystem.o $(OBJDIR)/build-order.o $(OBJDIR)/build-package.o
+$(BINDIR)/wl-build$(BINEXT): $(OBJDIR)/wl-build.o $(OBJDIR)/pkg.o $(OBJDIR)/pkgfile.o $(OBJDIR)/pkgdb.o $(OBJDIR)/memory_buffer.o $(OBJDIR)/sorted_unique_list.o $(OBJDIR)/filesystem.o $(OBJDIR)/build-order.o $(OBJDIR)/build-package.o $(RESFILE)
 	$(CC) $(STRIPFLAG) $(LDFLAGS) -o $@ $^ $(MINIARGV_LDFLAGS) $(LIBDIRTRAV_LDFLAGS) $(VERSIONCMP_LDFLAGS) $(AVL_LDFLAGS) $(CROSSRUN_LDFLAGS) $(PTHREADS_LDFLAGS) $(SQLITE3_LDFLAGS)
 
-$(BINDIR)/wl-find$(BINEXT): $(OBJDIR)/wl-find.o $(OBJDIR)/pkg.o $(OBJDIR)/pkgfile.o $(OBJDIR)/pkgdb.o $(OBJDIR)/memory_buffer.o $(OBJDIR)/sorted_unique_list.o $(OBJDIR)/filesystem.o
+$(BINDIR)/wl-find$(BINEXT): $(OBJDIR)/wl-find.o $(OBJDIR)/pkg.o $(OBJDIR)/pkgfile.o $(OBJDIR)/pkgdb.o $(OBJDIR)/memory_buffer.o $(OBJDIR)/sorted_unique_list.o $(OBJDIR)/filesystem.o $(RESFILE)
 	$(CC) $(STRIPFLAG) $(LDFLAGS) -o $@ $^ $(MINIARGV_LDFLAGS) $(PORTCOLCON_LDFLAGS) $(AVL_LDFLAGS) $(SQLITE3_LDFLAGS)
 
-$(BINDIR)/wl-edit$(BINEXT): $(OBJDIR)/wl-edit.o $(OBJDIR)/filesystem.o $(OBJDIR)/generatediff.o
+$(BINDIR)/wl-edit$(BINEXT): $(OBJDIR)/wl-edit.o $(OBJDIR)/filesystem.o $(OBJDIR)/generatediff.o $(RESFILE)
 	$(CC) $(STRIPFLAG) $(LDFLAGS) -o $@ $^ $(MINIARGV_LDFLAGS) $(XDIFF_LDFLAGS) $(MMAN_LDFLAGS)
 
 .PHONY: install
@@ -174,6 +184,9 @@ install: all
 .PHONY: clean
 clean:
 	$(RM) $(UTILS_BIN) $(OBJDIR)/*.o
+ifeq ($(OS),Windows_NT)
+	$(RM) $(OBJDIR)/*.res
+endif
 ifneq ($(OBJDIR),.)
 	$(RMDIR) $(OBJDIR)
 endif
