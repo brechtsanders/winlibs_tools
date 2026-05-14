@@ -361,13 +361,14 @@ int main (int argc, char *argv[], char *envp[])
       fprintf(stderr, "Unable to determine filename for URL: %s\n", argv[i]);
     } else {
       //determine download file path
-      if ((dstpath = (char*)malloc(dstdirlen + strlen(filename) + 2)) == NULL) {
+      size_t filenamelen = strlen(filename);
+      if ((dstpath = (char*)malloc(dstdirlen + filenamelen + 2)) == NULL) {
         fprintf(stderr, "Memory allocation error\n");
         return 3;
       }
       memcpy(dstpath, dstdir, dstdirlen);
       dstpath[dstdirlen] = PATH_SEPARATOR;
-      strcpy(dstpath + dstdirlen + 1, filename);
+      memcpy(dstpath + dstdirlen + 1, filename, filenamelen + 1);
       //check filename for unsupported characters in filename
       {
         char* p = dstpath + dstdirlen + 1;
