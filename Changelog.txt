@@ -1,5 +1,9 @@
 1.0.24
 
+2026-05-14  Brecht Sanders  https://github.com/brechtsanders/
+
+  * add icon file and link it into Windows .exe files
+
 1.0.23
 
 2026-05-13  Brecht Sanders  https://github.com/brechtsanders/
