@@ -1,3 +1,5 @@
+1.0.24
+
 1.0.23
 
 2026-05-13  Brecht Sanders  https://github.com/brechtsanders/
@@ -8,7 +10,7 @@
 
 2026-05-13  Brecht Sanders  https://github.com/brechtsanders/
 
-  * add manifest file to avoid Windows UAC for wl-install.exe and wl-uninstall.exe
+  * add manifest file to avoid Windows UAC for wl-install.exe and wl-uninstall.exe (see issue #5)
 
 1.0.21
 

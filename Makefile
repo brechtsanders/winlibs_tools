@@ -132,8 +132,9 @@ ifneq ($(OS),Windows_NT)
 RESOURCEFILE =
 else
 RESOURCEFILE = $(OBJDIR)/$(notdir $(@:$(BINEXT)=.res))
-$(OBJDIR)/%.rc: src/winlibs_tools.rc.in version objdir
-	sed -e 's/"winlibs_tools/"$(notdir $(@:.rc=))/; s/\/*\(VALUE "ProductVersion", "\).*\("\)/\1$(shell cat version)\2/; s/\/*\(VALUE "FileVersion", "\).*\("\)/\1$(shell cat version).0\2/' $< > $@
+$(OBJDIR)/%.rc: resources/winlibs_tools.rc.in version objdir
+	#sed -e 's/"winlibs_tools/"$(notdir $(@:.rc=))/; s/\/*\(VALUE "ProductVersion", "\).*\("\)/\1$(shell cat version)\2/; s/\/*\(VALUE "FileVersion", "\).*\("\)/\1$(shell cat version).0\2/' $< > $@
+	sed -e 's/%PRODUCTNAME%/$(notdir $(@:.rc=))/; s/%PRODUCTVERSION%/$(shell cat version)/; s/\/*\(VALUE "FileVersion", "\).*\("\)/\1$(shell cat version).0\2/' $< > $@
 $(OBJDIR)/%.res: $(OBJDIR)/%.rc objdir
 	$(WINDRES) -Isrc --input $< --output $@ --output-format=coff
 endif
